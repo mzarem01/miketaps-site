@@ -42,6 +42,12 @@ const built = new Date().toISOString().slice(0, 10);
       <h2 id="rig-h">The rig</h2>
       <p class="sub">Click a part, or pick one from the list.</p>
       <div class="rig-grid">
+        <div class="rig-view">
+        <div class="view-bar">
+          <button type="button" class="view-btn" data-rig-3d aria-pressed="false" hidden>View in 3D</button>
+          <span class="view-hint" data-rig-hint hidden>Drag to turn it, scroll or pinch to zoom, click a part.</span>
+        </div>
+        <div class="stage" data-rig-stage role="img" aria-label="3D model of the rig. Use the parts list below to pick a part with the keyboard." hidden></div>
         <svg class="case" viewBox="0 0 520 440" role="group" aria-label="The rig, with clickable parts">
           <rect x="10" y="10" width="500" height="420" rx="18" class="c-body" />
           <rect x="26" y="26" width="468" height="388" rx="10" class="c-glass" />
@@ -79,6 +85,7 @@ const built = new Date().toISOString().slice(0, 10);
             <rect x="490" y="120" width="14" height="200" rx="4" class="pc edge" />
           </g>
         </svg>
+        </div>
 
         <div class="detail" aria-live="polite">
           <p class="eyebrow" data-p-name>Part</p>
@@ -188,6 +195,61 @@ const built = new Date().toISOString().slice(0, 10);
     </section>
   </div>
   <script is:inline src={`/js/lab.js?v=${BUILD}`} defer></script>
+  <script>
+    // "View in 3D": only offered when the browser can draw WebGL. The 3D code (Three.js) is a
+    // separate file that downloads on the first tap, so the page stays light until then.
+    const btn = document.querySelector<HTMLButtonElement>('[data-rig-3d]');
+    const stage = document.querySelector<HTMLElement>('[data-rig-stage]');
+    const hint = document.querySelector<HTMLElement>('[data-rig-hint]');
+    const flat = document.querySelector<SVGElement>('svg.case');
+
+    function webgl() {
+      try {
+        const c = document.createElement('canvas');
+        return !!(c.getContext('webgl2') || c.getContext('webgl'));
+      } catch {
+        return false;
+      }
+    }
+
+    if (btn && stage && hint && flat && webgl()) {
+      btn.hidden = false;
+      let view: { select(id: string | null): void; show(on: boolean): void } | null = null;
+      let on = false;
+
+      document.addEventListener('rig:selected', (e) => view?.select((e as CustomEvent<string>).detail));
+
+      btn.addEventListener('click', async () => {
+        on = !on;
+        if (on && !view) {
+          btn.disabled = true;
+          btn.textContent = 'Loading the 3D model';
+          try {
+            const { initRig } = await import('../../scripts/rig3d.js');
+            stage.hidden = false;
+            view = initRig(stage);
+            const current = document.querySelector('[data-row].on');
+            if (current) view.select(current.getAttribute('data-row'));
+          } catch {
+            on = false;
+            stage.hidden = true;
+            btn.textContent = 'View in 3D';
+            btn.disabled = false;
+            hint.hidden = false;
+            hint.textContent = "The 3D view didn't load. The drawing still works.";
+            return;
+          }
+          btn.disabled = false;
+        }
+        stage.hidden = !on;
+        flat.style.display = on ? 'none' : '';
+        hint.hidden = !on;
+        btn.textContent = on ? 'Back to the drawing' : 'View in 3D';
+        btn.setAttribute('aria-pressed', String(on));
+        view?.show(on);
+      });
+    }
+  </script>
 </Base>
 
 <style>
@@ -236,6 +298,48 @@ const built = new Date().toISOString().slice(0, 10);
   .case {
     width: 100%;
     height: auto;
+  }
+  .view-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .view-btn {
+    font: 700 0.85rem var(--font-mono);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: none;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .view-btn[aria-pressed='true'] {
+    background: var(--accent);
+    color: var(--paper);
+  }
+  .view-btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .view-hint {
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+  }
+  .stage {
+    aspect-ratio: 520 / 440;
+    width: 100%;
+    border-radius: var(--radius);
+    background: radial-gradient(ellipse at 50% 40%, #2a2224 0%, #141112 75%);
+    overflow: hidden;
+    touch-action: none;
+  }
+  .stage :global(canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
   }
   .c-body { fill: #1b1718; stroke: #3a3335; stroke-width: 2; }
   .c-glass { fill: #241f20; }

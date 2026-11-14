@@ -263,6 +263,18 @@ import { BUILD } from '../data/build';
       </g>
     </a>
 
+    <!-- a sticky note on the wall by the monitor: the visible hint that the terminal works (puzzle.js) -->
+    <g class="spot sticky" role="button" tabindex="0" data-term-key aria-label="Sticky note: try typing. Opens the desk terminal">
+      <g class="obj">
+        <g transform="rotate(5 658 248)">
+          <rect x="628" y="222" width="62" height="54" rx="2" class="sticky-paper" />
+          <rect x="647" y="217" width="24" height="9" rx="1" class="sticky-tape" />
+          <text x="636" y="243" class="sticky-text">&gt;_ try</text>
+          <text x="636" y="259" class="sticky-text">typing</text>
+        </g>
+      </g>
+    </g>
+
     <!-- LAB: the rig on the desk -->
     <a class="spot" href="/lab/#rig" aria-label="The Lab: the rig (the PC on the desk)">
       <g class="obj">
@@ -736,6 +748,10 @@ import { BUILD } from '../data/build';
   .lamp-arm { fill: none; stroke: #2b2527; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
   .bulb { fill: #fbe3a6; transition: fill var(--base) var(--ease); }
   .beam { fill: #f4d08a; opacity: 0.16; transition: opacity var(--slow) var(--ease); pointer-events: none; }
+
+  .sticky-paper { fill: #efe3c8; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3)); }
+  .sticky-tape { fill: #e2c27a; opacity: 0.8; }
+  .sticky-text { font-family: var(--font-mono); font-size: 12px; font-weight: 600; fill: #3b0f15; }
 
   .plaque-wood { fill: var(--wood-edge); }
   .plaque-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2.5px; fill: #e2c27a; }

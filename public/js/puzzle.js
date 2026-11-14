@@ -98,13 +98,13 @@
   }
 
   // The keyboard on the desk does the same (phones have no keys to press).
-  var key = document.querySelector('[data-term-key]');
-  if (key) {
+  // So does the sticky note by the monitor.
+  document.querySelectorAll('[data-term-key]').forEach(function (key) {
     key.addEventListener('click', open);
     key.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
-  }
+  });
 
   // The rack's back door: knock on the UPS three times.
   var ups = document.querySelector('[data-ups]');

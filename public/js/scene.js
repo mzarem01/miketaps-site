@@ -157,3 +157,44 @@
     if (v) start(v);
   });
 })();
+
+// Mia, on the floor by the desk: each click gives her a treat.
+// The count is kept only in this browser.
+(function () {
+  var mia = document.querySelector('[data-mia]');
+  if (!mia) return;
+  var tip = mia.querySelector('[data-mia-tip]');
+  var live = document.querySelector('[data-mia-live]');
+  var treats = 0;
+  var timer;
+  try { treats = parseInt(localStorage.getItem('miketaps-mia-treats') || '0', 10) || 0; } catch (e) {}
+
+  function line(n) {
+    if (n === 0) return 'give her a treat';
+    if (n === 1) return '1 treat. Good girl';
+    if (n < 10) return n + ' treats. Still hungry';
+    if (n < 25) return n + ' treats. She has you trained';
+    return n + ' treats. Spoiled rotten';
+  }
+  if (tip) tip.textContent = line(treats);
+
+  function give() {
+    treats += 1;
+    try { localStorage.setItem('miketaps-mia-treats', String(treats)); } catch (e) {}
+    if (tip) tip.textContent = line(treats);
+    if (live) live.textContent = 'Mia got a treat. ' + line(treats) + '.';
+    mia.classList.remove('is-treating');
+    void mia.getBoundingClientRect();
+    mia.classList.add('is-treating');
+    clearTimeout(timer);
+    timer = setTimeout(function () { mia.classList.remove('is-treating'); }, 1700);
+  }
+
+  mia.addEventListener('click', give);
+  mia.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      give();
+    }
+  });
+})();

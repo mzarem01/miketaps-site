@@ -65,7 +65,12 @@ for (const file of files) {
     const where = `${rel}:${i + 1}`;
     // Scripture is quoted verbatim, so the em dash rule skips the generated Bible files.
     if (line.includes(EM_DASH) && !rel.includes('/bible/') && !rel.endsWith('verses.generated.json')) problems.push(`${where}  em dash`);
-    for (const rule of ipRules) if (rule.re.test(line)) problems.push(`${where}  ${rule.name}`);
+    for (const rule of ipRules) {
+      // ops/ may name the site's own Docker network (172.16-31 range). It's container-internal,
+      // not a home network address, and the firewall docs need it.
+      if (rel.startsWith('ops/') && rule.name.startsWith('private address (172')) continue;
+      if (rule.re.test(line)) problems.push(`${where}  ${rule.name}`);
+    }
     const lower = line.toLowerCase();
     for (const term of terms) {
       if (lower.includes(term.toLowerCase())) problems.push(`${where}  private term (#${terms.indexOf(term) + 1})`);

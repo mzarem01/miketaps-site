@@ -49,3 +49,7 @@ services:
 networks:
   site:
     name: miketaps-site
+    # Pinned so the firewall rules in ops/firewall.md always match this network.
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

@@ -14,7 +14,7 @@ import { BUILD } from '../../data/build';
       <p class="lede">One last lock on the door. If you made it this far, you already have the flag. You just might need to unscramble it.</p>
       <form class="br-form" data-flag-form autocomplete="off">
         <label class="sr-only" for="flag">Flag</label>
-        <input id="flag" data-flag placeholder="MT{...}" spellcheck="false" autocapitalize="off" autocomplete="off" />
+        <input id="flag" data-flag maxlength="100" placeholder="MT{...}" spellcheck="false" autocapitalize="off" autocomplete="off" />
         <button type="submit">Try the door</button>
       </form>
       <p class="reply" data-reply role="status"></p>

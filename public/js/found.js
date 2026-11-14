@@ -43,6 +43,25 @@
     if (text) e.textContent = text;
     return e;
   }
+  // Small stroke icons built as DOM nodes (no HTML strings anywhere in the site's scripts).
+  function icon(d, box, size, width) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var s = document.createElementNS(NS, 'svg');
+    s.setAttribute('viewBox', '0 0 ' + box + ' ' + box);
+    s.setAttribute('width', size);
+    s.setAttribute('height', size);
+    s.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', width);
+    p.setAttribute('stroke-linecap', 'round');
+    p.setAttribute('stroke-linejoin', 'round');
+    s.appendChild(p);
+    return s;
+  }
+
   function next() {
     if (showing || !queue.length) return;
     showing = true;
@@ -56,7 +75,7 @@
     box.textContent = '';
     var badge = el('span', 'found-badge');
     badge.setAttribute('aria-hidden', 'true');
-    badge.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    badge.appendChild(icon('M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3', 24, 18, 2));
     var text = el('span', 'found-text');
     text.appendChild(el('span', 'found-eyebrow', a.secret ? 'Secret found · the back room' : 'Found on the plaque · ' + a.count + '/' + MAIN));
     text.appendChild(el('span', 'found-title', a.title));
@@ -90,6 +109,7 @@
   window.mtPlaque = {
     list: LIST,
     have: load,
+    icon: icon,
     reset: function () {
       try { localStorage.removeItem(KEY); } catch (e) {}
       document.dispatchEvent(new CustomEvent('miketaps:found', { detail: null }));

@@ -10,6 +10,11 @@
 
 set -euo pipefail
 
+# Same as site-update: act as the deploy user so ownership never drifts.
+if [[ "$(id -u)" == 0 ]] && id miketaps-deploy >/dev/null 2>&1; then
+  exec runuser -u miketaps-deploy -- "$0" "$@"
+fi
+
 BASE="${MIKETAPS_BASE:-/srv/miketaps/site}"
 cd "${BASE}"
 

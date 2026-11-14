@@ -11,6 +11,10 @@
   var NOTE = 'dGhlIHJhY2sgaGFzIGEgYmFjayBkb29yLiBrbm9jayB0aHJlZSB0aW1lcy4=';
   var lastArrow = 0;
   var tv = document.querySelector('[data-tv]');
+  // On phones (or narrow windows) the terminal opens as a full-width panel at the top of the screen.
+  var narrow = window.matchMedia('(max-width: 700px), (pointer: coarse)');
+  var home = term.parentNode;
+  var homeNext = term.nextSibling;
 
   function print(text, cls) {
     var d = document.createElement('div');
@@ -22,6 +26,10 @@
 
   function open() {
     if (term.hidden) {
+      if (narrow.matches) {
+        document.body.appendChild(term);
+        term.classList.add('term-sheet');
+      }
       term.hidden = false;
       // The terminal and the TV share the monitor: tell the TV to switch off (scene.js).
       document.dispatchEvent(new CustomEvent('miketaps:terminal'));
@@ -37,7 +45,14 @@
   function close() {
     term.hidden = true;
     input.blur();
+    if (term.classList.contains('term-sheet')) {
+      term.classList.remove('term-sheet');
+      home.insertBefore(term, homeNext);
+    }
   }
+
+  var closeBtn = term.querySelector('[data-term-close]');
+  if (closeBtn) closeBtn.addEventListener('click', close);
 
   function run(raw) {
     var cmd = raw.trim();

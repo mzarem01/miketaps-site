@@ -460,6 +460,7 @@ import { BUILD } from '../data/build';
   </div>
   <!-- the desk terminal and the note in the rack: part of the back room puzzle (puzzle.js) -->
   <div class="term" data-term hidden>
+    <button type="button" class="term-close" data-term-close aria-label="Close the terminal">&times;</button>
     <div class="term-out" data-term-out aria-live="polite"></div>
     <form class="term-line" data-term-form autocomplete="off">
       <label for="term-cmd">guest@workshop:~$</label>
@@ -534,6 +535,41 @@ import { BUILD } from '../data/build';
     color: #c9bdb1;
   }
   .term[hidden] { display: none; }
+  /* On phones the terminal opens as a panel across the top of the screen (puzzle.js moves it to the body).
+     16px text so iPhone doesn't zoom, and room to see what you type above the keyboard. */
+  .term-close { display: none; }
+  .term.term-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+    height: min(50svh, 360px);
+    z-index: 60;
+    padding: 14px 16px 16px;
+    border-radius: 0 0 14px 14px;
+    border-bottom: 2px solid #c29b45;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .term.term-sheet .term-out { padding-right: 40px; }
+  .term.term-sheet .term-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    color: #e2c27a;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .term.term-sheet .term-close:focus-visible { outline: 2px solid #e2c27a; }
   .term-out {
     flex: 1;
     min-height: 0;
@@ -542,7 +578,7 @@ import { BUILD } from '../data/build';
     flex-direction: column;
     justify-content: flex-end;
     white-space: pre-wrap;
-    word-break: break-all;
+    overflow-wrap: anywhere;
   }
   .term-out :global(.cmd) { color: #e2c27a; }
   .term-line { display: flex; gap: 0.5em; margin: 0; }

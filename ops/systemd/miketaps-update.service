@@ -1,0 +1,15 @@
+[Unit]
+Description=Pull and deploy the latest MikeTaps site release
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/site-update
+Nice=10
+# Only needs to write the site folder
+ProtectSystem=strict
+ReadWritePaths=/srv/miketaps
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true

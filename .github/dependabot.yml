@@ -1,0 +1,18 @@
+# Dependabot opens pull requests for updates. Same review flow as everything else.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      all-npm:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: docker-compose
+    directory: /ops
+    schedule:
+      interval: monthly

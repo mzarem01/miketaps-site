@@ -1,0 +1,42 @@
+# Runs when a pull request is merged to main: builds the site, checks it again,
+# and publishes a GitHub Release. HomeLab's updater pulls the newest release.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check
+        env:
+          PRIVACY_TERMS: ${{ secrets.PRIVACY_TERMS }}
+      - name: Package
+        run: |
+          tar -czf site.tar.gz -C dist .
+          sha256sum site.tar.gz > site.tar.gz.sha256
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="v$(date -u +%Y.%m.%d.%H%M)-${GITHUB_SHA::7}"
+          gh release create "$tag" site.tar.gz site.tar.gz.sha256 \
+            --title "$tag" \
+            --notes "Built from ${GITHUB_SHA::7}: $(git log -1 --pretty=%s)"

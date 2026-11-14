@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# site-rollback: switch the live site back to an earlier release.
+#
+#   site-rollback            go back one release
+#   site-rollback <tag>      go to a specific release
+#   site-rollback --list     show releases on disk, newest first
+#
+# A rollback pins the site so the updater doesn't redeploy the broken release.
+# Fix the problem on GitHub, then run 'site-update --unpin' to resume updates.
+
+set -euo pipefail
+
+BASE="${MIKETAPS_BASE:-/srv/miketaps}"
+cd "${BASE}"
+
+live="$(readlink current 2>/dev/null || true)"
+live="${live#releases/}"
+mapfile -t releases < <(ls -1 releases | sort -r | grep -v '\.partial$')
+
+if [[ "${1:-}" == "--list" ]]; then
+  for r in "${releases[@]}"; do
+    if [[ "$r" == "$live" ]]; then echo "* ${r}  (live)"; else echo "  ${r}"; fi
+  done
+  exit 0
+fi
+
+if [[ -n "${1:-}" ]]; then
+  want="$1"
+else
+  want=""
+  for i in "${!releases[@]}"; do
+    if [[ "${releases[$i]}" == "$live" ]]; then
+      want="${releases[$((i + 1))]:-}"
+      break
+    fi
+  done
+fi
+
+if [[ -z "$want" || ! -f "releases/${want}/index.html" ]]; then
+  echo "No earlier release to roll back to. Releases on disk:" >&2
+  printf '  %s\n' "${releases[@]}" >&2
+  exit 1
+fi
+
+ln -sfn "releases/${want}" current.new
+mv -Tf current.new current
+echo "$want" > .pinned
+echo "$(date -Is) site-rollback: live is now ${want} (was ${live}). Updates paused until 'site-update --unpin'."

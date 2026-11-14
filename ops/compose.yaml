@@ -1,0 +1,51 @@
+# MikeTaps site container. Runs as a plain Docker Compose project, outside CasaOS.
+#
+# Install location on the server: /srv/miketaps/compose.yaml
+# Site files: /srv/miketaps/current -> releases/<version> (managed by site-update)
+#
+# Hardening:
+#   - unprivileged nginx (non-root, port 8080 inside the container)
+#   - read-only root filesystem, only /tmp writable (in memory)
+#   - no Linux capabilities, no privilege escalation
+#   - published on 127.0.0.1 only: reachable by cloudflared on the host,
+#     not by the LAN and not by Tailscale
+#   - its own network, so it can't reach other containers by name
+
+name: miketaps
+
+services:
+  web:
+    image: nginxinc/nginx-unprivileged:1.30-alpine
+    container_name: miketaps-web
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 64m
+    cpus: 0.5
+    pids_limit: 64
+    ports:
+      - "127.0.0.1:8090:8080"
+    volumes:
+      - /srv/miketaps:/srv/miketaps:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - site
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+networks:
+  site:
+    name: miketaps-site

@@ -1,0 +1,32 @@
+# Runs on every pull request: the site must build and pass the content check
+# before it can be merged.
+name: Check
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Content check (no em dashes, no private addresses or terms)
+        run: npm run check
+        env:
+          PRIVACY_TERMS: ${{ secrets.PRIVACY_TERMS }}
+      - name: Upload preview of the built site
+        uses: actions/upload-artifact@v7
+        with:
+          name: site-preview
+          path: dist
+          retention-days: 7

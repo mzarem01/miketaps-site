@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# site-update: pull the latest MikeTaps release from GitHub and switch to it.
+#
+# Runs every 5 minutes from miketaps-update.timer. Safe to run by hand.
+# Only ever makes outbound requests to GitHub. Needs no token (public repo).
+#
+#   site-update            check for a new release and deploy it
+#   site-update --unpin    clear a rollback pin, then deploy the latest release
+#
+# Layout:
+#   /srv/miketaps/releases/<tag>/   unpacked releases (newest $KEEP kept; tags sort by date)
+#   /srv/miketaps/current           symlink to the live release
+#   /srv/miketaps/.pinned           present after site-rollback: updates paused
+
+set -euo pipefail
+
+REPO="mzarem01/miketaps-site"
+BASE="${MIKETAPS_BASE:-/srv/miketaps}"
+KEEP=5
+API="${MIKETAPS_API:-https://api.github.com/repos/${REPO}/releases/latest}"
+
+log() { echo "$(date -Is) site-update: $*"; }
+
+if [[ "${1:-}" == "--unpin" ]]; then
+  rm -f "${BASE}/.pinned"
+  log "pin cleared"
+fi
+
+if [[ -f "${BASE}/.pinned" ]]; then
+  log "paused, pinned to $(cat "${BASE}/.pinned") (run 'site-update --unpin' to resume)"
+  exit 0
+fi
+
+mkdir -p "${BASE}/releases"
+
+json="$(curl -fsSL --max-time 20 -H 'Accept: application/vnd.github+json' "$API")"
+tag="$(printf '%s' "$json" | python3 -c 'import sys, json; print(json.load(sys.stdin)["tag_name"])')"
+
+if [[ ! "$tag" =~ ^v[0-9A-Za-z._-]+$ ]]; then
+  log "refusing odd tag name: $tag"
+  exit 1
+fi
+
+live="$(readlink "${BASE}/current" 2>/dev/null || true)"
+if [[ "$live" == "releases/${tag}" ]]; then
+  exit 0
+fi
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+dl="${MIKETAPS_DL:-https://github.com/${REPO}/releases/download}/${tag}"
+curl -fsSL --max-time 120 -o "${tmp}/site.tar.gz" "${dl}/site.tar.gz"
+curl -fsSL --max-time 20 -o "${tmp}/site.tar.gz.sha256" "${dl}/site.tar.gz.sha256"
+
+(cd "$tmp" && sha256sum -c --quiet site.tar.gz.sha256)
+
+# Reject archives with absolute paths or parent-directory entries
+if tar -tzf "${tmp}/site.tar.gz" | grep -qE '(^/|(^|/)\.\.(/|$))'; then
+  log "archive contains unsafe paths, aborting"
+  exit 1
+fi
+
+target="${BASE}/releases/${tag}"
+rm -rf "${target}.partial"
+mkdir -p "${target}.partial"
+tar -xzf "${tmp}/site.tar.gz" -C "${target}.partial" --no-same-owner --no-same-permissions
+
+if [[ ! -f "${target}.partial/index.html" ]]; then
+  log "release ${tag} has no index.html, aborting"
+  rm -rf "${target}.partial"
+  exit 1
+fi
+
+chmod -R a+rX "${target}.partial"
+rm -rf "$target"
+mv "${target}.partial" "$target"
+
+# Atomic switch: build the new link beside the old one, then rename over it
+ln -sfn "releases/${tag}" "${BASE}/current.new"
+mv -Tf "${BASE}/current.new" "${BASE}/current"
+log "deployed ${tag} (was ${live:-nothing})"
+
+# Prune old releases, never the live one
+mapfile -t old < <(ls -1 "${BASE}/releases" | sort -r | grep -v '\.partial$' | tail -n +$((KEEP + 1)))
+for r in "${old[@]}"; do
+  [[ "releases/${r}" == "releases/${tag}" ]] && continue
+  rm -rf "${BASE}/releases/${r}"
+  log "pruned ${r}"
+done

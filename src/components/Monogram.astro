@@ -1,0 +1,27 @@
+---
+// The MikeTaps monogram: a burgundy circle with a serif M and a gold hairline ring.
+// Original mark. Keep it clear of anything that resembles a team logo.
+interface Props {
+  size?: number;
+}
+const { size = 36 } = Astro.props;
+---
+<svg
+  class="monogram"
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  role="img"
+  aria-label="MikeTaps monogram"
+>
+  <circle cx="32" cy="32" r="31" fill="#6e1e28" />
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#c29b45" stroke-width="1.25" />
+  <text
+    x="32"
+    y="42"
+    text-anchor="middle"
+    font-family="Fraunces Variable, Georgia, serif"
+    font-size="30"
+    font-weight="500"
+    fill="#e2c27a">M</text>
+</svg>

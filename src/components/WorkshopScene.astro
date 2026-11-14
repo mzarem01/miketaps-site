@@ -1,4 +1,5 @@
 ---
+import { BUILD } from '../data/build';
 // The workshop: the homepage's explorable room.
 // Every clickable object is a real link (or button, for the lamp) with a label,
 // so it works with a keyboard and a screen reader. The same destinations are
@@ -301,7 +302,7 @@
   </figcaption>
 </figure>
 
-<script is:inline src="/js/scene.js" defer></script>
+<script is:inline src={`/js/scene.js?v=${BUILD}`} defer></script>
 
 <style>
   .scene-wrap {

@@ -142,6 +142,31 @@ import { BUILD } from '../data/build';
       <path d="M412 134c-16-10-22-34-8-44 4 18 10 26 8 44zM412 134c14-14 30-16 38-6-14 2-26 6-38 6zM412 134c-4-22 6-38 20-40-6 14-12 26-20 40z" fill="#4f7a55" />
     </g>
 
+    <!-- THE PLAQUE: what you have found around the site (found.js keeps the list, scene.js draws it) -->
+    <g class="spot plaque" role="button" tabindex="0" data-plaque aria-haspopup="dialog" aria-label="The plaque: see what you have found">
+      <g class="obj">
+        <rect x="476" y="66" width="104" height="96" rx="5" class="plaque-wood" />
+        <rect x="483" y="73" width="90" height="82" rx="3" fill="#221612" />
+        <text x="528" y="92" text-anchor="middle" class="plaque-label">FOUND</text>
+        <text x="528" y="118" text-anchor="middle" class="plaque-count" data-plaque-count>0/10</text>
+        <circle class="stud" data-stud cx="500" cy="132" r="4" />
+        <circle class="stud" data-stud cx="514" cy="132" r="4" />
+        <circle class="stud" data-stud cx="528" cy="132" r="4" />
+        <circle class="stud" data-stud cx="542" cy="132" r="4" />
+        <circle class="stud" data-stud cx="556" cy="132" r="4" />
+        <circle class="stud" data-stud cx="500" cy="145" r="4" />
+        <circle class="stud" data-stud cx="514" cy="145" r="4" />
+        <circle class="stud" data-stud cx="528" cy="145" r="4" />
+        <circle class="stud" data-stud cx="542" cy="145" r="4" />
+        <circle class="stud" data-stud cx="556" cy="145" r="4" />
+      </g>
+      <g class="tag" transform="translate(438 14)">
+        <rect width="180" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">The plaque</text>
+        <text x="14" y="36" class="tag-sub">what you have found</text>
+      </g>
+    </g>
+
     <!-- THE WORD: the Bible on the shelf -->
     <a class="spot" href="/the-word/" aria-label="The Word: scripture by mood (the Bible on the shelf)">
       <g class="obj">
@@ -424,6 +449,25 @@ import { BUILD } from '../data/build';
     <span class="sr-only" data-mia-live aria-live="polite"></span>
     <button type="button" class="labels-btn" data-show-labels aria-pressed="false">Show labels</button>
   </figcaption>
+  <dialog class="plaque-dialog" data-plaque-dialog aria-labelledby="plaque-title">
+    <div class="plaque-head">
+      <div>
+        <p class="plaque-eyebrow">THE PLAQUE</p>
+        <h2 id="plaque-title">Found <span data-plaque-n>0</span> of 10</h2>
+      </div>
+      <form method="dialog">
+        <button class="plaque-close" aria-label="Close the plaque">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        </button>
+      </form>
+    </div>
+    <div class="plaque-bar" aria-hidden="true"><span data-plaque-bar></span></div>
+    <ul class="plaque-list" data-plaque-list></ul>
+    <div class="plaque-foot">
+      <p>Saved in this browser only. Nothing is sent anywhere.</p>
+      <button type="button" class="plaque-reset" data-plaque-reset>Start over</button>
+    </div>
+  </dialog>
 </figure>
 
 <script is:inline src={`/js/scene.js?v=${BUILD}`} defer></script>
@@ -582,6 +626,12 @@ import { BUILD } from '../data/build';
   .lamp-arm { fill: none; stroke: #2b2527; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
   .bulb { fill: #fbe3a6; transition: fill var(--base) var(--ease); }
   .beam { fill: #f4d08a; opacity: 0.16; transition: opacity var(--slow) var(--ease); pointer-events: none; }
+
+  .plaque-wood { fill: var(--wood-edge); }
+  .plaque-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2.5px; fill: #e2c27a; }
+  .plaque-count { font-family: var(--font-display); font-weight: 600; font-size: 22px; fill: #f1e9dc; }
+  .stud { fill: none; stroke: #8a7a6c; stroke-width: 1.3; transition: fill var(--base) var(--ease), stroke var(--base) var(--ease); }
+  .stud.on { fill: #e2c27a; stroke: #e2c27a; }
 
   .pennant-text {
     font-family: var(--font-display);

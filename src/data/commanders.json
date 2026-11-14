@@ -1,0 +1,472 @@
+{
+  "sources": {
+    "history": {
+      "title": "History of the Washington Commanders (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/History_of_the_Washington_Commanders"
+    },
+    "team": {
+      "title": "Washington Commanders (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Washington_Commanders"
+    },
+    "sb17": {
+      "title": "Super Bowl XVII (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Super_Bowl_XVII"
+    },
+    "sb22": {
+      "title": "Super Bowl XXII (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Super_Bowl_XXII"
+    },
+    "sb26": {
+      "title": "Super Bowl XXVI (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Super_Bowl_XXVI"
+    },
+    "hogs": {
+      "title": "The Hogs (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/The_Hogs_(American_football)"
+    },
+    "baugh": {
+      "title": "Sammy Baugh (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Sammy_Baugh"
+    },
+    "monk": {
+      "title": "Art Monk (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Art_Monk"
+    },
+    "green": {
+      "title": "Darrell Green (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Darrell_Green"
+    },
+    "taylor": {
+      "title": "Sean Taylor (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Sean_Taylor"
+    },
+    "s2024": {
+      "title": "2024 Washington Commanders season (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/2024_Washington_Commanders_season"
+    }
+  },
+  "eras": [
+    {
+      "id": "early",
+      "name": "The early years",
+      "span": "1932 to 1945"
+    },
+    {
+      "id": "middle",
+      "name": "RFK and the long build",
+      "span": "1946 to 1980"
+    },
+    {
+      "id": "gibbs",
+      "name": "The Gibbs era",
+      "span": "1981 to 1992"
+    },
+    {
+      "id": "modern",
+      "name": "Modern times",
+      "span": "1993 to today"
+    }
+  ],
+  "facts": [
+    {
+      "id": 1,
+      "era": "early",
+      "year": "1932",
+      "title": "It started in Boston",
+      "fact": "The franchise was founded in 1932 as the Boston Braves. Boston was awarded the team on July 9, 1932, with George Preston Marshall as owner.",
+      "src": "history"
+    },
+    {
+      "id": 2,
+      "era": "early",
+      "year": "1933",
+      "title": "First name change",
+      "fact": "In 1933 the team changed its name after moving its home games to Fenway Park.",
+      "src": "history"
+    },
+    {
+      "id": 3,
+      "era": "early",
+      "year": "1937",
+      "title": "Moving to Washington",
+      "fact": "The team relocated to Washington, D.C. on February 13, 1937.",
+      "src": "history"
+    },
+    {
+      "id": 4,
+      "era": "early",
+      "year": "1936",
+      "title": "Signing Slinging Sammy",
+      "fact": "Washington signed TCU rookie quarterback Sammy Baugh on December 12, 1936, and built its offense around his passing.",
+      "src": "history"
+    },
+    {
+      "id": 5,
+      "era": "early",
+      "year": "1937",
+      "title": "A title in year one",
+      "fact": "In its first season in Washington, the team won the 1937 NFL Championship Game over the Chicago Bears on December 12, 1937.",
+      "src": "history"
+    },
+    {
+      "id": 6,
+      "era": "early",
+      "year": "1940",
+      "title": "The one we don't talk about",
+      "fact": "The Bears beat Washington 73 to 0 in the 1940 title game, the most lopsided score in NFL championship history.",
+      "src": "history"
+    },
+    {
+      "id": 7,
+      "era": "early",
+      "year": "1942",
+      "title": "Payback",
+      "fact": "Two years later, Washington won the 1942 NFL Championship Game 14 to 6 over a previously undefeated Bears team.",
+      "src": "history"
+    },
+    {
+      "id": 8,
+      "era": "early",
+      "year": "1945",
+      "title": "Lost by a safety",
+      "fact": "The Cleveland Rams beat Washington 15 to 14 in the 1945 title game. The deciding safety led to a rule change known as the Baugh/Marshall Rule.",
+      "src": "history"
+    },
+    {
+      "id": 9,
+      "era": "early",
+      "year": "1943",
+      "title": "Triple crown",
+      "fact": "In 1943 Sammy Baugh led the league in pass completions, punting (45.9-yard average) and interceptions (11).",
+      "src": "baugh"
+    },
+    {
+      "id": 10,
+      "era": "early",
+      "year": "1940",
+      "title": "A punting record for 82 years",
+      "fact": "Baugh averaged 51.4 yards per punt in 1940. It stood as the single-season record until 2022.",
+      "src": "baugh"
+    },
+    {
+      "id": 11,
+      "era": "early",
+      "year": "1937",
+      "title": "One team, sixteen seasons",
+      "fact": "\"Slinging Sammy\" Baugh played all 16 of his NFL seasons in Washington, from 1937 to 1952. He was inducted into the Hall of Fame in 1963.",
+      "src": "baugh"
+    },
+    {
+      "id": 12,
+      "era": "early",
+      "year": "1937",
+      "title": "The fight song",
+      "fact": "Washington was among the first NFL franchises with an original fight song, played after home touchdowns since 1937.",
+      "src": "team"
+    },
+    {
+      "id": 13,
+      "era": "early",
+      "year": "1937",
+      "title": "Griffith Stadium",
+      "fact": "After the move, the team played at Griffith Stadium from 1937 through 1960.",
+      "src": "team"
+    },
+    {
+      "id": 14,
+      "era": "middle",
+      "year": "1961",
+      "title": "Moving to RFK",
+      "fact": "Washington played at RFK Stadium from 1961 to 1996.",
+      "src": "team"
+    },
+    {
+      "id": 15,
+      "era": "middle",
+      "year": "1962",
+      "title": "Last to integrate",
+      "fact": "Under federal pressure, the team integrated in 1962, the last pro football franchise to do so.",
+      "src": "history"
+    },
+    {
+      "id": 16,
+      "era": "middle",
+      "year": "1969",
+      "title": "Lombardi's one season",
+      "fact": "Vince Lombardi coached Washington to a 7-5-2 record in 1969. He died of cancer shortly before the 1970 season.",
+      "src": "history"
+    },
+    {
+      "id": 17,
+      "era": "middle",
+      "year": "1972",
+      "title": "The first Super Bowl trip",
+      "fact": "George Allen, hired in January 1971, took the 1972 team to Super Bowl VII. Washington lost 14 to 7 to the undefeated Miami Dolphins.",
+      "src": "history"
+    },
+    {
+      "id": 18,
+      "era": "middle",
+      "year": "1974",
+      "title": "Enter Jack Kent Cooke",
+      "fact": "Jack Kent Cooke bought majority control in 1974 and became sole owner in 1985.",
+      "src": "history"
+    },
+    {
+      "id": 19,
+      "era": "middle",
+      "year": "1980",
+      "title": "Drafting Art Monk",
+      "fact": "Washington took Art Monk in the first round of the 1980 draft, 18th overall. He played 14 seasons for the team.",
+      "src": "monk"
+    },
+    {
+      "id": 20,
+      "era": "gibbs",
+      "year": "1981",
+      "title": "Gibbs arrives",
+      "fact": "Jack Kent Cooke signed Joe Gibbs as head coach on January 13, 1981.",
+      "src": "history"
+    },
+    {
+      "id": 21,
+      "era": "gibbs",
+      "year": "1982",
+      "title": "Okay, you hogs",
+      "fact": "Offensive line coach Joe Bugel coined \"The Hogs\" at 1982 training camp, telling Russ Grimm and Jeff Bostic: \"Okay, you hogs, let's get running down there.\"",
+      "src": "hogs"
+    },
+    {
+      "id": 22,
+      "era": "gibbs",
+      "year": "1982",
+      "title": "Honorary Hog",
+      "fact": "Running back John Riggins was accepted by the offensive line as an \"Honorary Hog.\"",
+      "src": "hogs"
+    },
+    {
+      "id": 23,
+      "era": "gibbs",
+      "year": "1982",
+      "title": "The strike season",
+      "fact": "A 57-day players' strike cut the 1982 season to nine games. Washington went 8-1.",
+      "src": "sb17"
+    },
+    {
+      "id": 24,
+      "era": "gibbs",
+      "year": "1983",
+      "title": "Super Bowl XVII",
+      "fact": "On January 30, 1983, at the Rose Bowl, Washington beat the Miami Dolphins 27 to 17 for its first Super Bowl title.",
+      "src": "sb17"
+    },
+    {
+      "id": 25,
+      "era": "gibbs",
+      "year": "1983",
+      "title": "Fourth and one",
+      "fact": "In the fourth quarter, facing fourth-and-one at Miami's 43, John Riggins ran 43 yards for the touchdown that gave Washington its first lead, 20 to 17.",
+      "src": "sb17"
+    },
+    {
+      "id": 26,
+      "era": "gibbs",
+      "year": "1983",
+      "title": "Riggo's workload",
+      "fact": "Riggins ran for 166 yards on 38 carries in Super Bowl XVII, both Super Bowl records at the time, and was named MVP.",
+      "src": "sb17"
+    },
+    {
+      "id": 27,
+      "era": "gibbs",
+      "year": "1983",
+      "title": "Last pick of the first round",
+      "fact": "Darrell Green was the last player taken in the first round of the 1983 draft, 28th overall.",
+      "src": "green"
+    },
+    {
+      "id": 28,
+      "era": "gibbs",
+      "year": "1984",
+      "title": "106 catches",
+      "fact": "Art Monk caught 106 passes in 1984, a then-NFL record.",
+      "src": "monk"
+    },
+    {
+      "id": 29,
+      "era": "gibbs",
+      "year": "4x",
+      "title": "The fastest man",
+      "fact": "Darrell Green won the NFL's Fastest Man competition four times and is its only undefeated multiple winner.",
+      "src": "green"
+    },
+    {
+      "id": 30,
+      "era": "gibbs",
+      "year": "1987",
+      "title": "Running on torn cartilage",
+      "fact": "In a 1987 divisional playoff at Chicago, Green returned a punt 52 yards for the winning touchdown, 21 to 17, after tearing rib cartilage on the return.",
+      "src": "green"
+    },
+    {
+      "id": 31,
+      "era": "gibbs",
+      "year": "1988",
+      "title": "Super Bowl XXII",
+      "fact": "On January 31, 1988, in San Diego, Washington beat the Denver Broncos 42 to 10.",
+      "src": "sb22"
+    },
+    {
+      "id": 32,
+      "era": "gibbs",
+      "year": "1988",
+      "title": "35 in one quarter",
+      "fact": "Washington scored 35 points in the second quarter of Super Bowl XXII: five touchdowns on 18 offensive plays.",
+      "src": "sb22"
+    },
+    {
+      "id": 33,
+      "era": "gibbs",
+      "year": "1988",
+      "title": "Doug Williams makes history",
+      "fact": "Doug Williams threw for 340 yards and four touchdowns, won MVP, and became the first African-American starting quarterback to win a Super Bowl.",
+      "src": "sb22"
+    },
+    {
+      "id": 34,
+      "era": "gibbs",
+      "year": "1988",
+      "title": "Timmy Smith's 204",
+      "fact": "Rookie Timmy Smith ran for 204 yards in Super Bowl XXII, a Super Bowl record.",
+      "src": "sb22"
+    },
+    {
+      "id": 35,
+      "era": "gibbs",
+      "year": "1991",
+      "title": "14 and 2",
+      "fact": "The 1991 team went 14-2 in the regular season.",
+      "src": "sb26"
+    },
+    {
+      "id": 36,
+      "era": "gibbs",
+      "year": "1992",
+      "title": "Super Bowl XXVI",
+      "fact": "On January 26, 1992, at the Metrodome in Minneapolis, Washington beat the Buffalo Bills 37 to 24.",
+      "src": "sb26"
+    },
+    {
+      "id": 37,
+      "era": "gibbs",
+      "year": "1992",
+      "title": "Rypien's night",
+      "fact": "Mark Rypien completed 18 of 33 passes for 292 yards and two touchdowns and was named Super Bowl XXVI MVP.",
+      "src": "sb26"
+    },
+    {
+      "id": 38,
+      "era": "gibbs",
+      "year": "1992",
+      "title": "Three rings",
+      "fact": "The Hogs helped Washington win Super Bowls XVII, XXII and XXVI under Joe Gibbs.",
+      "src": "hogs"
+    },
+    {
+      "id": 39,
+      "era": "modern",
+      "year": "1997",
+      "title": "A new home",
+      "fact": "Since 1997 the team has played in Landover, Maryland, at the stadium now called Northwest Stadium.",
+      "src": "team"
+    },
+    {
+      "id": 40,
+      "era": "modern",
+      "year": "2002",
+      "title": "Twenty seasons",
+      "fact": "Darrell Green played 20 seasons, all in Washington (1983 to 2002), and set an NFL record with an interception in 19 straight seasons.",
+      "src": "green"
+    },
+    {
+      "id": 41,
+      "era": "modern",
+      "year": "2004",
+      "title": "Gibbs, part two",
+      "fact": "Joe Gibbs came back as head coach and team president on January 7, 2004.",
+      "src": "history"
+    },
+    {
+      "id": 42,
+      "era": "modern",
+      "year": "2004",
+      "title": "Number 21",
+      "fact": "Washington drafted safety Sean Taylor fifth overall in 2004 out of Miami. He died in November 2007 at age 24, and the team retired his No. 21 on October 17, 2021.",
+      "src": "taylor"
+    },
+    {
+      "id": 43,
+      "era": "modern",
+      "year": "2008",
+      "title": "Same day, same class",
+      "fact": "Art Monk and Darrell Green were both inducted into the Pro Football Hall of Fame on August 2, 2008.",
+      "src": "monk"
+    },
+    {
+      "id": 44,
+      "era": "modern",
+      "year": "2010",
+      "title": "A Hog in Canton",
+      "fact": "Guard Russ Grimm, an original Hog, was inducted into the Pro Football Hall of Fame in 2010.",
+      "src": "hogs"
+    },
+    {
+      "id": 45,
+      "era": "modern",
+      "year": "2022",
+      "title": "Commanders",
+      "fact": "After playing as the Washington Football Team, the franchise rebranded as the Commanders in 2022.",
+      "src": "history"
+    },
+    {
+      "id": 46,
+      "era": "modern",
+      "year": "2023",
+      "title": "New ownership",
+      "fact": "A group led by Josh Harris bought the team for $6.05 billion. The NFL approved the sale on July 20, 2023.",
+      "src": "team"
+    },
+    {
+      "id": 47,
+      "era": "modern",
+      "year": "2024",
+      "title": "Number two overall",
+      "fact": "Washington drafted quarterback Jayden Daniels out of LSU second overall in 2024. He won Offensive Rookie of the Year.",
+      "src": "s2024"
+    },
+    {
+      "id": 48,
+      "era": "modern",
+      "year": "2024",
+      "title": "Best since '91",
+      "fact": "The 2024 team went 12-5, its best record since 1991, then won road playoff games at Tampa Bay (23-20) and Detroit (45-31).",
+      "src": "s2024"
+    },
+    {
+      "id": 49,
+      "era": "modern",
+      "year": "2024",
+      "title": "Back in the NFC title game",
+      "fact": "The 2024 run reached the NFC Championship Game for the first time since the 1991 season.",
+      "src": "s2024"
+    },
+    {
+      "id": 50,
+      "era": "modern",
+      "year": "Colors",
+      "title": "Burgundy and gold",
+      "fact": "The team's colors are officially burgundy and gold. Five league titles: 1937, 1942, and Super Bowls XVII, XXII and XXVI.",
+      "src": "team"
+    }
+  ]
+}

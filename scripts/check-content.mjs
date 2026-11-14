@@ -63,7 +63,8 @@ for (const file of files) {
   const lines = text.split(/\r?\n/);
   lines.forEach((line, i) => {
     const where = `${rel}:${i + 1}`;
-    if (line.includes(EM_DASH)) problems.push(`${where}  em dash`);
+    // Scripture is quoted verbatim, so the em dash rule skips the generated Bible files.
+    if (line.includes(EM_DASH) && !rel.includes('/bible/') && !rel.endsWith('verses.generated.json')) problems.push(`${where}  em dash`);
     for (const rule of ipRules) if (rule.re.test(line)) problems.push(`${where}  ${rule.name}`);
     const lower = line.toLowerCase();
     for (const term of terms) {

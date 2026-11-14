@@ -1,0 +1,445 @@
+---
+// The workshop: the homepage's explorable room.
+// Every clickable object is a real link (or button, for the lamp) with a label,
+// so it works with a keyboard and a screen reader. The same destinations are
+// always listed in the header nav and the room map below the scene.
+---
+<figure class="scene-wrap">
+  <div class="scene-scroll" data-scene-scroll>
+  <svg
+    class="scene"
+    viewBox="0 0 1200 680"
+    role="group"
+    aria-labelledby="scene-title"
+  >
+    <title id="scene-title">Mike's workshop. Each object opens a part of the site.</title>
+    <defs>
+      <radialGradient id="lampglow" cx="0.29" cy="0.5" r="0.55">
+        <stop offset="0" stop-color="#f4d08a" style="stop-opacity: var(--glow)" />
+        <stop offset="1" stop-color="#f4d08a" stop-opacity="0" />
+      </radialGradient>
+      <radialGradient id="screenglow" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#e2c27a" stop-opacity="0.18" />
+        <stop offset="1" stop-color="#e2c27a" stop-opacity="0" />
+      </radialGradient>
+      <clipPath id="window-clip"><rect x="600" y="50" width="150" height="160" rx="4" /></clipPath>
+    </defs>
+
+    <!-- room -->
+    <rect class="wall" width="1200" height="450" />
+    <g class="wall-stripes" aria-hidden="true">
+      <rect x="0" y="0" width="1200" height="450" class="wall-pattern" />
+    </g>
+    <rect class="rail" y="440" width="1200" height="12" />
+    <rect class="wainscot" y="452" width="1200" height="118" />
+    <g class="wainscot-lines">
+      <rect x="40" y="470" width="180" height="82" rx="3" />
+      <rect x="250" y="470" width="180" height="82" rx="3" />
+      <rect x="460" y="470" width="180" height="82" rx="3" />
+      <rect x="670" y="470" width="180" height="82" rx="3" />
+      <rect x="880" y="470" width="180" height="82" rx="3" />
+    </g>
+    <rect class="floor" y="570" width="1200" height="110" />
+    <g class="floor-lines">
+      <path d="M0 600H1200M0 636H1200M180 570V600M520 600V636M840 570V600M300 636V680M1000 636V680" />
+    </g>
+    <ellipse class="rug" cx="540" cy="640" rx="360" ry="34" />
+
+    <!-- window: dusk with the lamp on, night with it off -->
+    <g class="window" aria-hidden="true">
+      <g clip-path="url(#window-clip)">
+        <g class="sky-day">
+          <rect x="600" y="50" width="150" height="160" fill="#e7b77b" />
+          <rect x="600" y="130" width="150" height="80" fill="#cf8a5c" />
+          <circle cx="700" cy="150" r="22" fill="#f3d79b" />
+          <path d="M600 190 l30 -22 30 14 34 -26 30 20 26 -10 V210 H600z" fill="#7a3a33" />
+        </g>
+        <g class="sky-night">
+          <rect x="600" y="50" width="150" height="160" fill="#101a33" />
+          <circle cx="712" cy="92" r="16" fill="#f1e9dc" />
+          <circle cx="719" cy="87" r="14" fill="#101a33" />
+          <circle cx="630" cy="80" r="1.6" fill="#f1e9dc" />
+          <circle cx="660" cy="118" r="1.2" fill="#f1e9dc" />
+          <circle cx="740" cy="140" r="1.4" fill="#f1e9dc" />
+          <circle cx="618" cy="150" r="1" fill="#f1e9dc" />
+          <path d="M600 190 l30 -22 30 14 34 -26 30 20 26 -10 V210 H600z" fill="#070b16" />
+        </g>
+      </g>
+      <rect x="600" y="50" width="150" height="160" rx="4" class="window-frame" />
+      <path d="M675 50V210M600 130H750" class="window-frame" />
+      <rect x="590" y="208" width="170" height="10" rx="2" class="wood" />
+    </g>
+
+    <!-- lamplight over everything on the left -->
+    <rect width="1200" height="680" fill="url(#lampglow)" class="glow" />
+
+    <!-- shelf -->
+    <rect x="60" y="168" width="390" height="14" rx="2" class="wood" />
+    <path d="M90 182l14 30M420 182l-14 30" class="bracket" />
+    <g aria-hidden="true">
+      <rect x="80" y="98" width="26" height="70" rx="2" fill="#3f5b4a" />
+      <rect x="108" y="88" width="30" height="80" rx="2" fill="#a77a3d" />
+      <rect x="140" y="104" width="22" height="64" rx="2" fill="#2f3a52" />
+      <rect x="164" y="92" width="28" height="76" rx="2" fill="#7b5a4a" />
+      <rect x="194" y="112" width="20" height="56" rx="2" transform="rotate(12 204 168)" fill="#5b4a6e" />
+      <rect x="292" y="120" width="70" height="16" rx="2" fill="#7a6a5e" />
+      <rect x="296" y="136" width="64" height="16" rx="2" fill="#a77a3d" />
+      <rect x="292" y="152" width="70" height="16" rx="2" fill="#3f5b4a" />
+      <path d="M392 168h40l-6-34h-28z" fill="#8a5e40" />
+      <path d="M412 134c-16-10-22-34-8-44 4 18 10 26 8 44zM412 134c14-14 30-16 38-6-14 2-26 6-38 6zM412 134c-4-22 6-38 20-40-6 14-12 26-20 40z" fill="#4f7a55" />
+    </g>
+
+    <!-- THE WORD: the Bible on the shelf -->
+    <a class="spot" href="/the-word/" aria-label="The Word: scripture by mood (the Bible on the shelf)">
+      <g class="obj">
+        <rect x="236" y="74" width="40" height="94" rx="3" fill="#3b0f15" />
+        <rect x="236" y="74" width="7" height="94" fill="#2a0a0f" />
+        <rect x="243" y="84" width="33" height="3" fill="#c29b45" />
+        <rect x="243" y="156" width="33" height="3" fill="#c29b45" />
+        <path d="M258 104v28M250 112h16" stroke="#e2c27a" stroke-width="3" stroke-linecap="round" />
+        <rect x="270" y="74" width="6" height="94" fill="#efe3c8" opacity="0.5" />
+      </g>
+      <g class="tag" transform="translate(170 22)">
+        <rect width="180" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">The Word</text>
+        <text x="14" y="36" class="tag-sub">scripture by mood</text>
+      </g>
+    </a>
+
+    <!-- GAMEDAY: the pennant -->
+    <a class="spot" href="/gameday/" aria-label="Gameday: Washington franchise history cards (the pennant)">
+      <g class="obj swing">
+        <path d="M800 70L1000 112L800 154z" fill="#8a2533" />
+        <path d="M800 70L1000 112L800 154z" fill="none" stroke="#c29b45" stroke-width="2" />
+        <rect x="800" y="70" width="18" height="84" fill="#c29b45" />
+        <text x="830" y="119" class="pennant-text">GAMEDAY</text>
+        <circle cx="809" cy="76" r="4" fill="#d9d2c4" />
+      </g>
+      <g class="tag" transform="translate(820 166)">
+        <rect width="196" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">Gameday</text>
+        <text x="14" y="36" class="tag-sub">deal me a history card</text>
+      </g>
+    </a>
+
+    <!-- THE MAT: purple belt on a hook -->
+    <a class="spot" href="/the-mat/" aria-label="The Mat: jiu-jitsu (the belt on the hook)">
+      <g class="obj swing">
+        <circle cx="1060" cy="64" r="6" fill="#c29b45" />
+        <rect x="1032" y="76" width="16" height="190" rx="3" fill="#5d3d91" />
+        <rect x="1054" y="76" width="16" height="166" rx="3" fill="#53367f" />
+        <rect x="1028" y="66" width="46" height="26" rx="6" fill="#5d3d91" />
+        <path d="M1040 92l-8 18M1062 92l8 18" stroke="#47306d" stroke-width="3" />
+        <rect x="1032" y="222" width="16" height="40" fill="#151012" />
+        <rect x="1032" y="226" width="16" height="4" class="stripe s1" />
+        <rect x="1032" y="234" width="16" height="4" class="stripe s2" />
+        <rect x="1032" y="242" width="16" height="4" class="stripe s3" />
+        <rect x="1032" y="250" width="16" height="4" class="stripe s4" />
+      </g>
+      <g class="tag" transform="translate(856 284)">
+        <rect width="172" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">The Mat</text>
+        <text x="14" y="36" class="tag-sub" data-stripe-tip>jiu-jitsu since 2010</text>
+      </g>
+    </a>
+
+    <!-- desk -->
+    <rect x="110" y="430" width="860" height="18" rx="3" class="wood-top" />
+    <rect x="130" y="448" width="20" height="186" class="wood" />
+    <rect x="930" y="448" width="20" height="186" class="wood" />
+    <rect x="380" y="434" width="190" height="10" rx="2" class="keyboard" />
+    <rect x="586" y="434" width="18" height="10" rx="5" class="keyboard" />
+
+    <!-- lamplight on the desk (drawn behind the monitor) -->
+    <path class="beam" d="M268 306L336 290L372 430H176z" />
+
+    <!-- coffee, always -->
+    <g aria-hidden="true">
+      <path d="M346 404h26v22a6 6 0 0 1-6 6h-14a6 6 0 0 1-6-6z" fill="#e9dcc4" />
+      <path d="M372 410h5a6 6 0 0 1 0 12h-5" fill="none" stroke="#e9dcc4" stroke-width="3" />
+      <rect x="346" y="404" width="26" height="5" fill="#6e1e28" />
+      <path class="steam" d="M354 398c-4-6 4-10 0-16M364 398c-4-6 4-10 0-16" fill="none" stroke="#f1e9dc" stroke-width="2" stroke-linecap="round" />
+    </g>
+
+    <!-- WORK: the monitor -->
+    <a class="spot" href="/work/" aria-label="Work: projects and write-ups (the monitor)">
+      <g class="obj">
+        <ellipse cx="470" cy="310" rx="240" ry="140" fill="url(#screenglow)" class="screen-glow" />
+        <rect x="320" y="214" width="300" height="190" rx="10" class="bezel" />
+        <rect x="332" y="226" width="276" height="160" rx="4" class="screen" />
+        <text x="346" y="252" class="term">$ whoami</text>
+        <text x="346" y="272" class="term dim">mike, builder of things</text>
+        <text x="346" y="298" class="term">$ ls projects/</text>
+        <text x="346" y="318" class="term dim">soc-lab  homelab  network</text>
+        <text x="346" y="344" class="term">$ tap in<tspan class="cursor">_</tspan></text>
+        <rect x="460" y="404" width="20" height="26" class="bezel" />
+        <rect x="420" y="424" width="100" height="8" rx="3" class="bezel" />
+      </g>
+      <g class="tag" transform="translate(370 168)">
+        <rect width="200" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">Work</text>
+        <text x="14" y="36" class="tag-sub">projects and write-ups</text>
+      </g>
+    </a>
+
+    <!-- LAB: the rig on the desk -->
+    <a class="spot" href="/lab/#rig" aria-label="The Lab: the rig (the PC on the desk)">
+      <g class="obj">
+        <rect x="700" y="262" width="170" height="168" rx="8" class="case" />
+        <rect x="710" y="272" width="150" height="148" rx="4" class="glass" />
+        <rect x="722" y="290" width="70" height="56" rx="3" fill="#2b2527" />
+        <rect x="722" y="356" width="126" height="18" rx="3" fill="#3a3335" />
+        <rect x="722" y="372" width="126" height="3" fill="#c29b45" />
+        <circle cx="828" cy="300" r="16" class="fan" />
+        <circle cx="828" cy="300" r="5" fill="#2b2527" />
+        <circle cx="828" cy="338" r="16" class="fan fan-2" />
+        <circle cx="828" cy="338" r="5" fill="#2b2527" />
+        <circle cx="750" cy="400" r="12" class="fan" />
+        <circle cx="790" cy="400" r="12" class="fan fan-2" />
+      </g>
+      <g class="tag" transform="translate(694 214)">
+        <rect width="182" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">The Lab</text>
+        <text x="14" y="36" class="tag-sub">the rig, part by part</text>
+      </g>
+    </a>
+
+    <!-- THE LAMP: the light/dark switch -->
+    <g class="spot lamp" role="button" tabindex="0" data-lamp aria-pressed="true" aria-label="Toggle the lamp">
+      <g class="obj">
+        <ellipse cx="206" cy="428" rx="36" ry="6" fill="#2b2527" />
+        <path d="M206 426L228 330L276 286" class="lamp-arm" />
+        <circle cx="228" cy="330" r="6" fill="#c29b45" />
+        <path d="M258 270L310 254L340 292L268 312z" fill="#6e1e28" />
+        <path d="M258 270L310 254" stroke="#c29b45" stroke-width="3" />
+        <circle class="bulb" cx="306" cy="296" r="8" />
+      </g>
+      <g class="tag" transform="translate(70 330)">
+        <rect width="172" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">Lamp</text>
+        <text x="14" y="36" class="tag-sub" data-lamp-tip>click to switch</text>
+      </g>
+    </g>
+
+    <!-- the controller: just for fun -->
+    <g class="spot" role="button" tabindex="0" data-wiggle aria-label="A game controller. It wiggles.">
+      <g class="obj wiggle">
+        <path d="M630 418c10-10 56-10 66 0 8 8 10 22 2 24-8 2-14-6-20-8h-30c-6 2-12 10-20 8-8-2-6-16 2-24z" fill="#2b2527" />
+        <circle cx="646" cy="426" r="3" fill="#8a2533" />
+        <circle cx="680" cy="424" r="2.5" fill="#c29b45" />
+        <circle cx="686" cy="430" r="2.5" fill="#c29b45" />
+      </g>
+      <g class="tag" transform="translate(600 456)">
+        <rect width="190" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">Controller</text>
+        <text x="14" y="36" class="tag-sub">nothing here... yet</text>
+      </g>
+    </g>
+
+    <!-- LAB: the server rack -->
+    <a class="spot" href="/lab/#homelab" aria-label="The Lab: the home server and how this site runs (the server rack)">
+      <g class="obj">
+        <ellipse cx="1072" cy="298" rx="42" ry="22" fill="#7a4a2a" />
+        <path d="M1052 292h40M1060 287v10M1068 287v10M1076 287v10M1084 287v10" stroke="#f1e9dc" stroke-width="2" />
+        <rect x="1000" y="318" width="146" height="330" rx="6" class="rack" />
+        <rect x="1012" y="332" width="122" height="34" rx="3" class="unit" />
+        <rect x="1012" y="374" width="122" height="34" rx="3" class="unit" />
+        <rect x="1012" y="416" width="122" height="34" rx="3" class="unit" />
+        <rect x="1012" y="458" width="122" height="34" rx="3" class="unit" />
+        <rect x="1012" y="500" width="122" height="60" rx="3" class="unit" />
+        <circle cx="1120" cy="349" r="3.5" class="led led-a" />
+        <circle cx="1108" cy="349" r="3.5" class="led led-b" />
+        <circle cx="1120" cy="391" r="3.5" class="led led-c" />
+        <circle cx="1120" cy="433" r="3.5" class="led led-a" />
+        <circle cx="1108" cy="433" r="3.5" class="led led-gold" />
+        <circle cx="1120" cy="475" r="3.5" class="led led-b" />
+        <path d="M1024 349h50M1024 391h50M1024 433h50M1024 475h50" class="vent" />
+        <rect x="1022" y="512" width="60" height="36" rx="2" class="ups" />
+        <text x="1030" y="535" class="ups-text">UPS</text>
+      </g>
+      <g class="tag" transform="translate(840 590)">
+        <rect width="200" height="44" rx="10" />
+        <text x="14" y="20" class="tag-name">The Lab</text>
+        <text x="14" y="36" class="tag-sub">how this site runs</text>
+      </g>
+    </a>
+  </svg>
+  </div>
+  <figcaption class="scene-bar">
+    <span><span class="hint-wide">Click anything in the room, or use the map below.</span><span class="hint-narrow">Swipe to look around. Tap anything.</span></span>
+    <button type="button" class="labels-btn" data-show-labels aria-pressed="false">Show labels</button>
+  </figcaption>
+</figure>
+
+<script is:inline src="/js/scene.js" defer></script>
+
+<style>
+  .scene-wrap {
+    margin: 0;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--wall);
+    box-shadow: 0 30px 60px -30px rgba(40, 10, 14, 0.45);
+  }
+  .scene-scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .scene {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .wall { fill: var(--wall); transition: fill var(--slow) var(--ease); }
+  .wall-pattern { fill: none; }
+  .rail { fill: var(--wood-edge); }
+  .wainscot { fill: var(--wainscot); transition: fill var(--slow) var(--ease); }
+  .wainscot-lines rect { fill: none; stroke: var(--wainscot-line); stroke-width: 2; }
+  .floor { fill: var(--floor); transition: fill var(--slow) var(--ease); }
+  .floor-lines path { stroke: var(--floor-line); stroke-width: 2; fill: none; }
+  .rug { fill: var(--burgundy-deep); opacity: 0.7; }
+  .wood { fill: var(--wood); }
+  .wood-top { fill: var(--wood-edge); }
+  .bracket { stroke: var(--wood); stroke-width: 6; stroke-linecap: round; }
+  .window-frame { fill: none; stroke: var(--wood-edge); stroke-width: 6; }
+  .glow { pointer-events: none; }
+  .keyboard { fill: var(--metal); stroke: var(--metal-edge); }
+
+  .bezel { fill: #1b1718; }
+  .screen { fill: var(--screen); }
+  .term { font-family: var(--font-mono); font-size: 15px; fill: #e2c27a; }
+  .term.dim { fill: #b9aea2; }
+  .cursor { animation: blink 1.1s steps(1) infinite; }
+  .screen-glow { pointer-events: none; opacity: 0.35; transition: opacity var(--slow) var(--ease); }
+
+  .case { fill: var(--metal); stroke: var(--metal-edge); stroke-width: 2; }
+  .glass { fill: #1a1517; opacity: 0.9; }
+  .fan { fill: none; stroke: #b0303f; stroke-width: 4; }
+  .fan-2 { stroke: #c29b45; }
+
+  .rack { fill: var(--metal); stroke: var(--metal-edge); stroke-width: 2; }
+  .unit { fill: #221d1f; stroke: var(--metal-edge); }
+  .vent { stroke: #3a3335; stroke-width: 3; stroke-dasharray: 4 4; }
+  .ups { fill: #171314; stroke: #3a3335; }
+  .ups-text { font-family: var(--font-mono); font-size: 13px; fill: #9b8e82; }
+  .led { fill: #6fcf87; }
+  .led-gold { fill: #e2c27a; }
+  .led-a { animation: led 2.6s infinite; }
+  .led-b { animation: led 1.7s infinite 0.4s; }
+  .led-c { animation: led 3.3s infinite 1.1s; }
+
+  /* belt stripes: earned one per return visit (see scene.js) */
+  .stripe { fill: #f1e9dc; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scaleX(0); transition: opacity var(--base) var(--ease), transform var(--slow) var(--pop); }
+  .scene[data-stripes='1'] .s1,
+  .scene[data-stripes='2'] :is(.s1, .s2),
+  .scene[data-stripes='3'] :is(.s1, .s2, .s3),
+  .scene[data-stripes='4'] .stripe { opacity: 1; transform: none; }
+  .lamp-arm { fill: none; stroke: #2b2527; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+  .bulb { fill: #fbe3a6; transition: fill var(--base) var(--ease); }
+  .beam { fill: #f4d08a; opacity: 0.16; transition: opacity var(--slow) var(--ease); pointer-events: none; }
+
+  .pennant-text {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    fill: #e2c27a;
+  }
+
+  /* sky follows the lamp */
+  .sky-night { opacity: 0; transition: opacity var(--slow) var(--ease); }
+  .sky-day { transition: opacity var(--slow) var(--ease); }
+  :global(:root[data-theme='dark']) .sky-night { opacity: 1; }
+  :global(:root[data-theme='dark']) .sky-day { opacity: 0; }
+  :global(:root[data-theme='dark']) .beam { opacity: 0; }
+  :global(:root[data-theme='dark']) .bulb { fill: #4a3f41; }
+  :global(:root[data-theme='dark']) .screen-glow { opacity: 1; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .sky-night { opacity: 1; }
+    :global(:root:not([data-theme='light'])) .sky-day { opacity: 0; }
+    :global(:root:not([data-theme='light'])) .beam { opacity: 0; }
+    :global(:root:not([data-theme='light'])) .bulb { fill: #4a3f41; }
+    :global(:root:not([data-theme='light'])) .screen-glow { opacity: 1; }
+  }
+
+  /* hotspots */
+  .spot { cursor: pointer; outline: none; }
+  .spot .obj {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform var(--base) var(--pop), filter var(--base) var(--ease);
+  }
+  .spot .swing { transform-origin: 10% 10%; }
+  .spot:hover .obj,
+  .spot:focus-visible .obj {
+    transform: translateY(-6px);
+    filter: drop-shadow(0 0 10px rgba(242, 205, 130, 0.65));
+  }
+  .spot:hover .swing,
+  .spot:focus-visible .swing {
+    transform: rotate(-3deg);
+  }
+  .spot:active .obj {
+    transform: translateY(-2px) scale(0.98);
+  }
+  .lamp:hover .obj,
+  .lamp:focus-visible .obj { transform: none; }
+
+  .tag {
+    opacity: 0;
+    transition: opacity var(--fast) var(--ease);
+    pointer-events: none;
+  }
+  .tag rect { fill: var(--card); stroke: var(--gold); stroke-width: 1.5; }
+  .tag-name { font-family: var(--font-display); font-weight: 600; font-size: 17px; fill: var(--ink); }
+  .tag-sub { font-family: var(--font-sans); font-size: 13px; fill: var(--ink-faint); }
+  .spot:hover .tag,
+  .spot:focus-visible .tag,
+  .scene.show-tags .tag { opacity: 1; }
+
+  .wiggle.is-wiggling,
+  :global(.is-wiggling) { animation: wiggle 500ms var(--ease); }
+
+  .scene-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 1.1rem;
+    background: var(--card);
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    border-top: 1px solid var(--rule);
+  }
+  .labels-btn {
+    font: 600 0.9rem/1 var(--font-sans);
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform var(--fast) var(--pop);
+  }
+  .labels-btn:active { transform: scale(0.95); }
+  .labels-btn[aria-pressed='true'] { background: var(--gold-tint); border-color: var(--gold); }
+
+  .steam { opacity: 0.35; animation: steam 3.5s ease-in-out infinite; }
+  .hint-narrow { display: none; }
+  @media (max-width: 700px) {
+    .scene { width: 820px; max-width: none; }
+    .hint-wide { display: none; }
+    .hint-narrow { display: inline; }
+  }
+  @keyframes steam { 0%, 100% { opacity: 0.15; transform: translateY(0); } 50% { opacity: 0.45; transform: translateY(-4px); } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes led { 0%, 100% { opacity: 1; } 45% { opacity: 0.35; } 50% { opacity: 1; } }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-8deg); }
+    50% { transform: rotate(6deg); }
+    75% { transform: rotate(-3deg); }
+  }
+</style>

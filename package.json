@@ -7,8 +7,9 @@
     "node": ">=22.23.4"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "bible": "node scripts/build-bible.mjs",
+    "dev": "node scripts/build-bible.mjs && astro dev",
+    "build": "node scripts/build-bible.mjs && astro build",
     "preview": "astro preview",
     "check": "node scripts/check-content.mjs",
     "ci": "npm run build && npm run check"
@@ -16,6 +17,7 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/source-sans-3": "^5.3.1",
-    "astro": "^7.4.12"
+    "astro": "^7.4.12",
+    "world-english-bible": "^1.0.1"
   }
 }

@@ -3,19 +3,23 @@ import '@fontsource-variable/fraunces';
 import '@fontsource-variable/source-sans-3';
 import '../styles/global.css';
 import Monogram from '../components/Monogram.astro';
+import { sections } from '../data/sections';
 
 interface Props {
   title?: string;
   description?: string;
+  accent?: string;
 }
 
 const {
   title = 'MikeTaps',
-  description = 'Things I have built and run at home: a self-hosted lab, security projects, local AI, and a few things I care about.',
+  description = "Mike's workshop: a self-hosted lab, security projects, local AI, Commanders history, jiu-jitsu and scripture.",
+  accent,
 } = Astro.props;
 
-const pageTitle = title === 'MikeTaps' ? title : `${title} | MikeTaps`;
+const pageTitle = title === 'MikeTaps' ? 'MikeTaps | The workshop' : `${title} | MikeTaps`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const year = new Date().getFullYear();
 ---
 <!doctype html>
@@ -23,55 +27,86 @@ const year = new Date().getFullYear();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline src="/js/theme.js"></script>
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#171314" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
   </head>
-  <body>
-    <a class="sr-only skip" href="#main">Skip to content</a>
-    <header class="site-header wrap">
-      <a class="brand" href="/" aria-label="MikeTaps home">
-        <Monogram size={34} />
-        <span class="brand-name">MikeTaps</span>
-      </a>
-      <nav aria-label="Main">
-        <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a>
-      </nav>
+  <body style={accent ? `--accent:${accent}` : undefined}>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="brand" href="/" aria-label="MikeTaps, back to the workshop">
+          <Monogram size={36} />
+          <span class="brand-name">MikeTaps</span>
+        </a>
+        <nav aria-label="Main" class="nav">
+          {sections.map((s) => (
+            <a
+              href={`/${s.slug}/`}
+              style={`--dot:${s.accent}`}
+              aria-current={path === `/${s.slug}` ? 'page' : undefined}
+            >
+              {s.name}
+            </a>
+          ))}
+        </nav>
+        <button class="lamp-btn" type="button" data-lamp aria-pressed="true" aria-label="Toggle the lamp">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path class="shade" d="M7 3h10l3 8H4z" />
+            <path d="M12 11v7M8 21h8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path class="beam" d="M6 12l-3 6h18l-3-6z" />
+          </svg>
+        </button>
+      </div>
     </header>
-    <main id="main" class="wrap">
+    <main id="main">
       <slot />
     </main>
-    <footer class="site-footer wrap">
-      <hr class="rule" />
-      <p>
-        Built and run at home. &copy; {year} MikeTaps.
-      </p>
+    <footer class="site-footer">
+      <div class="wrap">
+        <hr class="rule" />
+        <div class="foot">
+          <p>Built and run at home. &copy; {year} MikeTaps.</p>
+          <p class="hint">Psst: the lamp works.</p>
+        </div>
+      </div>
     </footer>
+    <script is:inline src="/js/site.js" defer></script>
   </body>
 </html>
 
 <style>
+  .skip {
+    position: absolute;
+    left: -999px;
+    top: 0.5rem;
+    background: var(--card);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    z-index: 10;
+  }
   .skip:focus {
-    position: static;
-    width: auto;
-    height: auto;
-    clip: auto;
-    margin: 0.5rem;
+    left: 0.5rem;
   }
   .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
+    min-height: 64px;
   }
   .brand {
     display: inline-flex;
@@ -79,33 +114,114 @@ const year = new Date().getFullYear();
     gap: 0.6rem;
     color: var(--ink);
     text-decoration: none;
+    flex-shrink: 0;
   }
   .brand-name {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
-  nav {
+  .nav {
     display: flex;
-    gap: 1.25rem;
-    font-size: 1rem;
+    gap: 0.25rem;
+    margin-left: auto;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
-  nav a {
+  .nav a {
+    position: relative;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
     color: var(--ink-soft);
     text-decoration: none;
+    font-weight: 600;
+    font-size: 0.98rem;
+    white-space: nowrap;
+    transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease);
   }
-  nav a[aria-current='page'] {
-    color: var(--burgundy-text);
+  .nav a::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dot);
+    margin-right: 0.45rem;
+    vertical-align: 0.1em;
+    transform: scale(0.6);
+    transition: transform var(--fast) var(--pop);
   }
-  nav a:hover {
-    color: var(--burgundy-text);
+  .nav a:hover,
+  .nav a[aria-current='page'] {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+  .nav a:hover::before,
+  .nav a[aria-current='page']::before {
+    transform: scale(1);
+  }
+  .lamp-btn {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: transform var(--fast) var(--pop);
+  }
+  .lamp-btn:active {
+    transform: scale(0.92);
+  }
+  .lamp-btn .shade {
+    fill: var(--burgundy);
+  }
+  .lamp-btn .beam {
+    fill: var(--gold-bright);
+    opacity: 0.55;
+    transition: opacity var(--base) var(--ease);
+  }
+  .lamp-btn[aria-pressed='false'] .beam {
+    opacity: 0;
   }
   main {
     min-height: 60vh;
-    padding-bottom: 3rem;
   }
   .site-footer {
     color: var(--ink-faint);
-    font-size: 0.9rem;
-    padding-bottom: 2rem;
+    font-size: 0.92rem;
+    padding: 2rem 0 2.5rem;
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+  }
+  .hint {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  @media (max-width: 760px) {
+    .bar {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+    }
+    .lamp-btn {
+      margin-left: auto;
+    }
+    .nav {
+      order: 3;
+      width: 100%;
+      margin-left: -0.6rem;
+      flex-wrap: wrap;
+      overflow: visible;
+    }
   }
 </style>

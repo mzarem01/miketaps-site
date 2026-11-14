@@ -1,0 +1,191 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const modules = import.meta.glob('./*.md', { eager: true }) as Record<string, any>;
+const projects = Object.entries(modules)
+  .map(([path, mod]) => ({
+    href: `/work/${path.replace('./', '').replace('.md', '')}/`,
+    ...mod.frontmatter,
+  }))
+  .sort((a, b) => a.order - b.order);
+---
+<Base title="Work" description="Projects, write-ups and postmortems from the home lab." accent="#c29b45">
+  <section class="wrap head">
+    <p class="eyebrow">$ ls ~/work</p>
+    <h1>Work</h1>
+    <p class="lede">
+      CompTIA Security+ certified and building toward a SOC analyst role. Everything here is
+      something I built and run myself, mistakes included, because the mistakes are where I
+      learned the most.
+    </p>
+    <p class="tip">Hover or focus a card to see what broke.</p>
+  </section>
+
+  <section class="wrap">
+    <ol class="grid">
+      {projects.map((p, i) => (
+        <li>
+          <a class="card" href={p.href}>
+            <span class="front">
+              <span class="row">
+                <span class="kind">{p.kind}</span>
+                <span class="idx">0{i + 1}</span>
+              </span>
+              <span class="title">{p.title}</span>
+              <span class="teaser">{p.teaser}</span>
+              <span class="stack">{p.stack.slice(0, 4).join(' · ')}</span>
+            </span>
+            <span class="reveal" aria-hidden="true">
+              <span class="label">What broke</span>
+              <span class="broke">{p.broke}</span>
+              <span class="go">Read it &rarr;</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-top: clamp(1.75rem, 4vw, 3rem);
+    padding-bottom: 1.5rem;
+  }
+  .lede {
+    max-width: 42rem;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+  }
+  .tip {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    position: relative;
+    display: block;
+    min-height: 290px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    background:
+      linear-gradient(var(--rule) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px) 0 0 / 24px 24px,
+      var(--card);
+    transition: transform var(--base) var(--pop), box-shadow var(--base) var(--ease);
+  }
+  .front,
+  .reveal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.3rem;
+  }
+  .front {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 70%, transparent), var(--card) 55%);
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+  .kind {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-text);
+  }
+  .idx {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 560;
+    line-height: 1.15;
+  }
+  .teaser {
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+  .stack {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+  .reveal {
+    background: #151112;
+    color: #efe6d8;
+    justify-content: center;
+    clip-path: circle(0% at 100% 100%);
+    transition: clip-path 420ms var(--ease);
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #e2c27a;
+  }
+  .broke {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+  .go {
+    margin-top: 0.5rem;
+    color: #e2c27a;
+    font-weight: 600;
+  }
+  .card:hover,
+  .card:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px -24px rgba(60, 20, 10, 0.6);
+  }
+  .card:hover .reveal,
+  .card:focus-visible .reveal {
+    clip-path: circle(150% at 100% 100%);
+  }
+  @media (hover: none) {
+    .reveal {
+      position: static;
+      clip-path: none;
+      padding-top: 1rem;
+      border-top: 1px solid #3a2f30;
+    }
+    .card {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .front {
+      position: static;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      clip-path: none;
+      opacity: 0;
+    }
+    .card:hover .reveal,
+    .card:focus-visible .reveal {
+      opacity: 1;
+    }
+  }
+</style>

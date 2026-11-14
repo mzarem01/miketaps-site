@@ -1,0 +1,13 @@
+{
+  "note": "References only. scripts/build-bible.mjs fills in the exact World English Bible text at build time.",
+  "moods": [
+    { "id": "anxiety", "name": "Anxious", "line": "When your mind won't stop running.", "refs": ["Philippians 4:6-7", "1 Peter 5:7", "Matthew 6:34"] },
+    { "id": "gratitude", "name": "Grateful", "line": "When you want to say thank you.", "refs": ["1 Thessalonians 5:18", "Psalm 100:4", "Psalm 107:1"] },
+    { "id": "uncertainty", "name": "Uncertain", "line": "When you can't see the next step.", "refs": ["Proverbs 3:5-6", "Jeremiah 29:11", "Psalm 32:8"] },
+    { "id": "grief", "name": "Grieving", "line": "When something or someone is gone.", "refs": ["Psalm 34:18", "Matthew 5:4", "Revelation 21:4"] },
+    { "id": "motivation", "name": "Need a push", "line": "When the work is long and you're tired.", "refs": ["Colossians 3:23", "Galatians 6:9", "Philippians 4:13"] },
+    { "id": "encouragement", "name": "Discouraged", "line": "When you need someone in your corner.", "refs": ["Joshua 1:9", "Isaiah 40:31", "Deuteronomy 31:6"] },
+    { "id": "patience", "name": "Waiting", "line": "When the answer hasn't come yet.", "refs": ["Psalm 27:14", "Romans 12:12", "James 1:2-4"] },
+    { "id": "strength", "name": "Worn down", "line": "When you're running on empty.", "refs": ["Isaiah 41:10", "Psalm 46:1", "2 Corinthians 12:9"] }
+  ]
+}

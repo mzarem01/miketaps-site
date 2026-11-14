@@ -49,7 +49,7 @@
 })();
 
 // The controller is a TV remote: each press changes the channel on the desk monitor.
-// 0 = terminal, 1 = Epona clip, 2 = Sean Taylor tribute, 3 = Volvagia clip, 4 = test pattern.
+// 0 = terminal, 1 = Epona, 2 and 3 = Madden plays, 4 = Volvagia, 5 = test pattern.
 (function () {
   var remote = document.querySelector('[data-tv-remote]');
   var tv = document.querySelector('[data-tv]');
@@ -66,16 +66,16 @@
   var YT = 'https://www.youtube.com/channel/UCVr4Sy6tnK-_dN8chyJnc8w';
   var info = {
     1: 'Ocarina of Time: riding Epona across Hyrule Field',
-    2: 'Sean Taylor, No. 21. Never forgotten',
-    3: 'Ocarina of Time: the last hits on Volvagia',
-    4: 'Test pattern. Nothing on but burgundy and gold',
+    2: 'Madden 27: scoop and score in the Super Bowl',
+    3: 'Madden 27: a perfectly timed pick, taken back for six',
+    4: 'Ocarina of Time: the last hits on Volvagia',
+    5: 'Test pattern. Nothing on but burgundy and gold',
   };
   var links = {
     1: [YT, 'More on YouTube'],
-    2: ['https://en.wikipedia.org/wiki/Sean_Taylor', 'Source'],
-    3: [YT, 'More on YouTube'],
+    4: [YT, 'More on YouTube'],
   };
-  var next = { 0: 'press to play a clip', 1: 'next channel', 2: 'next channel', 3: 'next channel', 4: 'back to the terminal' };
+  var next = { 0: 'press to play a clip', 1: 'next channel', 2: 'next channel', 3: 'next channel', 4: 'next channel', 5: 'back to the terminal' };
 
   function current() {
     return tv.querySelector('video[data-ch="' + channel + '"]');
@@ -108,7 +108,7 @@
   }
 
   function tune() {
-    channel = (channel + 1) % 5;
+    channel = (channel + 1) % 6;
     stopAll();
     if (tip) tip.textContent = next[channel];
     if (!channel) {

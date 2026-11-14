@@ -7,9 +7,35 @@ After=network-online.target
 Type=oneshot
 ExecStart=/usr/local/bin/site-update
 Nice=10
-# Only needs to write the site folder
+UMask=0022
+
+# Runs as its own user, which owns only /srv/miketaps/site
+User=miketaps-deploy
+Group=miketaps-deploy
+
+# Sandbox: read-only system, no privileges, no devices, no kernel access
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
 ProtectSystem=strict
-ReadWritePaths=/srv/miketaps
+ReadWritePaths=/srv/miketaps/site
 ProtectHome=true
 PrivateTmp=true
-NoNewPrivileges=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+ProcSubset=pid
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources

@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-BASE="${MIKETAPS_BASE:-/srv/miketaps}"
+BASE="${MIKETAPS_BASE:-/srv/miketaps/site}"
 cd "${BASE}"
 
 live="$(readlink current 2>/dev/null || true)"

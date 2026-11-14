@@ -3,19 +3,20 @@
 #
 # Runs every 5 minutes from miketaps-update.timer. Safe to run by hand.
 # Only ever makes outbound requests to GitHub. Needs no token (public repo).
+# Runs as the unprivileged miketaps-deploy user, which can write only /srv/miketaps/site.
 #
 #   site-update            check for a new release and deploy it
 #   site-update --unpin    clear a rollback pin, then deploy the latest release
 #
 # Layout:
-#   /srv/miketaps/releases/<tag>/   unpacked releases (newest $KEEP kept; tags sort by date)
-#   /srv/miketaps/current           symlink to the live release
-#   /srv/miketaps/.pinned           present after site-rollback: updates paused
+#   /srv/miketaps/site/releases/<tag>/   unpacked releases (newest $KEEP kept; tags sort by date)
+#   /srv/miketaps/site/current           symlink to the live release
+#   /srv/miketaps/site/.pinned           present after site-rollback: updates paused
 
 set -euo pipefail
 
 REPO="mzarem01/miketaps-site"
-BASE="${MIKETAPS_BASE:-/srv/miketaps}"
+BASE="${MIKETAPS_BASE:-/srv/miketaps/site}"
 KEEP=5
 API="${MIKETAPS_API:-https://api.github.com/repos/${REPO}/releases/latest}"
 

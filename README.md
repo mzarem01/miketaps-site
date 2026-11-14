@@ -66,14 +66,16 @@ Needs Node 22.23.4 or newer.
 ## Server setup (one time)
 
 ```sh
-sudo mkdir -p /srv/miketaps/releases
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin miketaps-deploy
+sudo mkdir -p /srv/miketaps/site/releases
+sudo chown -R miketaps-deploy:miketaps-deploy /srv/miketaps/site
 sudo cp ops/compose.yaml /srv/miketaps/compose.yaml
 sudo cp -r ops/nginx /srv/miketaps/nginx
 sudo install -m 755 ops/bin/site-update ops/bin/site-rollback /usr/local/bin/
 sudo cp ops/systemd/miketaps-update.* /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now miketaps-update.timer
-sudo site-update
+sudo -u miketaps-deploy site-update
 cd /srv/miketaps && sudo docker compose up -d
 ```
 

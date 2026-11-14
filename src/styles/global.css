@@ -1,49 +1,131 @@
 /*
-  MikeTaps design tokens, "Field notes" direction.
-  Light: warm paper, burgundy accents, gold hairlines.
-  Dark: the "Rack room" palette, warm charcoal with the same accents.
-  Gold is decoration only (rules, marks). Never use --gold for body text.
+  MikeTaps design system: "The Workshop at Night"
+
+  Two themes, switched by the desk lamp on the homepage (and the lamp icon in the header):
+    lamp on  = light: warm cream paper, burgundy ink, gold lamplight
+    lamp off = dark:  warm charcoal room, the same accents glowing
+  With no saved choice, the visitor's system setting decides.
+
+  Color rules
+    - Burgundy carries identity: walls, headings accents, links.
+    - Gold is light and trim: lamplight, rules, highlights. Never body text on cream.
+    - Each section gets one accent on top of the shared base (see --accent per section).
+
+  Motion rules
+    - Motion explains something (an object lifting means "you can open this").
+    - 150 to 250 ms for feedback, up to 600 ms for scene changes. Ease out.
+    - prefers-reduced-motion: no movement, only quick fades.
 */
 
 :root {
-  --paper: #faf7f2;
-  --surface: #f3ede3;
-  --ink: #2a2220;
-  --ink-soft: #5a4d45;
-  --ink-faint: #7a6a5e;
+  /* paper and ink */
+  --paper: #f6efe3;
+  --paper-2: #efe5d3;
+  --card: #fbf7f0;
+  --ink: #261d1b;
+  --ink-soft: #57483f;
+  --ink-faint: #7b6a5d;
+  --rule: #dfd1bb;
+
+  /* brand */
   --burgundy: #6e1e28;
-  --burgundy-text: #6e1e28;
-  --burgundy-tint: #f1e4e4;
+  --burgundy-deep: #4a1219;
+  --burgundy-text: #7a1f2c;
+  --burgundy-tint: #f0dfdf;
   --gold: #c29b45;
+  --gold-bright: #e2c27a;
   --gold-text: #6b5218;
-  --gold-tint: #f5ecd6;
-  --rule: #e4d9c8;
+  --gold-tint: #f4e8cc;
+  --accent: var(--burgundy-text);
 
-  --font-serif: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  /* room scene */
+  --wall: #5a1820;
+  --wall-shade: #4a131a;
+  --wainscot: #3e1016;
+  --wainscot-line: #5e1d26;
+  --floor: #3a271d;
+  --floor-line: #4a3326;
+  --wood: #6b4630;
+  --wood-edge: #8a5e40;
+  --metal: #2a2426;
+  --metal-edge: #4a3f41;
+  --screen: #120e0f;
+  --glow: 0.22;
+  --scene-ink: #f6efe3;
+
+  /* type */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Source Sans 3 Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-mono: ui-monospace, 'Cascadia Code', 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --measure: 42rem;
-  --wide: 64rem;
-  --radius: 10px;
+  /* space and shape */
+  --measure: 40rem;
+  --wide: 76rem;
+  --radius: 14px;
+  --radius-sm: 8px;
 
-  color-scheme: light dark;
+  /* motion */
+  --fast: 160ms;
+  --base: 240ms;
+  --slow: 600ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --pop: cubic-bezier(0.3, 1.4, 0.5, 1);
+
+  color-scheme: light;
+}
+
+/* lamp off */
+:root[data-theme='dark'] {
+  --paper: #161112;
+  --paper-2: #1d1718;
+  --card: #221b1c;
+  --ink: #f2e9dc;
+  --ink-soft: #c7baac;
+  --ink-faint: #9b8e82;
+  --rule: #3a2f30;
+  --burgundy-text: #eaa4ad;
+  --burgundy-tint: #3a1c21;
+  --gold-text: #e6c983;
+  --gold-tint: #2f2716;
+  --wall: #2b1316;
+  --wall-shade: #230f12;
+  --wainscot: #1d0c0f;
+  --wainscot-line: #33161b;
+  --floor: #1c1410;
+  --floor-line: #261b15;
+  --wood: #3f2a1d;
+  --wood-edge: #563b29;
+  --metal: #1b1718;
+  --metal-edge: #352d2f;
+  --glow: 0.06;
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #171314;
-    --surface: #211b1c;
-    --ink: #f1e9dc;
-    --ink-soft: #c4b8ab;
-    --ink-faint: #9a8e82;
-    --burgundy: #8a2533;
-    --burgundy-text: #e8a3ac;
-    --burgundy-tint: #3a1d21;
-    --gold: #c29b45;
-    --gold-text: #e2c27a;
-    --gold-tint: #2e2616;
-    --rule: #3a3031;
+  :root:not([data-theme='light']) {
+    --paper: #161112;
+    --paper-2: #1d1718;
+    --card: #221b1c;
+    --ink: #f2e9dc;
+    --ink-soft: #c7baac;
+    --ink-faint: #9b8e82;
+    --rule: #3a2f30;
+    --burgundy-text: #eaa4ad;
+    --burgundy-tint: #3a1c21;
+    --gold-text: #e6c983;
+    --gold-tint: #2f2716;
+    --wall: #2b1316;
+    --wall-shade: #230f12;
+    --wainscot: #1d0c0f;
+    --wainscot-line: #33161b;
+    --floor: #1c1410;
+    --floor-line: #261b15;
+    --wood: #3f2a1d;
+    --wood-edge: #563b29;
+    --metal: #1b1718;
+    --metal-edge: #352d2f;
+    --glow: 0.06;
+    color-scheme: dark;
   }
 }
 
@@ -65,24 +147,30 @@ body {
   font-size: 1.125rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--slow) var(--ease), color var(--slow) var(--ease);
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: 560;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   margin: 0 0 0.5em;
+  font-variation-settings: 'opsz' 96;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-size: clamp(2.4rem, 6vw, 4.25rem);
 }
 
 h2 {
-  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+}
+
+h3 {
+  font-size: 1.35rem;
 }
 
 p {
@@ -90,9 +178,10 @@ p {
 }
 
 a {
-  color: var(--burgundy-text);
+  color: var(--accent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
+  transition: text-decoration-thickness var(--fast) var(--ease);
 }
 
 a:hover {
@@ -100,16 +189,14 @@ a:hover {
 }
 
 :focus-visible {
-  outline: 2px solid var(--burgundy-text);
+  outline: 2px solid var(--gold);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-.rule {
-  height: 1px;
-  background: var(--gold);
-  border: 0;
-  margin: 1.5rem 0;
+::selection {
+  background: var(--gold-tint);
+  color: var(--ink);
 }
 
 .wrap {
@@ -123,25 +210,44 @@ a:hover {
 }
 
 .eyebrow {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  letter-spacing: 0.14em;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
 
-.chip {
-  display: inline-block;
-  font-size: 0.85rem;
-  padding: 0.2rem 0.7rem;
-  border-radius: 999px;
-  background: var(--burgundy-tint);
-  color: var(--burgundy-text);
+.rule {
+  height: 1px;
+  border: 0;
+  background: var(--gold);
+  margin: 1.5rem 0;
 }
 
-.chip--gold {
-  background: var(--gold-tint);
-  color: var(--gold-text);
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 600 1rem/1 var(--font-sans);
+  padding: 0.8rem 1.15rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--burgundy);
+  background: var(--burgundy);
+  color: #f6efe3;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 3px 0 var(--burgundy-deep);
+  transition: transform var(--fast) var(--pop), box-shadow var(--fast) var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--burgundy-deep);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--burgundy-deep);
 }
 
 .sr-only {
@@ -160,8 +266,8 @@ a:hover {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition-duration: 1ms !important;
     scroll-behavior: auto !important;
   }
 }

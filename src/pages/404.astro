@@ -1,16 +1,35 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Not found">
-  <section class="nf prose">
+<Base title="Fumble">
+  <section class="wrap fumble">
+    <div class="ball" aria-hidden="true">
+      <svg viewBox="0 0 120 70" width="140">
+        <ellipse cx="60" cy="35" rx="56" ry="30" fill="#7a4a2a" />
+        <path d="M36 35h48M46 29v12M54 29v12M62 29v12M70 29v12" stroke="#f1e9dc" stroke-width="3" />
+      </svg>
+    </div>
     <p class="eyebrow">404</p>
-    <h1>Nothing here.</h1>
-    <p>That page doesn't exist, or it hasn't been built yet. <a href="/">Head back home</a>.</p>
+    <h1>Fumble.</h1>
+    <p class="prose">That page isn't on the field. It might not be built yet, or the link took a bad bounce.</p>
+    <a class="btn" href="/">Recover it: back to the workshop</a>
   </section>
 </Base>
 
 <style>
-  .nf {
-    padding: 3rem 0;
+  .fumble {
+    padding: clamp(3rem, 8vw, 6rem) 1.25rem 4rem;
+  }
+  .ball {
+    animation: bounce 1.6s var(--ease) 1;
+    transform-origin: center;
+    margin-bottom: 1rem;
+  }
+  @keyframes bounce {
+    0% { transform: translate(-60px, -30px) rotate(-40deg); opacity: 0; }
+    40% { transform: translate(0, 0) rotate(20deg); opacity: 1; }
+    60% { transform: translate(20px, -18px) rotate(60deg); }
+    80% { transform: translate(30px, 0) rotate(90deg); }
+    100% { transform: translate(0, 0) rotate(0); }
   }
 </style>

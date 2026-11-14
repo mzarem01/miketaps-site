@@ -1,27 +1,51 @@
 ---
-// The MikeTaps monogram: a burgundy circle with a serif M and a gold hairline ring.
-// Original mark. Keep it clear of anything that resembles a team logo.
+// The MikeTaps monogram. Original mark: burgundy disc, gold ring, serif M.
+// Ships with an 8-bit twin that only shows during the Konami code easter egg.
 interface Props {
   size?: number;
 }
 const { size = 36 } = Astro.props;
 ---
-<svg
-  class="monogram"
-  width={size}
-  height={size}
-  viewBox="0 0 64 64"
-  role="img"
-  aria-label="MikeTaps monogram"
->
-  <circle cx="32" cy="32" r="31" fill="#6e1e28" />
-  <circle cx="32" cy="32" r="27" fill="none" stroke="#c29b45" stroke-width="1.25" />
-  <text
-    x="32"
-    y="42"
-    text-anchor="middle"
-    font-family="Fraunces Variable, Georgia, serif"
-    font-size="30"
-    font-weight="500"
-    fill="#e2c27a">M</text>
-</svg>
+<span class="mono" style={`--size:${size}px`} aria-hidden="true">
+  <svg class="mono-hd" viewBox="0 0 64 64" width={size} height={size}>
+    <circle cx="32" cy="32" r="31" fill="#6e1e28" />
+    <circle cx="32" cy="32" r="26.5" fill="none" stroke="#c29b45" stroke-width="1.5" />
+    <text x="32" y="42.5" text-anchor="middle" font-family="Fraunces Variable, Georgia, serif" font-size="30" font-weight="600" fill="#e2c27a">M</text>
+  </svg>
+  <svg class="mono-8" viewBox="0 0 16 16" width={size} height={size} shape-rendering="crispEdges">
+    <rect x="4" y="0" width="8" height="1" fill="#6e1e28" />
+    <rect x="2" y="1" width="12" height="1" fill="#6e1e28" />
+    <rect x="1" y="2" width="14" height="12" fill="#6e1e28" />
+    <rect x="0" y="4" width="16" height="8" fill="#6e1e28" />
+    <rect x="2" y="14" width="12" height="1" fill="#6e1e28" />
+    <rect x="4" y="15" width="8" height="1" fill="#6e1e28" />
+    <rect x="4" y="4" width="2" height="8" fill="#e2c27a" />
+    <rect x="10" y="4" width="2" height="8" fill="#e2c27a" />
+    <rect x="6" y="5" width="1" height="2" fill="#e2c27a" />
+    <rect x="9" y="5" width="1" height="2" fill="#e2c27a" />
+    <rect x="7" y="7" width="2" height="2" fill="#e2c27a" />
+  </svg>
+</span>
+
+<style>
+  .mono {
+    display: inline-grid;
+    width: var(--size);
+    height: var(--size);
+  }
+  .mono > svg {
+    grid-area: 1 / 1;
+  }
+  .mono-8 {
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity var(--base) var(--ease), transform var(--base) var(--pop);
+  }
+  :global(.eight-bit) .mono-8 {
+    opacity: 1;
+    transform: scale(1);
+  }
+  :global(.eight-bit) .mono-hd {
+    opacity: 0;
+  }
+</style>

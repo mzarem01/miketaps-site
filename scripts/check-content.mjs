@@ -21,13 +21,25 @@ const self = 'scripts/check-content.mjs';
 
 const EM_DASH = String.fromCharCode(0x2014);
 
+// An address is exactly four numbers. Don't match inside a longer dotted run like
+// "0f.10.11.12.13" (minified libraries have lookup tables like that), but do still
+// match an address at the end of a sentence ("at 10.0.0.5.").
+const ip = (core) => new RegExp(`(?<![\\w.])${core.source}(?!\\.?\\d)`);
+
 const ipRules = [
-  { name: 'private LAN address (192.168.x.x)', re: /\b192\.168\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'private address (10.x.x.x)', re: /\b10\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'private address (172.16-31.x.x)', re: /\b172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b/ },
-  { name: 'Tailscale/CGNAT address (100.64-127.x.x)', re: /\b100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}\b/ },
+  { name: 'private LAN address (192.168.x.x)', re: ip(/192\.168\.\d{1,3}\.\d{1,3}/) },
+  { name: 'private address (10.x.x.x)', re: ip(/10\.\d{1,3}\.\d{1,3}\.\d{1,3}/) },
+  { name: 'private address (172.16-31.x.x)', re: ip(/172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}/) },
+  { name: 'Tailscale/CGNAT address (100.64-127.x.x)', re: ip(/100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}/) },
   { name: 'Tailscale MagicDNS name', re: /\.ts\.net\b/i },
 ];
+
+// Self-test: if the address rules ever stop catching real addresses, fail loudly
+// instead of passing everything.
+const mustCatch = ['at 10.0.0.5', 'at 10.0.0.5.', '(192.168.1.20)', 'http://172.20.0.3:8080', 'ip=100.101.5.6,'];
+const mustSkip = ['0f.10.11.12.13.14', '10.11.12.13.14', '1.10.0.0.1'];
+for (const t of mustCatch) if (!ipRules.some((r) => r.re.test(t))) { console.error(`Self-test failed: should catch "${t}"`); process.exit(1); }
+for (const t of mustSkip) if (ipRules.some((r) => r.re.test(t))) { console.error(`Self-test failed: should skip "${t}"`); process.exit(1); }
 
 function loadTerms() {
   const raw = process.env.PRIVACY_TERMS ?? (existsSync('.privacy-terms') ? readFileSync('.privacy-terms', 'utf8') : '');

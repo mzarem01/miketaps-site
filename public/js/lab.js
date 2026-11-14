@@ -19,7 +19,12 @@
     document.querySelectorAll('[data-row]').forEach(function (r) {
       r.classList.toggle('on', r === row);
     });
+    // Tell the 3D view (if it's open) which part is selected.
+    document.dispatchEvent(new CustomEvent('rig:selected', { detail: id }));
   }
+
+  // A click on a part in the 3D view selects it the same way.
+  document.addEventListener('rig:pick', function (e) { select(e.detail); });
 
   document.querySelectorAll('[data-part]').forEach(function (el) {
     var id = el.getAttribute('data-part');

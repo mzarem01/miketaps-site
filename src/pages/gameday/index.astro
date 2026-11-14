@@ -1,4 +1,5 @@
 ---
+import { BUILD } from '../../data/build';
 import Base from '../../layouts/Base.astro';
 import data from '../../data/commanders.json';
 
@@ -90,7 +91,7 @@ const payload = JSON.stringify({ facts, eras, sources }).replace(/</g, '\\u003c'
   </section>
 
   <script type="application/json" id="gameday-data" set:html={payload} />
-  <script is:inline src="/js/gameday.js" defer></script>
+  <script is:inline src={`/js/gameday.js?v=${BUILD}`} defer></script>
 </Base>
 
 <style>

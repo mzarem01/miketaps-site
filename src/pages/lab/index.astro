@@ -1,4 +1,5 @@
 ---
+import { BUILD } from '../../data/build';
 import Base from '../../layouts/Base.astro';
 
 const parts = [
@@ -186,7 +187,7 @@ const built = new Date().toISOString().slice(0, 10);
       </div>
     </section>
   </div>
-  <script is:inline src="/js/lab.js" defer></script>
+  <script is:inline src={`/js/lab.js?v=${BUILD}`} defer></script>
 </Base>
 
 <style>

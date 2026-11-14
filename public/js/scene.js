@@ -98,6 +98,7 @@
     now.hidden = false;
     now.textContent = 'Now playing: ' + info[channel] + '.';
     if (links[channel]) {
+      now.appendChild(document.createTextNode(' '));
       var a = document.createElement('a');
       a.href = links[channel][0];
       a.textContent = links[channel][1];

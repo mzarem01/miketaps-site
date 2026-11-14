@@ -1,0 +1,439 @@
+---
+import Base from '../../layouts/Base.astro';
+import data from '../../data/commanders.json';
+
+const { facts, eras, sources } = data as any;
+const eraName = Object.fromEntries(eras.map((e: any) => [e.id, e.name]));
+const payload = JSON.stringify({ facts, eras, sources });
+---
+<Base title="Gameday" description="Washington franchise history, one collectible card at a time. Every fact has a source." accent="#8a2533">
+  <section class="wrap head">
+    <p class="eyebrow">The MikeTaps history series</p>
+    <h1>Gameday</h1>
+    <p class="lede">
+      Washington football history, one card at a time. Deal yourself a card, flip it over, and
+      check the source if you don't believe it. Collect all {facts.length}.
+    </p>
+  </section>
+
+  <section class="wrap table" aria-label="Card table">
+    <div class="felt">
+      <div class="controls">
+        <div class="eras" role="group" aria-label="Deal from an era">
+          <button type="button" class="era on" data-era="all" aria-pressed="true">All eras</button>
+          {eras.map((e: any) => (
+            <button type="button" class="era" data-era={e.id} aria-pressed="false">{e.name}</button>
+          ))}
+        </div>
+        <p class="count"><span data-collected>0</span> of {facts.length} collected</p>
+      </div>
+
+      <div class="play">
+        <button type="button" class="deck" data-deal aria-label="Deal me a card">
+          <span class="back b3" aria-hidden="true"></span>
+          <span class="back b2" aria-hidden="true"></span>
+          <span class="back b1" aria-hidden="true"><span class="crest">M</span></span>
+        </button>
+
+        <div class="slot" aria-live="polite">
+          <div class="dealt" data-dealt hidden>
+            <article class="hcard" data-card>
+              <div class="hcard-inner">
+                <div class="face front">
+                  <span class="series">History series <span data-no></span></span>
+                  <span class="ribbon" data-era-name></span>
+                  <span class="year" data-year></span>
+                  <h2 class="ctitle" data-title></h2>
+                  <p class="flip-hint">Tap to flip</p>
+                </div>
+                <div class="face backside">
+                  <p class="cfact" data-fact></p>
+                  <a class="csrc" data-src href="#" target="_blank" rel="noopener">Source</a>
+                </div>
+              </div>
+            </article>
+          </div>
+          <p class="empty" data-empty>Click the deck. Your first card is waiting.</p>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn" data-deal>Deal me a card</button>
+          <button type="button" class="ghost" data-flip disabled>Flip it</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap binder" aria-labelledby="binder-h">
+    <h2 id="binder-h">The binder</h2>
+    <p class="sub">Every card in the set, by era. Cards you've been dealt get a gold corner.</p>
+    {eras.map((e: any) => (
+      <div class="era-block">
+        <h3>{e.name} <span>{e.span}</span></h3>
+        <ol class="sleeves">
+          {facts.filter((f: any) => f.era === e.id).map((f: any) => (
+            <li class="sleeve" data-sleeve={f.id}>
+              <span class="s-year">{f.year}</span>
+              <span class="s-title">{f.title}</span>
+              <span class="s-fact">{f.fact}</span>
+              <a class="s-src" href={sources[f.src].url}>{sources[f.src].title}</a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+    <p class="disclaimer">
+      A fan project. Not affiliated with the Washington Commanders or the NFL. Facts are written in
+      my own words from the linked sources.
+    </p>
+  </section>
+
+  <script type="application/json" id="gameday-data" set:html={payload} />
+  <script is:inline src="/js/gameday.js" defer></script>
+</Base>
+
+<style>
+  .head {
+    padding-top: clamp(1.75rem, 4vw, 3rem);
+    padding-bottom: 1.25rem;
+  }
+  .lede {
+    max-width: 40rem;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+  }
+  .felt {
+    border-radius: 24px;
+    padding: clamp(1rem, 3vw, 2rem);
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(194, 155, 69, 0.18), transparent 60%),
+      repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.04) 0 2px, transparent 2px 6px),
+      #4a1219;
+    color: #f2e9dc;
+    box-shadow: inset 0 0 0 1px rgba(194, 155, 69, 0.35), 0 30px 60px -30px rgba(40, 10, 14, 0.6);
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .eras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .era {
+    font: 600 0.9rem/1 var(--font-sans);
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(226, 194, 122, 0.45);
+    background: transparent;
+    color: #f2e9dc;
+    cursor: pointer;
+    transition: background-color var(--fast) var(--ease), transform var(--fast) var(--pop);
+  }
+  .era:active {
+    transform: scale(0.95);
+  }
+  .era.on {
+    background: #e2c27a;
+    color: #3a1d10;
+  }
+  .count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #e2c27a;
+  }
+  .play {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem 2rem;
+    align-items: center;
+    margin: 1.5rem auto 0;
+    max-width: 620px;
+  }
+  .deck {
+    position: relative;
+    width: 160px;
+    height: 224px;
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    grid-row: span 2;
+  }
+  .back {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background:
+      repeating-linear-gradient(45deg, rgba(226, 194, 122, 0.22) 0 2px, transparent 2px 12px),
+      repeating-linear-gradient(-45deg, rgba(226, 194, 122, 0.22) 0 2px, transparent 2px 12px),
+      #6e1e28;
+    border: 3px solid #f2e9dc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    transition: transform var(--base) var(--pop);
+  }
+  .b2 { transform: translate(4px, 4px) rotate(2deg); }
+  .b3 { transform: translate(8px, 8px) rotate(4deg); }
+  .crest {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #4a1219;
+    border: 2px solid #c29b45;
+    color: #e2c27a;
+    font-family: var(--font-display);
+    font-size: 2rem;
+  }
+  .deck:hover .b1,
+  .deck:focus-visible .b1 {
+    transform: translate(-6px, -8px) rotate(-3deg);
+  }
+  .deck:active .b1 {
+    transform: translate(-2px, -2px);
+  }
+  .slot {
+    min-height: 300px;
+    display: grid;
+    place-items: center start;
+  }
+  .empty {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-style: italic;
+    color: rgba(242, 233, 220, 0.75);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .actions .btn {
+    background: #e2c27a;
+    border-color: #e2c27a;
+    color: #3a1d10;
+    box-shadow: 0 3px 0 #9a7a33;
+  }
+  .ghost {
+    font: 600 1rem/1 var(--font-sans);
+    padding: 0.8rem 1.15rem;
+    border-radius: 999px;
+    border: 1.5px solid rgba(242, 233, 220, 0.6);
+    background: transparent;
+    color: #f2e9dc;
+    cursor: pointer;
+  }
+  .ghost:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  /* the card */
+  .dealt {
+    width: 100%;
+  }
+  .hcard {
+    width: 300px;
+    max-width: 100%;
+    aspect-ratio: 5 / 7;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .hcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 700ms var(--ease);
+  }
+  .hcard.flipped .hcard-inner {
+    transform: rotateY(180deg);
+  }
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    color: #261d1b;
+    background: #f6ecd8;
+    border: 8px solid #f6ecd8;
+    box-shadow: inset 0 0 0 2px #6e1e28, inset 0 0 0 5px #f6ecd8, inset 0 0 0 6px #c29b45, 0 14px 30px rgba(0, 0, 0, 0.4);
+  }
+  .front {
+    background:
+      radial-gradient(circle at 70% 20%, rgba(194, 155, 69, 0.25), transparent 50%),
+      #f6ecd8;
+  }
+  .series {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6e1e28;
+    display: flex;
+    justify-content: space-between;
+  }
+  .ribbon {
+    align-self: flex-start;
+    margin-top: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    background: #6e1e28;
+    color: #e2c27a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
+    padding-right: 1.1rem;
+  }
+  .year {
+    margin-top: auto;
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 14vw, 5.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    color: #6e1e28;
+    letter-spacing: -0.03em;
+  }
+  .ctitle {
+    font-size: 1.45rem;
+    margin: 0.4rem 0 0.3rem;
+    color: #261d1b;
+  }
+  .flip-hint {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: #7b6a5d;
+  }
+  .backside {
+    transform: rotateY(180deg);
+    justify-content: center;
+    background:
+      linear-gradient(#e8dcc3 1px, transparent 1px) 0 0 / 100% 1.6rem,
+      #f6ecd8;
+  }
+  .cfact {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    line-height: 1.45;
+  }
+  .csrc {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #6e1e28;
+  }
+  .dealt.enter .hcard {
+    animation: deal 520ms var(--ease);
+  }
+  @keyframes deal {
+    from { transform: translate(-180px, 10px) rotate(-12deg) scale(0.7); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+
+  /* binder */
+  .binder {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  .sub {
+    color: var(--ink-soft);
+  }
+  .era-block h3 {
+    margin-top: 2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .era-block h3 span {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+  .sleeves {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+  .sleeve {
+    position: relative;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .sleeve.have::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-style: solid;
+    border-width: 0 28px 28px 0;
+    border-color: transparent var(--gold) transparent transparent;
+  }
+  .s-year {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--burgundy-text);
+    line-height: 1;
+  }
+  .s-title {
+    font-weight: 700;
+  }
+  .s-fact {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .s-src {
+    font-size: 0.8rem;
+  }
+  .disclaimer {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+  @media (max-width: 640px) {
+    .play {
+      grid-template-columns: 1fr;
+    }
+    .deck {
+      grid-row: auto;
+      width: 120px;
+      height: 168px;
+      justify-self: center;
+    }
+    .slot {
+      place-items: center;
+    }
+    .actions {
+      justify-content: center;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hcard-inner {
+      transition: none;
+    }
+  }
+</style>

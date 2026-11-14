@@ -1,0 +1,440 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const parts = [
+  { id: 'cpu', name: 'CPU', model: 'AMD Ryzen 7 9800X3D', why: 'Eight cores with 3D V-Cache. Built for games, and it has plenty left over for everything else I throw at this box.' },
+  { id: 'cooler', name: 'Cooler', model: '240 mm liquid cooler', why: 'Keeps the CPU in check day to day. Under an all-out stress test it hits its limit, so a repaste is on my list.' },
+  { id: 'gpu', name: 'Graphics', model: 'XFX Radeon RX 9070 XT, 16 GB', why: 'Games, and my local AI. A 35-billion-parameter model fits entirely in its 16 GB once it is squeezed down.' },
+  { id: 'ram', name: 'Memory', model: 'G.Skill 2 x 16 GB DDR5-6000', why: '32 GB with EXPO on. Passed four clean passes of MemTest86.' },
+  { id: 'board', name: 'Motherboard', model: 'MSI PRO B650-VC WIFI', why: 'AM5, so there is an upgrade path for the CPU later.' },
+  { id: 'ssd', name: 'Storage', model: 'WD Green SN3000 2 TB NVMe', why: 'Backed up every night to the home server with Kopia.' },
+  { id: 'case', name: 'Case', model: 'HYTE Y40', why: 'Panoramic glass and a vertical GPU. Started life as a prebuilt, and I have been in it plenty since.' },
+  { id: 'psu', name: 'Power', model: 'About 850 W, plus a CyberPower 1500 VA UPS', why: 'Tested clean under load. The UPS rides out power blips and talks to the PC over USB.' },
+];
+
+const services = [
+  { name: 'Media server', note: 'Jellyfin, with hardware transcoding on the Intel iGPU' },
+  { name: 'Photos', note: 'Immich, replacing cloud photo storage' },
+  { name: 'DNS filtering', note: 'Pi-hole for the whole house' },
+  { name: 'Monitoring', note: 'Uptime Kuma with chat alerts, plus an outside check-in for full outages' },
+  { name: 'Backups', note: 'Nightly jobs that report in when they finish, a separate backup drive, and a monthly offsite copy' },
+  { name: 'Power', note: 'UPS with automatic clean shutdown on low battery' },
+  { name: 'This website', note: 'One locked-down container, the only public thing besides the media server' },
+];
+
+const built = new Date().toISOString().slice(0, 10);
+---
+<Base title="The Lab" description="The rig, the home server, and how this site runs, minus the private bits." accent="#3f8f6a">
+  <div class="lab">
+    <section class="wrap head">
+      <p class="eyebrow">The Lab</p>
+      <h1>The hardware behind it all.</h1>
+      <p class="lede">My main rig, the home server that runs the house, and how this site gets from my keyboard to your screen.</p>
+      <nav class="jump" aria-label="On this page">
+        <a href="#rig">The rig</a>
+        <a href="#homelab">The home server</a>
+        <a href="#site">How this site runs</a>
+      </nav>
+    </section>
+
+    <section id="rig" class="wrap rig" aria-labelledby="rig-h">
+      <h2 id="rig-h">The rig</h2>
+      <p class="sub">Click a part, or pick one from the list.</p>
+      <div class="rig-grid">
+        <svg class="case" viewBox="0 0 520 440" role="group" aria-label="The rig, with clickable parts">
+          <rect x="10" y="10" width="500" height="420" rx="18" class="c-body" />
+          <rect x="26" y="26" width="468" height="388" rx="10" class="c-glass" />
+          <g class="part" data-part="board" tabindex="0" role="button" aria-label="Motherboard">
+            <rect x="250" y="60" width="220" height="250" rx="6" class="pc board" />
+          </g>
+          <g class="part" data-part="cooler" tabindex="0" role="button" aria-label="Cooler">
+            <rect x="60" y="34" width="400" height="26" rx="5" class="pc rad" />
+            <circle cx="160" cy="47" r="10" class="fan-s" />
+            <circle cx="360" cy="47" r="10" class="fan-s" />
+          </g>
+          <g class="part" data-part="cpu" tabindex="0" role="button" aria-label="CPU">
+            <rect x="320" y="110" width="70" height="70" rx="8" class="pc cpu" />
+            <circle cx="355" cy="145" r="18" class="pump" />
+          </g>
+          <g class="part" data-part="ram" tabindex="0" role="button" aria-label="Memory">
+            <rect x="408" y="96" width="12" height="96" rx="2" class="pc ram" />
+            <rect x="428" y="96" width="12" height="96" rx="2" class="pc ram" />
+          </g>
+          <g class="part" data-part="ssd" tabindex="0" role="button" aria-label="Storage">
+            <rect x="300" y="236" width="120" height="16" rx="3" class="pc ssd" />
+          </g>
+          <g class="part" data-part="gpu" tabindex="0" role="button" aria-label="Graphics card">
+            <rect x="46" y="80" width="170" height="250" rx="10" class="pc gpu" />
+            <circle cx="131" cy="135" r="34" class="gfan" />
+            <circle cx="131" cy="205" r="34" class="gfan" />
+            <circle cx="131" cy="275" r="34" class="gfan" />
+            <rect x="52" y="86" width="6" height="238" fill="#c29b45" />
+          </g>
+          <g class="part" data-part="psu" tabindex="0" role="button" aria-label="Power">
+            <rect x="26" y="340" width="468" height="74" rx="6" class="pc shroud" />
+            <text x="410" y="384" class="hyte">HYTE</text>
+          </g>
+          <g class="part" data-part="case" tabindex="0" role="button" aria-label="Case">
+            <rect x="490" y="120" width="14" height="200" rx="4" class="pc edge" />
+          </g>
+        </svg>
+
+        <div class="detail" aria-live="polite">
+          <p class="eyebrow" data-p-name>Part</p>
+          <h3 data-p-model>Pick something in the case</h3>
+          <p data-p-why>Every part has a reason it's in there. Some reasons are better than others.</p>
+        </div>
+      </div>
+
+      <table class="specs">
+        <caption class="sr-only">Full parts list</caption>
+        <thead><tr><th>Part</th><th>Model</th><th>Notes</th></tr></thead>
+        <tbody>
+          {parts.map((p) => (
+            <tr data-row={p.id}>
+              <th scope="row"><button type="button" class="row-btn" data-part={p.id}>{p.name}</button></th>
+              <td class="model">{p.model}</td>
+              <td>{p.why}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="monitors">On the desk: an ASUS 27-inch 1440p 240 Hz OLED and an HP OMEN 34-inch ultrawide.</p>
+    </section>
+
+    <section id="homelab" class="wrap homelab" aria-labelledby="hl-h">
+      <h2 id="hl-h">The home server</h2>
+      <p class="sub">
+        A Dell OptiPlex 5050 (i7-7700, 32 GB) running Debian and about twenty containers. It
+        started as a 2009 office PC. <a href="/work/homelab/">The full story is in Work.</a>
+      </p>
+
+      <svg class="zones" viewBox="0 0 900 360" role="img" aria-labelledby="zones-t zones-d">
+        <title id="zones-t">How traffic reaches the home network</title>
+        <desc id="zones-d">Visitors reach this site through Cloudflare and an outbound tunnel. Mike's own devices use a private mesh VPN. Inside the house, the router firewall only lets other devices reach a short list of services on the server.</desc>
+        <defs>
+          <marker id="za" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar" /></marker>
+        </defs>
+        <rect x="20" y="30" width="190" height="300" rx="14" class="zone z-out" />
+        <text x="40" y="62" class="zt">The internet</text>
+        <rect x="42" y="90" width="146" height="54" rx="10" class="node" />
+        <text x="115" y="122" class="nt" text-anchor="middle">Visitors</text>
+        <rect x="42" y="230" width="146" height="54" rx="10" class="node" />
+        <text x="115" y="255" class="nt" text-anchor="middle">My phone</text>
+        <text x="115" y="273" class="ns" text-anchor="middle">and laptops</text>
+
+        <rect x="250" y="80" width="150" height="74" rx="12" class="node accent" />
+        <text x="325" y="112" class="nt" text-anchor="middle">Cloudflare</text>
+        <text x="325" y="132" class="ns" text-anchor="middle">HTTPS at the edge</text>
+
+        <rect x="440" y="30" width="440" height="300" rx="14" class="zone z-home" />
+        <text x="460" y="62" class="zt">Home</text>
+        <rect x="460" y="80" width="180" height="230" rx="12" class="zone z-srv" />
+        <text x="624" y="102" class="zt small" text-anchor="end">server zone</text>
+        <rect x="476" y="122" width="148" height="46" rx="9" class="node accent" />
+        <text x="550" y="150" class="nt" text-anchor="middle">This site</text>
+        <rect x="476" y="182" width="148" height="46" rx="9" class="node" />
+        <text x="550" y="210" class="nt" text-anchor="middle">Media server</text>
+        <rect x="476" y="242" width="148" height="52" rx="9" class="node dashed" />
+        <text x="550" y="264" class="nt" text-anchor="middle">Everything else</text>
+        <text x="550" y="282" class="ns" text-anchor="middle">private, VPN only</text>
+
+        <rect x="680" y="110" width="180" height="70" rx="12" class="node" />
+        <text x="770" y="140" class="nt" text-anchor="middle">Router firewall</text>
+        <text x="770" y="160" class="ns" text-anchor="middle">allows DNS and media only</text>
+        <rect x="680" y="220" width="180" height="70" rx="12" class="node" />
+        <text x="770" y="250" class="nt" text-anchor="middle">Wi-Fi devices</text>
+        <text x="770" y="270" class="ns" text-anchor="middle">TVs, phones, IoT</text>
+
+        <path d="M188 117H250" class="ln" marker-end="url(#za)" />
+        <path d="M400 117H440L460 140H476" class="ln" marker-end="url(#za)" />
+        <text x="325" y="174" class="ns" text-anchor="middle">outbound tunnel to home</text>
+        <path d="M188 257H420V268H476" class="ln vpn" marker-end="url(#za)" />
+        <text x="250" y="248" class="ns">private mesh VPN</text>
+        <path d="M770 220V180" class="ln" marker-end="url(#za)" />
+        <path d="M680 145H624" class="ln" marker-end="url(#za)" />
+      </svg>
+
+      <ul class="services">
+        {services.map((s) => (
+          <li><strong>{s.name}</strong><span>{s.note}</span></li>
+        ))}
+      </ul>
+      <p class="note">Addresses, hostnames, ports and the rest of the private details are left out on purpose.</p>
+    </section>
+
+    <section id="site" class="wrap colophon" aria-labelledby="site-h">
+      <h2 id="site-h">How this site runs</h2>
+      <p class="sub">
+        Built with Astro into plain HTML, CSS and a little JavaScript. No database, no logins, no
+        trackers. Served from the home server above.
+      </p>
+      <ol class="steps">
+        <li><span class="sn">1</span><strong>A change goes up as a pull request.</strong> Automated checks build the site and scan it for anything private.</li>
+        <li><span class="sn">2</span><strong>I review and merge it.</strong> Nothing goes live without that.</li>
+        <li><span class="sn">3</span><strong>GitHub builds a release.</strong> A tarball of the site plus its checksum.</li>
+        <li><span class="sn">4</span><strong>The server pulls it.</strong> Every few minutes it checks for a new release, verifies the checksum, and swaps it in. It never accepts an incoming connection to deploy.</li>
+        <li><span class="sn">5</span><strong>Cloudflare serves it to you.</strong> Through an outbound-only tunnel, so no ports are open at home.</li>
+      </ol>
+      <div class="facts">
+        <div><span class="k">Container</span><span class="v">Unprivileged nginx, read-only, no capabilities, 64 MB memory cap</span></div>
+        <div><span class="k">Rollback</span><span class="v">One command switches back to the previous release</span></div>
+        <div><span class="k">If my internet goes down</span><span class="v">Cloudflare shows an archived copy until it's back</span></div>
+        <div><span class="k">Your data</span><span class="v">Nothing collected. Your browser remembers the lamp, your cards and your belt stripes, and that's it</span></div>
+        <div><span class="k">This version</span><span class="v">Built {built}</span></div>
+        <div><span class="k">Source</span><span class="v"><a href="https://github.com/mzarem01/miketaps-site">github.com/mzarem01/miketaps-site</a></span></div>
+      </div>
+    </section>
+  </div>
+  <script is:inline src="/js/lab.js" defer></script>
+</Base>
+
+<style>
+  .lab {
+    --accent: #2f7a58;
+    --led: #6fcf87;
+  }
+  :global(:root[data-theme='dark']) .lab {
+    --accent: #7fd1a6;
+  }
+  .head {
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+  .lede {
+    max-width: 42rem;
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+  }
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .jump a {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+  }
+  section[id] {
+    scroll-margin-top: 90px;
+    padding-top: 2.5rem;
+  }
+  .sub {
+    color: var(--ink-soft);
+    max-width: 44rem;
+  }
+  .rig-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+  }
+  .case {
+    width: 100%;
+    height: auto;
+  }
+  .c-body { fill: #1b1718; stroke: #3a3335; stroke-width: 2; }
+  .c-glass { fill: #241f20; }
+  .pc { stroke: #4a4042; stroke-width: 1.5; transition: filter var(--base) var(--ease), stroke var(--base) var(--ease); }
+  .board { fill: #2b2527; }
+  .rad { fill: #322b2d; }
+  .fan-s { fill: none; stroke: #b0303f; stroke-width: 3; }
+  .cpu { fill: #3a3234; }
+  .pump { fill: #1b1718; stroke: #e2c27a; stroke-width: 3; }
+  .ram { fill: #5a5052; }
+  .ssd { fill: #2f6b4f; }
+  .gpu { fill: #2a2527; }
+  .gfan { fill: none; stroke: #b0303f; stroke-width: 4; }
+  .shroud { fill: #2b2527; }
+  .edge { fill: #3a3335; }
+  .hyte { font-family: var(--font-display); font-size: 18px; fill: #8b7f80; letter-spacing: 0.2em; }
+  .part { cursor: pointer; outline: none; }
+  .part:hover .pc,
+  .part:focus-visible .pc,
+  .part.on .pc {
+    stroke: #e2c27a;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(226, 194, 122, 0.6));
+  }
+  .detail {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+    background: var(--card);
+    min-height: 200px;
+  }
+  .detail h3 {
+    font-size: 1.5rem;
+  }
+  .specs {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.98rem;
+  }
+  .specs th,
+  .specs td {
+    text-align: left;
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .specs thead th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .row-btn {
+    font: 700 0.98rem var(--font-sans);
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .model {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  tr.on {
+    background: var(--gold-tint);
+  }
+  .monitors {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+  }
+  .zones {
+    width: 100%;
+    height: auto;
+    margin: 1rem 0;
+  }
+  .zone { fill: none; stroke: var(--rule); stroke-width: 2; }
+  .z-home { fill: color-mix(in srgb, var(--accent) 6%, transparent); stroke: var(--accent); }
+  .z-srv { stroke: var(--accent); stroke-dasharray: 6 5; }
+  .zt { font-family: var(--font-display); font-size: 18px; fill: var(--ink); }
+  .zt.small { font-size: 14px; fill: var(--ink-faint); font-family: var(--font-mono); }
+  .node { fill: var(--card); stroke: var(--ink-faint); stroke-width: 1.5; }
+  .node.accent { stroke: var(--accent); stroke-width: 2.5; }
+  .node.dashed { stroke-dasharray: 5 4; }
+  .nt { font-family: var(--font-sans); font-weight: 700; font-size: 15px; fill: var(--ink); }
+  .ns { font-family: var(--font-sans); font-size: 12.5px; fill: var(--ink-faint); }
+  .ln { fill: none; stroke: var(--ink-soft); stroke-width: 2; }
+  .ln.vpn { stroke-dasharray: 6 5; }
+  .ar { fill: var(--ink-soft); }
+  .services {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.6rem;
+  }
+  .services li {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    background: var(--card);
+  }
+  .services li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--led);
+    box-shadow: 0 0 6px var(--led);
+  }
+  .services span {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .note {
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+  }
+  .colophon {
+    padding-bottom: 3rem;
+  }
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 0.6rem;
+    counter-reset: s;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    column-gap: 0.8rem;
+    align-items: start;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+  }
+  .steps strong {
+    display: block;
+  }
+  .steps li > :not(.sn) {
+    grid-column: 2;
+  }
+  .sn {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.6rem;
+  }
+  .facts div {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px dashed var(--rule);
+  }
+  .k {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  @media (max-width: 760px) {
+    .rig-grid {
+      grid-template-columns: 1fr;
+    }
+    .model {
+      white-space: normal;
+    }
+    .specs thead {
+      display: none;
+    }
+    .specs tr {
+      display: grid;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .specs th,
+    .specs td {
+      border: 0;
+      padding: 0.15rem 0;
+    }
+  }
+</style>

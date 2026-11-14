@@ -97,23 +97,26 @@
 
   function render() {
     var have = P.have();
-    var total = P.list.length;
-    count.textContent = have.length + '/' + total;
-    n.textContent = have.length;
-    bar.style.width = Math.round((have.length / total) * 100) + '%';
-    plaque.setAttribute('aria-label', 'The plaque: ' + have.length + ' of ' + total + ' found. Open the list');
+    var main = P.list.filter(function (a) { return !a.secret; });
+    var total = main.length;
+    var got = main.filter(function (a) { return have.indexOf(a.id) !== -1; }).length;
+    count.textContent = got + '/' + total;
+    n.textContent = got;
+    bar.style.width = Math.round((got / total) * 100) + '%';
+    plaque.setAttribute('aria-label', 'The plaque: ' + got + ' of ' + total + ' found. Open the list');
     list.textContent = '';
     P.list.forEach(function (a, i) {
       var done = have.indexOf(a.id) !== -1;
-      if (studs[i]) studs[i].classList.toggle('on', done);
+      if (studs[i] && !a.secret) studs[i].classList.toggle('on', done);
       var li = document.createElement('li');
       if (done) li.className = 'is-done';
+      if (a.secret) li.className += ' is-secret';
       var mark = span('plaque-mark');
       mark.setAttribute('aria-hidden', 'true');
       if (done) mark.innerHTML = CHECK;
       var text = span('');
       text.appendChild(span('sr-only', done ? 'Found: ' : 'Not found yet: '));
-      text.appendChild(span('plaque-name', a.title));
+      text.appendChild(span('plaque-name', a.secret && !done ? '????' : a.title));
       text.appendChild(span('plaque-how', done ? a.done : a.hint));
       li.appendChild(mark);
       li.appendChild(text);

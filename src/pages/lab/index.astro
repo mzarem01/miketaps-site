@@ -23,6 +23,27 @@ const services = [
   { name: 'This website', note: 'One locked-down container, the only public thing besides the media server' },
 ];
 
+// The gear around the server, top to bottom as drawn in the rack.
+const gear = [
+  { id: 'router', name: 'Router and firewall', model: 'MikroTik hEX', why: 'Every connection to the server has to cross it. It runs an allow-list: my desktop gets full access, and everything else in the house gets DNS, the media server and the VPN. Nothing more.' },
+  { id: 'switch', name: 'Switch', model: 'Zyxel GS1900-8', why: 'Managed, so it can carry VLANs. It runs on battery with the router, because a server with no network is just a warm box.' },
+  { id: 'server', name: 'Server', model: 'Dell OptiPlex 5050 SFF, i7-7700, 32 GB', why: 'A used office PC that replaced my 2009 one in September 2026. It runs about twenty containers with no screen attached, and its Intel graphics handle video transcoding.' },
+  { id: 'media', name: 'Media drive', model: '8 TB external', why: 'Pooled with an internal SSD into one folder using mergerfs. No RAID: if one disk dies, the files on the other are still readable, and backups cover the rest.' },
+  { id: 'backup', name: 'Backup drive', model: '8 TB external', why: "Holds nothing but backups, and it's kept out of the pool, so one bad command can't wipe both copies. The nightly jobs check in with the monitor when they finish." },
+  { id: 'offsite', name: 'Offsite drive', model: '4 TB, rotated monthly', why: "Usually not here, and that's the point. Once a month it gets a fresh copy and leaves the house." },
+  { id: 'ups', name: 'UPS', model: 'CyberPower 1000 VA', why: 'Keeps the router, switch and server running through power blips. When the battery runs low, it tells the server to shut itself down cleanly.' },
+];
+
+// "Send a request" scenarios for the network diagram. Each path follows the lines drawn in it;
+// a jump (M) means the request passes through a box, like Cloudflare or the router.
+const traces = [
+  { id: 'visitor', label: 'A visitor loads this site', ok: true, path: 'M188 117H250M400 117H440L460 140H476', note: 'Cloudflare handles HTTPS, then hands the request down a tunnel the server opened from inside the house. No port is open at home.' },
+  { id: 'phone', label: 'I check the server from my phone', ok: true, path: 'M188 257H420V268H476', note: 'My own devices use a private mesh VPN. That is the only way in to the private services.' },
+  { id: 'probe', label: 'Someone looks for an admin page', ok: false, path: 'M188 117H250', note: "Stopped at Cloudflare. Only this site and the media server are published, and every other path or hostname gets a 404. Nothing at home is listening for the internet." },
+  { id: 'tv', label: 'A TV in the house plays a movie', ok: true, path: 'M770 220V180M680 145H640V205H624', note: 'The router firewall lets other devices in the house reach the media server and DNS.' },
+  { id: 'cam', label: 'The pet camera pokes at the server', ok: false, path: 'M770 220V180', note: 'Dropped and logged by the router. Devices in the house only get what they need, and everything else on the server is off limits to them.' },
+];
+
 const built = new Date().toISOString().slice(0, 10);
 ---
 <Base title="The Lab" description="The rig, the home server, and how this site runs, minus the private bits." accent="#3f8f6a">
@@ -119,7 +140,117 @@ const built = new Date().toISOString().slice(0, 10);
         started as a 2009 office PC. <a href="/work/homelab/">The full story is in Work.</a>
       </p>
 
-      <svg class="zones" viewBox="0 0 900 360" role="img" aria-labelledby="zones-t zones-d">
+      <h3 class="h3">The gear</h3>
+      <p class="sub">Click anything in the rack, or pick it from the list.</p>
+      <div class="rig-grid">
+        <figure class="rack-fig">
+          <svg class="rack" viewBox="0 0 440 520" role="group" aria-label="The home server gear, drawn as a rack, with clickable devices">
+            <rect x="20" y="10" width="400" height="500" rx="12" class="r-frame" />
+            <rect x="34" y="22" width="14" height="476" rx="2" class="r-rail" />
+            <rect x="392" y="22" width="14" height="476" rx="2" class="r-rail" />
+            {Array.from({ length: 24 }, (_, i) => (
+              <g class="r-holes">
+                <rect x="38" y={30 + i * 19.6} width="6" height="6" rx="1" />
+                <rect x="396" y={30 + i * 19.6} width="6" height="6" rx="1" />
+              </g>
+            ))}
+
+            <g class="gear" data-gear="router" tabindex="0" role="button" aria-label="Router and firewall">
+              <rect x="52" y="30" width="336" height="44" rx="5" class="u" />
+              <text x="66" y="57" class="u-t">hEX</text>
+              {[0, 1, 2, 3, 4].map((n) => (
+                <g><rect x={200 + n * 34} y="40" width="24" height="18" rx="2" class="port" /><circle cx={212 + n * 34} cy="65" r="2.6" class={`led g b${n % 3}`} /></g>
+              ))}
+              <circle cx="372" cy="52" r="3" class="led g" />
+            </g>
+
+            <g class="gear" data-gear="switch" tabindex="0" role="button" aria-label="Switch">
+              <rect x="52" y="84" width="336" height="44" rx="5" class="u" />
+              <text x="66" y="111" class="u-t">GS1900</text>
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <g><rect x={160 + n * 26} y="93" width="20" height="17" rx="2" class="port" /><circle cx={170 + n * 26} cy="118" r="2.4" class={n < 5 ? `led g b${(n + 1) % 3}` : 'led off'} /></g>
+              ))}
+              <circle cx="372" cy="106" r="3" class="led g" />
+            </g>
+
+            <g class="gear" data-gear="server" tabindex="0" role="button" aria-label="Server">
+              <rect x="52" y="138" width="336" height="96" rx="6" class="u srv" />
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                <rect x={70 + n * 14} y="156" width="6" height="60" rx="3" class="vent" />
+              ))}
+              <text x="210" y="176" class="u-t big">OPTIPLEX</text>
+              <rect x="210" y="190" width="110" height="8" rx="2" class="slot" />
+              <circle cx="356" cy="168" r="11" class="pwr" />
+              <circle cx="356" cy="168" r="11" class="pwr-ring" />
+              <circle cx="356" cy="200" r="2.8" class="led a b1" />
+            </g>
+
+            <g class="gear" data-gear="media" tabindex="0" role="button" aria-label="Media drive">
+              <rect x="52" y="244" width="336" height="56" rx="6" class="u drv" />
+              {[0, 1, 2, 3, 4, 5].map((n) => (
+                <rect x="70" y={254 + n * 6} width="120" height="2.5" rx="1" class="grille" />
+              ))}
+              <text x="210" y="278" class="u-t">8 TB</text>
+              <circle cx="372" cy="272" r="3" class="led w b2" />
+            </g>
+
+            <g class="gear" data-gear="backup" tabindex="0" role="button" aria-label="Backup drive">
+              <rect x="52" y="310" width="336" height="56" rx="6" class="u drv" />
+              {[0, 1, 2, 3, 4, 5].map((n) => (
+                <rect x="70" y={320 + n * 6} width="120" height="2.5" rx="1" class="grille" />
+              ))}
+              <text x="210" y="344" class="u-t">8 TB BACKUP</text>
+              <circle cx="372" cy="338" r="3" class="led w slow" />
+            </g>
+
+            <g class="gear" data-gear="offsite" tabindex="0" role="button" aria-label="Offsite drive">
+              <rect x="52" y="376" width="336" height="44" rx="5" class="u empty" />
+              <text x="220" y="403" class="u-t faint" text-anchor="middle">OFFSITE DRIVE: OUT OF THE HOUSE</text>
+            </g>
+
+            <g class="gear" data-gear="ups" tabindex="0" role="button" aria-label="UPS">
+              <rect x="52" y="430" width="336" height="68" rx="6" class="u ups" />
+              <rect x="70" y="446" width="84" height="36" rx="4" class="lcd" />
+              <text x="112" y="470" class="lcd-t" text-anchor="middle">100%</text>
+              <text x="180" y="469" class="u-t">CYBERPOWER</text>
+              <circle cx="356" cy="464" r="10" class="pwr" />
+              <circle cx="356" cy="464" r="10" class="pwr-ring" />
+            </g>
+          </svg>
+          <figcaption>A drawing, not a photo. There's no actual rack: in real life all of this sits in a corner.</figcaption>
+        </figure>
+
+        <div class="detail" aria-live="polite">
+          <p class="eyebrow" data-g-name>Gear</p>
+          <h3 data-g-model>Pick something in the rack</h3>
+          <p data-g-why>Seven things keep the house online. One of them is usually somewhere else.</p>
+        </div>
+      </div>
+
+      <table class="specs">
+        <caption class="sr-only">Home server gear</caption>
+        <thead><tr><th>Gear</th><th>Model</th><th>Notes</th></tr></thead>
+        <tbody>
+          {gear.map((g) => (
+            <tr data-gear-row={g.id}>
+              <th scope="row"><button type="button" class="row-btn" data-gear={g.id}>{g.name}</button></th>
+              <td class="model">{g.model}</td>
+              <td>{g.why}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 class="h3">How a request gets in (or doesn't)</h3>
+      <p class="sub">Pick a request and watch where it goes.</p>
+      <div class="trace-bar" data-trace-bar hidden>
+        {traces.map((t) => (
+          <button type="button" class="view-btn quiet" data-trace={t.id} data-path={t.path} data-ok={String(t.ok)} data-note={t.note} aria-pressed="false">{t.label}</button>
+        ))}
+      </div>
+      <p class="trace-note" data-trace-note aria-live="polite"></p>
+
+      <svg class="zones" data-zones viewBox="0 0 900 360" role="img" aria-labelledby="zones-t zones-d">
         <title id="zones-t">How traffic reaches the home network</title>
         <desc id="zones-d">Visitors reach this site through Cloudflare and an outbound tunnel. Mike's own devices use a private mesh VPN. Inside the house, the router firewall only lets other devices reach a short list of services on the server.</desc>
         <defs>
@@ -495,6 +626,90 @@ const built = new Date().toISOString().slice(0, 10);
     height: auto;
     margin: 1rem 0;
   }
+  .h3 {
+    margin-top: 2.2rem;
+    font-size: 1.35rem;
+  }
+  /* The rack */
+  .rack-fig {
+    margin: 0;
+  }
+  .rack {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .rack-fig figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .r-frame { fill: #1b1718; stroke: #3a3335; stroke-width: 2; }
+  .r-rail { fill: #2b2527; }
+  .r-holes rect { fill: #141112; }
+  .u { fill: #2b2527; stroke: #4a4042; stroke-width: 1.5; transition: filter var(--base) var(--ease), stroke var(--base) var(--ease); }
+  .u.srv { fill: #262122; }
+  .u.drv { fill: #221d1e; }
+  .u.ups { fill: #241f20; }
+  .u.empty { fill: none; stroke-dasharray: 6 5; }
+  .u-t { font: 700 11px var(--font-mono); fill: #8b7f80; letter-spacing: 0.12em; }
+  .u-t.big { font-size: 15px; letter-spacing: 0.3em; }
+  .u-t.faint { font-size: 10px; fill: #6d6264; }
+  .port { fill: #141112; stroke: #3a3335; }
+  .vent { fill: #1b1718; }
+  .slot { fill: #141112; }
+  .grille { fill: #1b1718; }
+  .pwr { fill: #1b1718; }
+  .pwr-ring { fill: none; stroke: #e2c27a; stroke-width: 2.5; }
+  .lcd { fill: #0f1a14; stroke: #2f6b4f; }
+  .lcd-t { font: 700 15px var(--font-mono); fill: #6fcf87; }
+  .led { fill: #6fcf87; }
+  .led.a { fill: #e2c27a; }
+  .led.w { fill: #e9e2d6; }
+  .led.off { fill: #3a3335; }
+  .gear { cursor: pointer; outline: none; }
+  .gear:hover .u,
+  .gear:focus-visible .u,
+  .gear.on .u {
+    stroke: #e2c27a;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(226, 194, 122, 0.6));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .led.b0 { animation: blink 0.9s steps(2, jump-none) infinite; }
+    .led.b1 { animation: blink 1.4s steps(2, jump-none) infinite 0.3s; }
+    .led.b2 { animation: blink 2.1s steps(2, jump-none) infinite 0.7s; }
+    .led.slow { animation: blink 3.2s steps(2, jump-none) infinite; }
+  }
+  @keyframes blink {
+    50% { opacity: 0.25; }
+  }
+  /* Request trace */
+  .trace-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.8rem 0 0.4rem;
+  }
+  .trace-bar .view-btn {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+  }
+  .trace-note {
+    min-height: 1.6em;
+    margin: 0.4rem 0 0;
+    color: var(--ink-soft);
+  }
+  .trace-note.ok::before { content: 'Allowed. '; font-weight: 700; color: var(--accent); }
+  .trace-note.no::before { content: 'Blocked. '; font-weight: 700; color: var(--burgundy-text); }
+  .zones :global(.trace-line) { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+  .zones :global(.trace-dot) { fill: var(--gold-bright); stroke: var(--ink); stroke-width: 1.5; }
+  .zones :global(.trace-end.ok) { fill: var(--accent); }
+  .zones :global(.trace-end.no) { fill: var(--burgundy); }
+  .zones :global(.trace-mark) { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
   .zone { fill: none; stroke: var(--rule); stroke-width: 2; }
   .z-home { fill: color-mix(in srgb, var(--accent) 6%, transparent); stroke: var(--accent); }
   .z-srv { stroke: var(--accent); stroke-dasharray: 6 5; }

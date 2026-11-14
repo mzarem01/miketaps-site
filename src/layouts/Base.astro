@@ -3,6 +3,7 @@ import { BUILD } from '../data/build';
 import '@fontsource-variable/fraunces';
 import '@fontsource-variable/source-sans-3';
 import '../styles/global.css';
+import '../styles/found.css';
 import Monogram from '../components/Monogram.astro';
 import { sections } from '../data/sections';
 
@@ -29,6 +30,7 @@ const year = new Date().getFullYear();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline src={`/js/theme.js?v=${BUILD}`}></script>
+    <script is:inline src={`/js/found.js?v=${BUILD}`} defer></script>
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />

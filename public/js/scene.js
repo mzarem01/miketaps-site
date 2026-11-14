@@ -30,7 +30,10 @@
     var m = d.getMonth();
     if (m === 11 || m <= 1) scene.setAttribute('data-snow', '');
     else scene.removeAttribute('data-snow');
-    document.dispatchEvent(new CustomEvent('miketaps:sky', { detail: p }));
+    // Seeing the window at dawn or at night counts toward the plaque (found.js).
+    if ((p === 'dawn' || p === 'night') && window.mtFound) {
+      setTimeout(function () { window.mtFound(p); }, 1500);
+    }
   }
   update();
   // Fade only on later changes, so the first paint never shows night melting into day.
@@ -60,6 +63,7 @@
   // Let the page settle, then award the stripe so the animation is visible.
   setTimeout(function () {
     scene.setAttribute('data-stripes', String(stripes));
+    if (stripes > 0 && window.mtFound) window.mtFound('stripe');
   }, 500);
   var tip = scene.querySelector('[data-stripe-tip]');
   if (tip) {
@@ -67,6 +71,87 @@
       : stripes < 4 ? stripes + (stripes > 1 ? ' stripes' : ' stripe') + '. Come back'
       : '4 stripes. Next belt?';
   }
+})();
+
+// The plaque on the wall: shows what you have found (found.js keeps the list).
+(function () {
+  var plaque = document.querySelector('[data-plaque]');
+  var dialog = document.querySelector('[data-plaque-dialog]');
+  var P = window.mtPlaque;
+  if (!plaque || !dialog || !P || !dialog.showModal) return;
+  var count = plaque.querySelector('[data-plaque-count]');
+  var studs = plaque.querySelectorAll('[data-stud]');
+  var list = dialog.querySelector('[data-plaque-list]');
+  var n = dialog.querySelector('[data-plaque-n]');
+  var bar = dialog.querySelector('[data-plaque-bar]');
+  var reset = dialog.querySelector('[data-plaque-reset]');
+  var CHECK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var armed = false;
+
+  function span(cls, text) {
+    var s = document.createElement('span');
+    s.className = cls;
+    if (text) s.textContent = text;
+    return s;
+  }
+
+  function render() {
+    var have = P.have();
+    var total = P.list.length;
+    count.textContent = have.length + '/' + total;
+    n.textContent = have.length;
+    bar.style.width = Math.round((have.length / total) * 100) + '%';
+    plaque.setAttribute('aria-label', 'The plaque: ' + have.length + ' of ' + total + ' found. Open the list');
+    list.textContent = '';
+    P.list.forEach(function (a, i) {
+      var done = have.indexOf(a.id) !== -1;
+      if (studs[i]) studs[i].classList.toggle('on', done);
+      var li = document.createElement('li');
+      if (done) li.className = 'is-done';
+      var mark = span('plaque-mark');
+      mark.setAttribute('aria-hidden', 'true');
+      if (done) mark.innerHTML = CHECK;
+      var text = span('');
+      text.appendChild(span('sr-only', done ? 'Found: ' : 'Not found yet: '));
+      text.appendChild(span('plaque-name', a.title));
+      text.appendChild(span('plaque-how', done ? a.done : a.hint));
+      li.appendChild(mark);
+      li.appendChild(text);
+      list.appendChild(li);
+    });
+  }
+
+  function open() {
+    render();
+    armed = false;
+    reset.textContent = 'Start over';
+    dialog.showModal();
+  }
+
+  plaque.addEventListener('click', open);
+  plaque.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      open();
+    }
+  });
+  // Click outside the panel to close it.
+  dialog.addEventListener('click', function (e) {
+    if (e.target === dialog) dialog.close();
+  });
+  // Two clicks to start over, so one slip does not wipe the list.
+  reset.addEventListener('click', function () {
+    if (!armed) {
+      armed = true;
+      reset.textContent = 'Sure? Click again';
+      return;
+    }
+    armed = false;
+    reset.textContent = 'Start over';
+    P.reset();
+  });
+  document.addEventListener('miketaps:found', render);
+  render();
 })();
 
 // On narrow screens the room scrolls sideways: start centered on the desk.

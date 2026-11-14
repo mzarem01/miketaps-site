@@ -270,10 +270,17 @@
       <video class="tv-video" data-ch="1" muted loop playsinline preload="none" poster="/media/ch1-epona.jpg" aria-label="Clip: riding Epona across Hyrule Field">
         <source src="/media/ch1-epona.mp4" type="video/mp4" />
       </video>
-      <video class="tv-video" data-ch="2" muted loop playsinline preload="none" poster="/media/ch2-volvagia.jpg" aria-label="Clip: the final hits on Volvagia">
+      <video class="tv-video" data-ch="3" muted loop playsinline preload="none" poster="/media/ch2-volvagia.jpg" aria-label="Clip: the final hits on Volvagia">
         <source src="/media/ch2-volvagia.mp4" type="video/mp4" />
       </video>
-      <div class="tv-bars" data-ch="3" aria-label="Test pattern">
+      <div class="tv-21" data-ch="2" role="img" aria-label="Tribute to Sean Taylor, number 21">
+        <span class="t-num" aria-hidden="true">21</span>
+        <span class="t-name">Sean Taylor</span>
+        <span class="t-line">Drafted 5th overall, 2004</span>
+        <span class="t-line">"Meast"</span>
+        <span class="t-line gold">No. 21 retired, Oct 17, 2021</span>
+      </div>
+      <div class="tv-bars" data-ch="4" aria-label="Test pattern">
         <span></span><span></span><span></span><span></span><span></span><span></span>
         <p>MIKETAPS<br /><small>Please stand by</small></p>
       </div>
@@ -328,8 +335,46 @@
     display: none;
   }
   .tv[data-on='1'] [data-ch='1'],
-  .tv[data-on='2'] [data-ch='2'] { display: block; }
-  .tv[data-on='3'] [data-ch='3'] { display: flex; }
+  .tv[data-on='3'] [data-ch='3'] { display: block; }
+  .tv[data-on='2'] [data-ch='2'],
+  .tv[data-on='4'] [data-ch='4'] { display: flex; }
+  .tv-21 {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 9% 7% 0;
+    background:
+      radial-gradient(ellipse at 85% 50%, rgba(226, 194, 122, 0.22), transparent 55%),
+      linear-gradient(135deg, #4a1219, #6e1e28 60%, #4a1219);
+    color: #f6efe3;
+    overflow: hidden;
+  }
+  .t-num {
+    position: absolute;
+    right: 3%;
+    top: 50%;
+    transform: translateY(-50%);
+    font: 700 clamp(50px, 8.5vw, 116px)/1 var(--font-display);
+    color: transparent;
+    -webkit-text-stroke: 2px #e2c27a;
+    opacity: 0.45;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+  .t-name {
+    font: 600 clamp(13px, 1.9vw, 24px)/1.1 var(--font-display);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.35em;
+    max-width: 58%;
+  }
+  .t-line {
+    font: 500 clamp(8px, 0.95vw, 12.5px)/1.45 var(--font-sans);
+    color: #e9dcc4;
+    max-width: 58%;
+  }
+  .t-line.gold { color: #e2c27a; font-weight: 700; }
+  @keyframes shimmer { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.6; } }
   .tv-bars span { flex: 1; }
   .tv-bars span:nth-child(1) { background: #f6efe3; }
   .tv-bars span:nth-child(2) { background: #e2c27a; }
@@ -378,7 +423,8 @@
   .tv-btn .waves { display: none; }
   .tv-btn[aria-pressed='true'] .waves { display: inline; }
   .tv-btn[aria-pressed='true'] .x { display: none; }
-  .tv[data-on='3'] [data-tv-sound] { display: none; }
+  .tv[data-on='2'] [data-tv-sound],
+  .tv[data-on='4'] [data-tv-sound] { display: none; }
   .tv-play { left: 50%; top: 50%; right: auto; bottom: auto; transform: translate(-50%, -50%); width: 44px; height: 44px; font-size: 16px; display: none; }
   .tv.needs-play .tv-play { display: grid; }
   .tv-static {

@@ -10,6 +10,7 @@
   var input = term.querySelector('[data-term-in]');
   var NOTE = 'dGhlIHJhY2sgaGFzIGEgYmFjayBkb29yLiBrbm9jayB0aHJlZSB0aW1lcy4=';
   var lastArrow = 0;
+  var tv = document.querySelector('[data-tv]');
 
   function print(text, cls) {
     var d = document.createElement('div');
@@ -22,6 +23,8 @@
   function open() {
     if (term.hidden) {
       term.hidden = false;
+      // The terminal and the TV share the monitor: tell the TV to switch off (scene.js).
+      document.dispatchEvent(new CustomEvent('miketaps:terminal'));
       if (!out.children.length) {
         print('workshop terminal v0.1');
         print('the lights are on but mike is out.');
@@ -80,8 +83,19 @@
     var t = e.target;
     if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
     if (!/^[a-z]$/i.test(e.key) || Date.now() - lastArrow < 2500 || !sceneVisible()) return;
+    // Typing while a clip is playing leaves the TV alone; the keyboard on the desk still switches over.
+    if (tv && !tv.hidden) return;
     open();
   });
+
+  // Pressing the controller hands the monitor back to the TV.
+  var remote = document.querySelector('[data-tv-remote]');
+  if (remote) {
+    remote.addEventListener('click', close);
+    remote.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') close();
+    });
+  }
 
   // The keyboard on the desk does the same (phones have no keys to press).
   var key = document.querySelector('[data-term-key]');

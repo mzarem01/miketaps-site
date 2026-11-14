@@ -252,6 +252,18 @@
     setNow();
   }
 
+  // The desk terminal (puzzle.js) shares the monitor: opening it switches the TV off.
+  document.addEventListener('miketaps:terminal', function () {
+    if (!channel) return;
+    channel = 0;
+    stopAll();
+    tv.hidden = true;
+    tv.removeAttribute('data-on');
+    tv.classList.remove('needs-play');
+    if (tip) tip.textContent = next[0];
+    setNow();
+  });
+
   remote.addEventListener('click', tune);
   remote.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') {

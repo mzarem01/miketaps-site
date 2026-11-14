@@ -44,6 +44,89 @@ const traces = [
   { id: 'cam', label: 'The pet camera pokes at the server', ok: false, path: 'M770 220V180', note: 'Dropped and logged by the router. Devices in the house only get what they need, and everything else on the server is off limits to them.' },
 ];
 
+// Stories that play on the rack drawing. Each step lights up some gear and sets the
+// rack's state (on battery, low battery, server off, offsite drive home).
+const stories = [
+  {
+    id: 'power',
+    label: 'Pull the plug',
+    steps: [
+      { gear: ['ups'], state: 'batt', title: 'The power goes out', text: "The UPS switches to battery right away. The router, switch and server don't even blink." },
+      { gear: ['ups', 'server'], state: 'low', title: 'The battery runs low', text: 'The UPS tells the server, and the server shuts itself down cleanly instead of losing power in the middle of a write.' },
+      { gear: ['server'], state: 'off', title: 'This site goes dark', text: "Nothing at home is answering, so Cloudflare shows its saved copy of the site instead of an error." },
+      { gear: ['server'], state: 'off', title: 'Someone gets told', text: 'The server checks in with an outside service every few minutes. When the check-ins stop, an alert lands in my chat, even though the server can no longer send one itself.' },
+      { gear: ['ups', 'server'], state: '', title: 'Power comes back', text: 'The UPS recharges. Once the server is back on, every service starts on its own and the monitor goes green again.' },
+    ],
+  },
+  {
+    id: 'backup',
+    label: 'Follow a backup',
+    steps: [
+      { gear: ['server'], state: '', title: 'Overnight, the server packs up', text: "A nightly job bundles up every app's settings, and the photo database gets dumped to an internal disk." },
+      { gear: ['server'], state: '', title: 'My desktop checks in too', text: 'My main PC backs itself up to the server every night.' },
+      { gear: ['media', 'backup'], state: '', title: 'Copied to the backup drive', text: 'Then the media, the photos and those bundles get copied to the separate backup drive. Two disks, so one failure never takes both copies.' },
+      { gear: ['server'], state: '', title: 'Every job reports in', text: "Each job pings the monitor when it finishes. If a ping doesn't arrive, I get an alert, so a backup can't quietly stop running." },
+      { gear: ['offsite', 'backup'], state: 'home', title: 'Once a month, a copy leaves', text: "The offsite drive comes home, gets a fresh copy, and leaves again. A fire or a break-in can't take every copy at once." },
+    ],
+  },
+];
+
+// The 2009 office PC versus the OptiPlex. Bars are only drawn where there's a number to compare.
+const compare = [
+  { k: 'Built around', then: '2009', now: '2017' },
+  { k: 'CPU', then: 'AMD Athlon II X4 620, 4 threads', now: 'Intel i7-7700, 8 threads', a: 4, b: 8 },
+  { k: 'Memory', then: '8 GB', now: '32 GB', a: 8, b: 32 },
+  { k: 'USB', then: 'USB 2.0 only', now: 'USB 3.0' },
+  { k: 'External drive speed*', then: 'About 32 MB/s', now: 'About 202 MB/s', a: 32, b: 202 },
+  { k: 'Hardware video transcoding', then: 'None', now: 'Intel Quick Sync: 0.8 s of CPU time for 20 s of 1080p video, versus 15.9 s in software*' },
+];
+
+// Real incidents, step by step. Everything here is from the write-ups linked on each one.
+const incidents = [
+  {
+    id: 'load',
+    title: 'Load 5.8, CPU 11%',
+    when: 'August 2026',
+    href: '/work/io-wait-postmortem/',
+    steps: [
+      { k: 'Symptom', t: 'Web pages on the server took seconds to load, SSH lagged and video stuttered. Load average: 5.78 on four cores.' },
+      { k: 'First guess', t: 'The 2009 CPU is finally too slow. It fit every symptom, and it was wrong.' },
+      { k: 'Evidence', t: 'All the containers together were using about 11 to 12 percent CPU. The box was waiting, not working.' },
+      { k: 'Cause', t: "Disk I/O I'd set up myself: too many transfers at once on a spinning disk, and monitoring that sampled everything every second." },
+      { k: 'Fix', t: 'Fewer transfers at once, and monitoring slowed to every 5 seconds. Load went from 5.78 to 3.23 within minutes. No hardware, no reboot.' },
+    ],
+  },
+  {
+    id: 'counters',
+    title: 'The firewall that saw nothing',
+    when: 'October 2026',
+    href: '/work/network-upgrade/',
+    steps: [
+      { k: 'Symptom', t: 'I turned on the new firewall rules, tested, and everything worked.' },
+      { k: 'Clue', t: "Every rule's counter read zero. A rule that never matches anything isn't filtering anything." },
+      { k: 'Cause', t: "The router's switch chip was passing traffic between those ports in hardware, so the firewall never saw a packet." },
+      { k: 'Fix', t: "Hardware offload off on the server's port, and IPv6 blocked there so nothing could route around the rules. The counters started climbing right away." },
+      { k: 'Lesson', t: 'Check the counters, not just that things still work.' },
+    ],
+  },
+  {
+    id: 'ssh',
+    title: 'Locked out by my own lock',
+    when: '2026',
+    href: '/work/homelab/',
+    steps: [
+      { k: 'Change', t: 'I made SSH key-only, so passwords stopped working entirely.' },
+      { k: 'Symptom', t: "Two weeks later my phone couldn't sign in to the server." },
+      { k: 'Cause', t: 'The phone had been relying on the door I just closed.' },
+      { k: 'Fix', t: 'SSH through the mesh VPN, so the phone signs in with its VPN identity.' },
+      { k: 'Lesson', t: 'Before closing a door, check what still uses it.' },
+    ],
+  },
+];
+
+// Embedded for the page script. "<" is escaped so the JSON can't close the script tag.
+const storyJson = JSON.stringify(stories).replace(/</g, '\\u003c');
+
 const built = new Date().toISOString().slice(0, 10);
 ---
 <Base title="The Lab" description="The rig, the home server, and how this site runs, minus the private bits." accent="#3f8f6a">
@@ -144,7 +227,7 @@ const built = new Date().toISOString().slice(0, 10);
       <p class="sub">Click anything in the rack, or pick it from the list.</p>
       <div class="rig-grid">
         <figure class="rack-fig">
-          <svg class="rack" viewBox="0 0 440 520" role="group" aria-label="The home server gear, drawn as a rack, with clickable devices">
+          <svg class="rack" data-rack viewBox="0 0 440 520" role="group" aria-label="The home server gear, drawn as a rack, with clickable devices">
             <rect x="20" y="10" width="400" height="500" rx="12" class="r-frame" />
             <rect x="34" y="22" width="14" height="476" rx="2" class="r-rail" />
             <rect x="392" y="22" width="14" height="476" rx="2" class="r-rail" />
@@ -205,13 +288,18 @@ const built = new Date().toISOString().slice(0, 10);
 
             <g class="gear" data-gear="offsite" tabindex="0" role="button" aria-label="Offsite drive">
               <rect x="52" y="376" width="336" height="44" rx="5" class="u empty" />
-              <text x="220" y="403" class="u-t faint" text-anchor="middle">OFFSITE DRIVE: OUT OF THE HOUSE</text>
+              <text x="220" y="403" class="u-t faint off-away" text-anchor="middle">OFFSITE DRIVE: OUT OF THE HOUSE</text>
+              <g class="off-home">
+                <rect x="60" y="382" width="320" height="32" rx="4" class="u-in" />
+                <text x="210" y="403" class="u-t">4 TB OFFSITE</text>
+                <circle cx="364" cy="398" r="3" class="led w b0" />
+              </g>
             </g>
 
             <g class="gear" data-gear="ups" tabindex="0" role="button" aria-label="UPS">
               <rect x="52" y="430" width="336" height="68" rx="6" class="u ups" />
               <rect x="70" y="446" width="84" height="36" rx="4" class="lcd" />
-              <text x="112" y="470" class="lcd-t" text-anchor="middle">100%</text>
+              <text x="112" y="470" class="lcd-t" text-anchor="middle" data-lcd>100%</text>
               <text x="180" y="469" class="u-t">CYBERPOWER</text>
               <circle cx="356" cy="464" r="10" class="pwr" />
               <circle cx="356" cy="464" r="10" class="pwr-ring" />
@@ -220,10 +308,33 @@ const built = new Date().toISOString().slice(0, 10);
           <figcaption>A drawing, not a photo. There's no actual rack: in real life all of this sits in a corner.</figcaption>
         </figure>
 
-        <div class="detail" aria-live="polite">
-          <p class="eyebrow" data-g-name>Gear</p>
-          <h3 data-g-model>Pick something in the rack</h3>
-          <p data-g-why>Seven things keep the house online. One of them is usually somewhere else.</p>
+        <div class="side">
+          <div class="detail" aria-live="polite">
+            <p class="eyebrow" data-g-name>Gear</p>
+            <h3 data-g-model>Pick something in the rack</h3>
+            <p data-g-why>Seven things keep the house online. One of them is usually somewhere else.</p>
+            <div class="story-nav" data-story-nav hidden>
+              <button type="button" class="view-btn quiet" data-story-prev>Back</button>
+              <span class="story-count" data-story-count></span>
+              <button type="button" class="view-btn" data-story-next>Next</button>
+            </div>
+          </div>
+          <div class="story-bar" data-story-bar hidden>
+            <span class="k">Play it out</span>
+            {stories.map((st) => (
+              <button type="button" class="view-btn quiet" data-story={st.id} aria-pressed="false">{st.label}</button>
+            ))}
+          </div>
+          {stories.map((st) => (
+            <details class="story-text" data-story-text>
+              <summary>{st.label}</summary>
+              <ol>
+                {st.steps.map((x) => (
+                  <li><strong>{x.title}.</strong> {x.text}</li>
+                ))}
+              </ol>
+            </details>
+          ))}
         </div>
       </div>
 
@@ -241,6 +352,32 @@ const built = new Date().toISOString().slice(0, 10);
         </tbody>
       </table>
 
+      <h3 class="h3">Then and now</h3>
+      <p class="sub">The 2009 office PC this all started on, next to the server that replaced it.</p>
+      <div class="cmp" data-cmp>
+        <div class="cmp-bar" data-cmp-bar hidden role="group" aria-label="Show which server">
+          <button type="button" class="view-btn" data-cmp-pick="then" aria-pressed="false">2009 office PC</button>
+          <button type="button" class="view-btn" data-cmp-pick="now" aria-pressed="true">Dell OptiPlex 5050</button>
+        </div>
+        <dl class="cmp-rows">
+          {compare.map((r) => {
+            const max = Math.max(r.a ?? 0, r.b ?? 0);
+            return (
+              <div class="cmp-row">
+                <dt>{r.k}</dt>
+                <dd>
+                  <span class="v-then">{r.then}</span><span class="v-arrow" aria-hidden="true"> to </span><span class="v-now">{r.now}</span>
+                  {max > 0 && (
+                    <span class="cmp-meter" aria-hidden="true" data-then={String(Math.round(((r.a ?? 0) / max) * 100))} data-now={String(Math.round(((r.b ?? 0) / max) * 100))}><span class="cmp-fill"></span></span>
+                  )}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+        <p class="note">* Measured on my own hardware. Old drive speed: copying a 2.3 GB backup over USB 2.0. New: reading from the media drive over USB 3.0. Both transcoding numbers are from the new server, with and without Quick Sync.</p>
+      </div>
+
       <h3 class="h3">How a request gets in (or doesn't)</h3>
       <p class="sub">Pick a request and watch where it goes.</p>
       <div class="trace-bar" data-trace-bar hidden>
@@ -250,6 +387,7 @@ const built = new Date().toISOString().slice(0, 10);
       </div>
       <p class="trace-note" data-trace-note aria-live="polite"></p>
 
+      <div class="zones-scroll" data-zones-wrap>
       <svg class="zones" data-zones viewBox="0 0 900 360" role="img" aria-labelledby="zones-t zones-d">
         <title id="zones-t">How traffic reaches the home network</title>
         <desc id="zones-d">Visitors reach this site through Cloudflare and an outbound tunnel. Mike's own devices use a private mesh VPN. Inside the house, the router firewall only lets other devices reach a short list of services on the server.</desc>
@@ -295,6 +433,7 @@ const built = new Date().toISOString().slice(0, 10);
         <path d="M770 220V180" class="ln" marker-end="url(#za)" />
         <path d="M680 145H624" class="ln" marker-end="url(#za)" />
       </svg>
+      </div>
 
       <ul class="services">
         {services.map((s) => (
@@ -302,6 +441,35 @@ const built = new Date().toISOString().slice(0, 10);
         ))}
       </ul>
       <p class="note">Addresses, hostnames, ports and the rest of the private details are left out on purpose.</p>
+
+      <h3 class="h3">When it broke</h3>
+      <p class="sub">Real incidents, one step at a time. Each one links to the full write-up.</p>
+      <div class="inc-tabs" data-inc-tabs hidden role="group" aria-label="Pick an incident">
+        {incidents.map((inc, i) => (
+          <button type="button" class="view-btn quiet" data-inc-pick={inc.id} aria-pressed={i === 0 ? 'true' : 'false'}>{inc.title}</button>
+        ))}
+      </div>
+      <div class="incs">
+        {incidents.map((inc) => (
+          <article class="inc" data-inc={inc.id} aria-labelledby={`inc-${inc.id}`}>
+            <header>
+              <p class="eyebrow">{inc.when}</p>
+              <h4 id={`inc-${inc.id}`}>{inc.title}</h4>
+            </header>
+            <ol class="inc-steps">
+              {inc.steps.map((x) => (
+                <li><span class="k">{x.k}</span><p>{x.t}</p></li>
+              ))}
+            </ol>
+            <div class="inc-nav" data-inc-nav hidden>
+              <button type="button" class="view-btn quiet" data-inc-prev>Back</button>
+              <span class="story-count" data-inc-count aria-live="polite"></span>
+              <button type="button" class="view-btn" data-inc-next>Next step</button>
+            </div>
+            <p class="inc-link"><a href={inc.href}>Read the full write-up</a></p>
+          </article>
+        ))}
+      </div>
     </section>
 
     <section id="site" class="wrap colophon" aria-labelledby="site-h">
@@ -327,6 +495,7 @@ const built = new Date().toISOString().slice(0, 10);
       </div>
     </section>
   </div>
+  <script type="application/json" id="rack-stories" set:html={storyJson} />
   <script is:inline src={`/js/lab.js?v=${BUILD}`} defer></script>
   <script>
     // "View in 3D": only offered when the browser can draw WebGL. The 3D code (Three.js) is a
@@ -687,6 +856,179 @@ const built = new Date().toISOString().slice(0, 10);
   }
   @keyframes blink {
     50% { opacity: 0.25; }
+  }
+  /* Rack states, set by the stories */
+  .u-in { fill: #2b2527; stroke: #4a4042; }
+  .off-home { display: none; }
+  .rack.st-home .off-home { display: inline; }
+  .rack.st-home .off-away { display: none; }
+  .led, .pwr-ring, .lcd-t, .lcd { transition: opacity var(--base) var(--ease), fill var(--base) var(--ease), stroke var(--base) var(--ease); }
+  .rack.st-batt .lcd-t,
+  .rack.st-low .lcd-t { fill: #e2c27a; }
+  .rack.st-batt .lcd,
+  .rack.st-low .lcd { stroke: #c29b45; fill: #1d1a10; }
+  .rack.st-low .lcd { stroke: #b0303f; }
+  .rack.st-low .lcd-t { fill: #e88a95; }
+  .rack.st-off [data-gear='server'] .led,
+  .rack.st-off [data-gear='server'] .pwr-ring {
+    opacity: 0.12;
+    animation: none;
+  }
+  .rack.st-off .lcd-t { fill: #6d6264; }
+  .side {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .story-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .story-nav,
+  .inc-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  .story-count {
+    font: 0.8rem var(--font-mono);
+    color: var(--ink-faint);
+  }
+  .story-text {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .story-text summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  /* Then and now */
+  .cmp {
+    margin-top: 0.8rem;
+  }
+  .cmp-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+  .cmp-rows {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--rule);
+  }
+  .cmp-row {
+    display: grid;
+    grid-template-columns: minmax(10rem, 16rem) 1fr;
+    gap: 0.3rem 1rem;
+    padding: 0.6rem 0.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cmp-row dt {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 0.15rem;
+  }
+  .cmp-row dd {
+    margin: 0;
+  }
+  .cmp-meter {
+    display: block;
+    margin-top: 0.4rem;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    overflow: hidden;
+    max-width: 26rem;
+  }
+  .cmp-fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+    transition: width var(--slow) var(--ease), background var(--slow) var(--ease);
+  }
+  .cmp.js .v-arrow { display: none; }
+  .cmp.js.show-now .v-then,
+  .cmp.js.show-then .v-now { display: none; }
+  .cmp.js.show-then .cmp-fill { background: var(--gold); }
+  .cmp:not(.js) .cmp-meter { display: none; }
+  .cmp:not(.js) .v-then { color: var(--ink-faint); }
+  /* Incidents */
+  .inc-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+  }
+  .incs {
+    display: grid;
+    gap: 1rem;
+  }
+  .inc {
+    padding: 1.2rem 1.4rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+    background: var(--card);
+  }
+  .inc h4 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+  }
+  .inc-steps {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .inc-steps li {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.8rem;
+    padding-left: 0.8rem;
+    border-left: 3px solid var(--rule);
+  }
+  .inc-steps li.now {
+    border-left-color: var(--gold);
+  }
+  .inc-steps p {
+    margin: 0;
+  }
+  .incs.js .inc-steps li.later {
+    display: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .incs.js .inc-steps li.now {
+      animation: step-in var(--base) var(--ease);
+    }
+  }
+  @keyframes step-in {
+    from { opacity: 0; transform: translateY(6px); }
+  }
+  .inc-link {
+    margin: 0.8rem 0 0;
+    font-size: 0.95rem;
+  }
+  .zones-scroll {
+    overflow-x: auto;
+  }
+  @media (max-width: 760px) {
+    .zones-scroll .zones {
+      min-width: 680px;
+    }
+    .cmp-row,
+    .inc-steps li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
   }
   /* Request trace */
   .trace-bar {

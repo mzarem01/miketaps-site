@@ -85,7 +85,6 @@
   var n = dialog.querySelector('[data-plaque-n]');
   var bar = dialog.querySelector('[data-plaque-bar]');
   var reset = dialog.querySelector('[data-plaque-reset]');
-  var CHECK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var armed = false;
 
   function span(cls, text) {
@@ -113,7 +112,7 @@
       if (a.secret) li.className += ' is-secret';
       var mark = span('plaque-mark');
       mark.setAttribute('aria-hidden', 'true');
-      if (done) mark.innerHTML = CHECK;
+      if (done) mark.appendChild(P.icon('M3 8.5l3.2 3L13 4.5', 16, 13, 2.4));
       var text = span('');
       text.appendChild(span('sr-only', done ? 'Found: ' : 'Not found yet: '));
       text.appendChild(span('plaque-name', a.secret && !done ? '????' : a.title));

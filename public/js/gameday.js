@@ -52,7 +52,7 @@
     card.querySelector('[data-fact]').textContent = f.fact;
     var src = data.sources[f.src];
     var a = card.querySelector('[data-src]');
-    a.href = src.url;
+    a.href = /^https:\/\//.test(src.url) ? src.url : '#';
     a.textContent = 'Source: ' + src.title;
     dealt.hidden = false;
     empty.hidden = true;

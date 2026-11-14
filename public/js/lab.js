@@ -41,23 +41,100 @@
 })();
 
 // The home server rack: click a device (or a row in the gear list) to see what it is.
+// The "Play it out" stories step through a scenario on the same drawing.
 (function () {
   var detail = {
     name: document.querySelector('[data-g-name]'),
     model: document.querySelector('[data-g-model]'),
     why: document.querySelector('[data-g-why]'),
   };
-  if (!detail.name) return;
+  var rack = document.querySelector('[data-rack]');
+  if (!detail.name || !rack) return;
+  var lcd = rack.querySelector('[data-lcd]');
+  var nav = document.querySelector('[data-story-nav]');
+  var bar = document.querySelector('[data-story-bar]');
+  var count = document.querySelector('[data-story-count]');
+  var prev = document.querySelector('[data-story-prev]');
+  var next = document.querySelector('[data-story-next]');
+  var STATES = ['batt', 'low', 'off', 'home'];
+  var LCD = { batt: 'ON BATT', low: 'LOW', off: 'LOW' };
 
+  function light(ids) {
+    document.querySelectorAll('.gear').forEach(function (g) {
+      g.classList.toggle('on', ids.indexOf(g.getAttribute('data-gear')) !== -1);
+    });
+  }
+
+  function setState(st) {
+    STATES.forEach(function (x) { rack.classList.toggle('st-' + x, x === st); });
+    if (lcd) lcd.textContent = LCD[st] || '100%';
+  }
+
+  // ---- stories ----
+  var stories = [];
+  try { stories = JSON.parse(document.getElementById('rack-stories').textContent); } catch (e) { stories = []; }
+  var story = null;
+  var at = 0;
+
+  function show() {
+    var st = story.steps[at];
+    detail.name.textContent = story.label;
+    detail.model.textContent = st.title;
+    detail.why.textContent = st.text;
+    count.textContent = 'Step ' + (at + 1) + ' of ' + story.steps.length;
+    prev.disabled = at === 0;
+    next.textContent = at === story.steps.length - 1 ? 'Done' : 'Next';
+    light(st.gear);
+    setState(st.state);
+    document.querySelectorAll('[data-gear-row]').forEach(function (r) { r.classList.remove('on'); });
+  }
+
+  function stop() {
+    story = null;
+    nav.hidden = true;
+    setState('');
+    bar.querySelectorAll('[data-story]').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+  }
+
+  if (stories.length && nav && bar) {
+    bar.hidden = false;
+    document.querySelectorAll('[data-story-text]').forEach(function (d) { d.hidden = true; });
+    bar.querySelectorAll('[data-story]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = b.getAttribute('data-story');
+        story = stories.filter(function (x) { return x.id === id; })[0];
+        if (!story) return;
+        at = 0;
+        bar.querySelectorAll('[data-story]').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        nav.hidden = false;
+        show();
+        next.focus();
+      });
+    });
+    prev.addEventListener('click', function () {
+      if (story && at > 0) { at--; show(); }
+    });
+    next.addEventListener('click', function () {
+      if (!story) return;
+      if (at < story.steps.length - 1) { at++; show(); return; }
+      var done = story.label;
+      stop();
+      light([]);
+      detail.name.textContent = done;
+      detail.model.textContent = 'That’s the whole run';
+      detail.why.textContent = 'Pick another one, or click anything in the rack.';
+    });
+  }
+
+  // ---- picking a device ----
   function select(id) {
     var row = document.querySelector('[data-gear-row="' + id + '"]');
     if (!row) return;
+    if (story) stop();
     detail.name.textContent = row.querySelector('th').textContent.trim();
     detail.model.textContent = row.querySelector('.model').textContent.trim();
     detail.why.textContent = row.querySelectorAll('td')[1].textContent.trim();
-    document.querySelectorAll('.gear').forEach(function (g) {
-      g.classList.toggle('on', g.getAttribute('data-gear') === id);
-    });
+    light([id]);
     document.querySelectorAll('[data-gear-row]').forEach(function (r) {
       r.classList.toggle('on', r === row);
     });
@@ -75,6 +152,80 @@
       });
     }
   });
+})();
+
+// Then and now: flip between the old server and the new one. Bars grow to match.
+(function () {
+  var box = document.querySelector('[data-cmp]');
+  if (!box) return;
+  var bar = box.querySelector('[data-cmp-bar]');
+  var fills = box.querySelectorAll('.cmp-meter');
+  box.classList.add('js');
+  bar.hidden = false;
+
+  function pick(which) {
+    box.classList.toggle('show-now', which === 'now');
+    box.classList.toggle('show-then', which === 'then');
+    bar.querySelectorAll('[data-cmp-pick]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-cmp-pick') === which));
+    });
+    fills.forEach(function (m) {
+      m.firstElementChild.style.width = m.getAttribute('data-' + which) + '%';
+    });
+  }
+
+  bar.querySelectorAll('[data-cmp-pick]').forEach(function (b) {
+    b.addEventListener('click', function () { pick(b.getAttribute('data-cmp-pick')); });
+  });
+  pick('now');
+})();
+
+// When it broke: one incident at a time, revealed a step at a time.
+(function () {
+  var tabs = document.querySelector('[data-inc-tabs]');
+  var incs = document.querySelectorAll('[data-inc]');
+  if (!tabs || !incs.length) return;
+  document.querySelector('.incs').classList.add('js');
+  tabs.hidden = false;
+
+  incs.forEach(function (inc) {
+    var steps = inc.querySelectorAll('.inc-steps li');
+    var navEl = inc.querySelector('[data-inc-nav]');
+    var cnt = inc.querySelector('[data-inc-count]');
+    var back = inc.querySelector('[data-inc-prev]');
+    var fwd = inc.querySelector('[data-inc-next]');
+    var at = 0;
+    navEl.hidden = false;
+
+    function show() {
+      steps.forEach(function (li, i) {
+        li.classList.toggle('later', i > at);
+        li.classList.toggle('now', i === at);
+      });
+      cnt.textContent = 'Step ' + (at + 1) + ' of ' + steps.length;
+      back.disabled = at === 0;
+      fwd.disabled = at === steps.length - 1;
+    }
+    inc.resetSteps = function () { at = 0; show(); };
+    back.addEventListener('click', function () { if (at > 0) { at--; show(); } });
+    fwd.addEventListener('click', function () { if (at < steps.length - 1) { at++; show(); } });
+    show();
+  });
+
+  function pick(id) {
+    incs.forEach(function (inc) {
+      var on = inc.getAttribute('data-inc') === id;
+      inc.hidden = !on;
+      if (on) inc.resetSteps();
+    });
+    tabs.querySelectorAll('[data-inc-pick]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-inc-pick') === id));
+    });
+  }
+  tabs.querySelectorAll('[data-inc-pick]').forEach(function (b) {
+    b.addEventListener('click', function () { pick(b.getAttribute('data-inc-pick')); });
+  });
+  pick(incs[0].getAttribute('data-inc'));
 })();
 
 // "How a request gets in": a dot follows the route through the network diagram and
@@ -110,6 +261,11 @@
   function run(btn) {
     cancelAnimationFrame(frame);
     if (layer) layer.remove();
+    var wrap = svg.parentElement;
+    var narrow = wrap && wrap.scrollWidth > wrap.clientWidth;
+    if (narrow) {
+      wrap.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
+    }
     layer = el('g', { 'aria-hidden': 'true' });
     svg.appendChild(layer);
 
@@ -124,6 +280,11 @@
     layer.appendChild(path);
     var len = path.getTotalLength();
     var end = path.getPointAtLength(len);
+    if (narrow) {
+      var start = path.getPointAtLength(0);
+      var mid = ((start.x + end.x) / 2 / 900) * svg.getBoundingClientRect().width;
+      wrap.scrollTo({ left: mid - wrap.clientWidth / 2, behavior: still.matches ? 'auto' : 'smooth' });
+    }
 
     function done() {
       finish(end, ok);

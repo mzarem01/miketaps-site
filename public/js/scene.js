@@ -11,6 +11,35 @@
   });
 })();
 
+// The window: the sky follows the visitor's own clock. Dawn 5 to 8, day 8 to 5,
+// dusk 5 to 9, night 9 to 5, plus a little snow from December to February.
+// No location and no weather service: just the browser's clock and date.
+(function () {
+  var scene = document.querySelector('.scene');
+  if (!scene) return;
+  function phase(h) {
+    if (h >= 5 && h < 8) return 'dawn';
+    if (h >= 8 && h < 17) return 'day';
+    if (h >= 17 && h < 21) return 'dusk';
+    return 'night';
+  }
+  function update() {
+    var d = new Date();
+    var p = phase(d.getHours());
+    scene.setAttribute('data-sky', p);
+    var m = d.getMonth();
+    if (m === 11 || m <= 1) scene.setAttribute('data-snow', '');
+    else scene.removeAttribute('data-snow');
+    document.dispatchEvent(new CustomEvent('miketaps:sky', { detail: p }));
+  }
+  update();
+  // Fade only on later changes, so the first paint never shows night melting into day.
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { scene.classList.add('sky-ready'); });
+  });
+  setInterval(update, 60000);
+})();
+
 // Easter egg: the belt on the hook earns a stripe each time you come back (max 4).
 // Counted once per browser session, stored only in this browser.
 (function () {

@@ -1,0 +1,173 @@
+---
+import Base from '../../layouts/Base.astro';
+import { BUILD } from '../../data/build';
+// The end of the back room puzzle. Not linked anywhere; robots.txt "hides" it on purpose.
+// The flag check lives in public/js/backroom.js (hash only, nothing sent anywhere).
+---
+<Base title="The back room" description="Nothing back here. Probably.">
+  <section class="backroom">
+    <div class="bulb" aria-hidden="true"><span></span></div>
+
+    <div class="inner" data-locked>
+      <p class="br-eyebrow">/backroom/</p>
+      <h1>You found the back room.</h1>
+      <p class="lede">One last lock on the door. If you made it this far, you already have the flag. You just might need to unscramble it.</p>
+      <form class="br-form" data-flag-form autocomplete="off">
+        <label class="sr-only" for="flag">Flag</label>
+        <input id="flag" data-flag placeholder="MT{...}" spellcheck="false" autocapitalize="off" autocomplete="off" />
+        <button type="submit">Try the door</button>
+      </form>
+      <p class="reply" data-reply role="status"></p>
+      <p class="fine">Nothing you type here leaves your browser.</p>
+      <noscript><p class="fine">This lock needs JavaScript. So does the terminal that leads here.</p></noscript>
+    </div>
+
+    <div class="inner" data-open hidden>
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M15 12h.01" fill="none" stroke="#e9c46a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <span>TAPPED IN</span>
+      </div>
+      <h1>The door opens. <em>Welcome in.</em></h1>
+      <p class="lede">You read the source, woke the terminal, decoded the note, knocked on the rack and turned the flag back around. That is most of a beginner room, done in a workshop.</p>
+      <div class="chip">
+        <span class="tick" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="#1f191a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+        <span><strong>Tapped in</strong><br /><small>Added to the plaque as its secret entry.</small></span>
+      </div>
+      <a class="back" href="/">Back to the workshop</a>
+    </div>
+  </section>
+  <script is:inline src={`/js/backroom.js?v=${BUILD}`} defer></script>
+</Base>
+
+<style>
+  .backroom {
+    position: relative;
+    overflow: hidden;
+    min-height: 72vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9rem 1.25rem 4rem;
+    background: #0e0a0b;
+    color: #f2ebe1;
+    text-align: center;
+  }
+  .bulb {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 90px;
+    margin-left: -1px;
+    background: #3a3132;
+    transform-origin: 50% 0;
+    animation: sway 6s ease-in-out infinite;
+  }
+  .bulb span {
+    position: absolute;
+    left: -11px;
+    bottom: -20px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f4d08a;
+    box-shadow: 0 0 60px 30px rgba(244, 208, 138, 0.18);
+  }
+  .inner {
+    max-width: 36rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+  }
+  .inner[hidden] { display: none; }
+  .br-eyebrow {
+    margin: 0;
+    font: 600 0.8rem/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #d1a54b;
+  }
+  h1 {
+    margin: 0;
+    font: 600 clamp(2rem, 5vw, 2.8rem)/1.1 var(--font-display);
+    color: #f2ebe1;
+  }
+  h1 em { font-weight: 500; color: #e7a3ad; }
+  h1:focus { outline: none; }
+  .lede { margin: 0; font-size: 1.12rem; line-height: 1.55; color: #c9bdb1; }
+  .br-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+  .br-form input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 1rem;
+    border: 1px solid #4a3a36;
+    border-radius: 10px;
+    background: #120e0f;
+    color: #f2ebe1;
+    font: 500 1rem var(--font-mono);
+  }
+  .br-form input:focus { outline: 2px solid #d1a54b; outline-offset: 2px; border-color: #d1a54b; }
+  .br-form button {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 0 1.4rem;
+    border: 0;
+    border-radius: 10px;
+    background: #d1a54b;
+    color: #1f191a;
+    font: 600 1rem var(--font-sans);
+    cursor: pointer;
+  }
+  .br-form button:hover { background: #e2b95c; }
+  .br-form button:focus-visible { outline: 2px solid #f2ebe1; outline-offset: 2px; }
+  .reply { margin: 0; min-height: 1.5em; color: #e7a3ad; }
+  .fine { margin: 0; font-size: 0.85rem; color: #8e8279; }
+  .badge {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #d1a54b;
+    background: #6e1e28;
+    box-shadow: 0 0 0 8px rgba(209, 165, 75, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    font: 600 0.75rem/1 var(--font-mono);
+    letter-spacing: 0.16em;
+    color: #e9c46a;
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.1rem;
+    border: 1px solid #d1a54b;
+    border-radius: 12px;
+    background: #1f191a;
+    text-align: left;
+  }
+  .chip strong { font: 600 1.05rem var(--font-display); }
+  .chip small { font-size: 0.85rem; color: #b4a89c; }
+  .tick {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #d1a54b;
+  }
+  .back { color: #e9c46a; }
+  .back:hover { color: #f4d98e; }
+  @keyframes sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+  @media (prefers-reduced-motion: reduce) { .bulb { animation: none; } }
+</style>

@@ -14,10 +14,12 @@
     { id: 'clip', title: 'Player 2', done: 'Played a clip on the monitor.', hint: 'The controller is not just for show.' },
     { id: 'stripe', title: 'Stripe earned', done: 'Came back and earned a belt stripe.', hint: 'Visit again another day.' },
     { id: 'dawn', title: 'Early riser', done: 'Caught the sunrise in the window.', hint: 'Come by early.' },
-    { id: 'night', title: 'Night owl', done: 'Saw the stars in the window.', hint: 'Come by late.' }
+    { id: 'night', title: 'Night owl', done: 'Saw the stars in the window.', hint: 'Come by late.' },
+    { id: 'backroom', secret: true, title: 'Tapped in', done: 'Found the back room.', hint: 'Some pages have more to say than they show.' }
   ];
   var known = {};
   LIST.forEach(function (a) { known[a.id] = a; });
+  var MAIN = LIST.filter(function (a) { return !a.secret; }).length;
 
   function load() {
     try {
@@ -56,7 +58,7 @@
     badge.setAttribute('aria-hidden', 'true');
     badge.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var text = el('span', 'found-text');
-    text.appendChild(el('span', 'found-eyebrow', 'Found on the plaque · ' + a.count + '/' + LIST.length));
+    text.appendChild(el('span', 'found-eyebrow', a.secret ? 'Secret found · the back room' : 'Found on the plaque · ' + a.count + '/' + MAIN));
     text.appendChild(el('span', 'found-title', a.title));
     text.appendChild(el('span', 'found-line', a.done));
     box.appendChild(badge);
@@ -77,7 +79,8 @@
     if (have.indexOf(id) !== -1) return;
     have.push(id);
     if (!save(have)) return;
-    queue.push({ title: known[id].title, done: known[id].done, count: have.length });
+    var count = have.filter(function (h) { return !known[h].secret; }).length;
+    queue.push({ title: known[id].title, done: known[id].done, count: count, secret: !!known[id].secret });
     document.dispatchEvent(new CustomEvent('miketaps:found', { detail: id }));
     if (document.body) next();
     else document.addEventListener('DOMContentLoaded', next);

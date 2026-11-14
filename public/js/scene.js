@@ -47,3 +47,106 @@
     sc.scrollLeft = (sc.scrollWidth - sc.clientWidth) * 0.42;
   }
 })();
+
+// The controller is a TV remote: each press changes the channel on the desk monitor.
+// 0 = terminal, 1 = Epona clip, 2 = Volvagia clip, 3 = test pattern, then back to 0.
+(function () {
+  var remote = document.querySelector('[data-tv-remote]');
+  var tv = document.querySelector('[data-tv]');
+  if (!remote || !tv) return;
+  var tip = document.querySelector('[data-tv-tip]');
+  var chLabel = tv.querySelector('[data-tv-ch]');
+  var soundBtn = tv.querySelector('[data-tv-sound]');
+  var playBtn = tv.querySelector('[data-tv-play]');
+  var now = document.querySelector('[data-tv-now]');
+  var videos = tv.querySelectorAll('video');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var channel = 0;
+  var sound = false;
+  var YT = 'https://www.youtube.com/channel/UCVr4Sy6tnK-_dN8chyJnc8w';
+  var info = {
+    1: 'Ocarina of Time: riding Epona across Hyrule Field',
+    2: 'Ocarina of Time: the last hits on Volvagia',
+    3: 'Test pattern. Nothing on but burgundy and gold',
+  };
+  var next = { 0: 'press to play a clip', 1: 'next channel', 2: 'next channel', 3: 'back to the terminal' };
+
+  function current() {
+    return tv.querySelector('video[data-ch="' + channel + '"]');
+  }
+
+  function stopAll() {
+    videos.forEach(function (v) { v.pause(); });
+  }
+
+  function start(v) {
+    v.muted = !sound;
+    var p = v.play();
+    tv.classList.remove('needs-play');
+    if (p && p.catch) p.catch(function () { tv.classList.add('needs-play'); });
+  }
+
+  function setNow() {
+    if (!now) return;
+    if (!channel) { now.hidden = true; now.textContent = ''; return; }
+    now.hidden = false;
+    now.textContent = 'Now playing: ' + info[channel] + '.';
+    if (channel !== 3) {
+      var a = document.createElement('a');
+      a.href = YT;
+      a.textContent = 'More on YouTube';
+      a.rel = 'noopener';
+      now.appendChild(a);
+    }
+  }
+
+  function tune() {
+    channel = (channel + 1) % 4;
+    stopAll();
+    if (tip) tip.textContent = next[channel];
+    if (!channel) {
+      tv.hidden = true;
+      tv.removeAttribute('data-on');
+      setNow();
+      return;
+    }
+    tv.hidden = false;
+    tv.setAttribute('data-on', String(channel));
+    chLabel.textContent = 'CH ' + channel;
+    tv.classList.remove('switching');
+    void tv.offsetWidth;
+    tv.classList.add('switching');
+    var v = current();
+    if (v) {
+      if (reduce) {
+        tv.classList.add('needs-play');
+      } else {
+        start(v);
+      }
+    } else {
+      tv.classList.remove('needs-play');
+    }
+    setNow();
+  }
+
+  remote.addEventListener('click', tune);
+  remote.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      tune();
+    }
+  });
+
+  soundBtn.addEventListener('click', function () {
+    sound = !sound;
+    soundBtn.setAttribute('aria-pressed', sound ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', sound ? 'Turn sound off' : 'Turn sound on');
+    var v = current();
+    if (v) v.muted = !sound;
+  });
+
+  playBtn.addEventListener('click', function () {
+    var v = current();
+    if (v) start(v);
+  });
+})();

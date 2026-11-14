@@ -56,8 +56,15 @@ curl -fsSL --max-time 20 -o "${tmp}/site.tar.gz.sha256" "${dl}/site.tar.gz.sha25
 (cd "$tmp" && sha256sum -c --quiet site.tar.gz.sha256)
 
 # Reject archives with absolute paths or parent-directory entries
-if tar -tzf "${tmp}/site.tar.gz" | grep -qE '(^/|(^|/)\.\.(/|$))'; then
+# (grep reads all input, no -q: with pipefail an early exit would SIGPIPE tar and skip the check)
+if tar -tzf "${tmp}/site.tar.gz" | grep -E '(^/|(^|/)\.\.(/|$))' >/dev/null; then
   log "archive contains unsafe paths, aborting"
+  exit 1
+fi
+
+# Reject anything that isn't a plain file or directory (symlinks, hard links, devices)
+if tar -tvzf "${tmp}/site.tar.gz" | grep -vE '^[-d]' >/dev/null; then
+  log "archive contains links or special files, aborting"
   exit 1
 fi
 

@@ -45,9 +45,11 @@ const built = new Date().toISOString().slice(0, 10);
         <div class="rig-view">
         <div class="view-bar">
           <button type="button" class="view-btn" data-rig-3d aria-pressed="false" hidden>View in 3D</button>
+          <button type="button" class="view-btn quiet" data-rig-labels aria-pressed="false" hidden>Show labels</button>
+          <button type="button" class="view-btn quiet" data-rig-reset hidden>Reset view</button>
           <span class="view-hint" data-rig-hint hidden>Drag to turn it, scroll or pinch to zoom, click a part.</span>
         </div>
-        <div class="stage" data-rig-stage role="img" aria-label="3D model of the rig. Use the parts list below to pick a part with the keyboard." hidden></div>
+        <div class="stage" data-rig-stage role="group" aria-label="3D model of the rig. Turn on labels to pick parts in the model, or use the parts list below." hidden></div>
         <svg class="case" viewBox="0 0 520 440" role="group" aria-label="The rig, with clickable parts">
           <rect x="10" y="10" width="500" height="420" rx="18" class="c-body" />
           <rect x="26" y="26" width="468" height="388" rx="10" class="c-glass" />
@@ -202,6 +204,8 @@ const built = new Date().toISOString().slice(0, 10);
     const stage = document.querySelector<HTMLElement>('[data-rig-stage]');
     const hint = document.querySelector<HTMLElement>('[data-rig-hint]');
     const flat = document.querySelector<SVGElement>('svg.case');
+    const labelsBtn = document.querySelector<HTMLButtonElement>('[data-rig-labels]');
+    const resetBtn = document.querySelector<HTMLButtonElement>('[data-rig-reset]');
 
     function webgl() {
       try {
@@ -212,9 +216,24 @@ const built = new Date().toISOString().slice(0, 10);
       }
     }
 
-    if (btn && stage && hint && flat && webgl()) {
+    if (btn && stage && hint && flat && labelsBtn && resetBtn && webgl()) {
       btn.hidden = false;
-      let view: { select(id: string | null): void; show(on: boolean): void } | null = null;
+      let view: {
+        select(id: string | null): void;
+        show(on: boolean): void;
+        labels(on: boolean): void;
+        reset(): void;
+      } | null = null;
+      // Labels start on for touch screens, where there is no hover to show what's clickable.
+      let labelsOn = window.matchMedia('(pointer: coarse)').matches;
+
+      labelsBtn.addEventListener('click', () => {
+        labelsOn = !labelsOn;
+        labelsBtn.setAttribute('aria-pressed', String(labelsOn));
+        labelsBtn.textContent = labelsOn ? 'Hide labels' : 'Show labels';
+        view?.labels(labelsOn);
+      });
+      resetBtn.addEventListener('click', () => view?.reset());
       let on = false;
 
       document.addEventListener('rig:selected', (e) => view?.select((e as CustomEvent<string>).detail));
@@ -227,7 +246,14 @@ const built = new Date().toISOString().slice(0, 10);
           try {
             const { initRig } = await import('../../scripts/rig3d.js');
             stage.hidden = false;
-            view = initRig(stage);
+            const names: Record<string, string> = {};
+            document.querySelectorAll('[data-row]').forEach((r) => {
+              names[r.getAttribute('data-row') ?? ''] = r.querySelector('th')?.textContent?.trim() ?? '';
+            });
+            view = initRig(stage, names);
+            view.labels(labelsOn);
+            labelsBtn.setAttribute('aria-pressed', String(labelsOn));
+            labelsBtn.textContent = labelsOn ? 'Hide labels' : 'Show labels';
             const current = document.querySelector('[data-row].on');
             if (current) view.select(current.getAttribute('data-row'));
           } catch {
@@ -244,6 +270,8 @@ const built = new Date().toISOString().slice(0, 10);
         stage.hidden = !on;
         flat.style.display = on ? 'none' : '';
         hint.hidden = !on;
+        labelsBtn.hidden = !on;
+        resetBtn.hidden = !on;
         btn.textContent = on ? 'Back to the drawing' : 'View in 3D';
         btn.setAttribute('aria-pressed', String(on));
         view?.show(on);
@@ -319,6 +347,15 @@ const built = new Date().toISOString().slice(0, 10);
     background: var(--accent);
     color: var(--paper);
   }
+  .view-btn.quiet {
+    border-color: var(--rule);
+    color: var(--ink-soft);
+  }
+  .view-btn.quiet[aria-pressed='true'] {
+    background: var(--gold-tint);
+    color: var(--ink);
+    border-color: var(--rule);
+  }
   .view-btn:disabled {
     opacity: 0.6;
     cursor: progress;
@@ -334,6 +371,44 @@ const built = new Date().toISOString().slice(0, 10);
     background: radial-gradient(ellipse at 50% 40%, #2a2224 0%, #141112 75%);
     overflow: hidden;
     touch-action: none;
+  }
+  .stage {
+    position: relative;
+  }
+  .stage :global(.rig-tags) {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .stage :global(.rig-tag) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: auto;
+    font: 700 0.72rem var(--font-mono);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(226, 194, 122, 0.55);
+    background: rgba(20, 17, 18, 0.78);
+    color: #f1e8dc;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) {
+    .stage :global(.rig-tag) {
+      font-size: 0.62rem;
+      padding: 0.12rem 0.4rem;
+    }
+  }
+  .stage :global(.rig-tag.behind) {
+    opacity: 0.35;
+  }
+  .stage :global(.rig-tag:hover),
+  .stage :global(.rig-tag:focus-visible),
+  .stage :global(.rig-tag.on) {
+    background: #e2c27a;
+    color: #1b1718;
+    outline: none;
   }
   .stage :global(canvas) {
     display: block;

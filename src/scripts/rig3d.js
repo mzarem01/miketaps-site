@@ -48,6 +48,69 @@ function box(w, h, d, material, x = 0, y = 0, z = 0) {
   return m;
 }
 
+// Small textures drawn on a canvas at load time (labels, gradients, fins). Nothing is downloaded.
+function canvasTex(w, h, draw) {
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
+
+function textTex(text, { color = '#d8d0c8', weight = 700, family = 'sans-serif', w = 512, h = 96, spacing = 0 } = {}) {
+  return canvasTex(w, h, (g) => {
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = color;
+    g.font = `${weight} ${Math.round(h * 0.72)}px ${family}`;
+    g.textBaseline = 'middle';
+    if ('letterSpacing' in g) g.letterSpacing = `${spacing}px`;
+    g.fillText(text, 4, h / 2);
+  });
+}
+
+// A flat decal (text or logo) facing +z.
+function decal(tex, w, h, emissive = false) {
+  const m = new THREE.MeshStandardMaterial({
+    map: tex, transparent: true, depthWrite: false, roughness: 0.6,
+    ...(emissive ? { emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 1.2 } : {}),
+  });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m);
+  mesh.raycast = () => {};
+  return mesh;
+}
+
+// One curved fan blade, lying in the xy plane and reaching out along +x.
+const bladeCache = new Map();
+function bladeGeom(rIn, rOut) {
+  const key = `${rIn}:${rOut}`;
+  if (bladeCache.has(key)) return bladeCache.get(key);
+  const mid = (rIn + rOut) / 2;
+  const sh = new THREE.Shape();
+  sh.moveTo(rIn, -0.35 * rIn);
+  sh.quadraticCurveTo(mid, -0.28 * rOut, rOut, -0.02 * rOut);
+  sh.quadraticCurveTo(rOut * 1.01, 0.22 * rOut, rOut * 0.82, 0.3 * rOut);
+  sh.quadraticCurveTo(mid, 0.18 * rOut, rIn, 0.35 * rIn);
+  sh.closePath();
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.0012, bevelEnabled: false, curveSegments: 8 });
+  bladeCache.set(key, geo);
+  return geo;
+}
+
+// A cable made of side-by-side strands that follow the same path. offsetAxis is the direction the
+// strands are spread along; it should be roughly square to the path.
+function cable(points, strands, spread, offsetAxis, material, radius = 0.0022) {
+  const g = new THREE.Group();
+  for (let i = 0; i < strands; i++) {
+    const k = (i - (strands - 1) / 2) * spread;
+    const pts = points.map((p) => p.clone().addScaledVector(offsetAxis, k));
+    g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, radius, 6, false), material));
+  }
+  return g;
+}
+
 // A fan facing +z: square frame, hub, blades and an LED ring. Returns the group and its spinning blades.
 // Graphics card fans skip the frame and the ring.
 function fan(size, led, bare = false) {
@@ -76,13 +139,15 @@ function fan(size, led, bare = false) {
   const hubLed = new THREE.Mesh(new THREE.CircleGeometry(s * 0.22, 24), bare ? mat(C.metal, { metalness: 0.5 }) : glow(led, 0.9));
   hubLed.position.z = 0.0095;
   rotor.add(hubLed);
-  const bladeMat = mat(C.blade, { transparent: true, opacity: 0.85 });
-  for (let i = 0; i < 7; i++) {
-    const b = box(r * 0.62, s * 0.26, 0.002, bladeMat);
-    b.geometry.translate(r * 0.31 + s * 0.28, 0, 0);
-    b.rotation.z = (i / 7) * Math.PI * 2;
-    b.rotation.x = 0.35;
-    rotor.add(b);
+  const bladeMat = mat(C.blade, { transparent: true, opacity: 0.9, side: THREE.DoubleSide });
+  const n = bare ? 11 : 9;
+  for (let i = 0; i < n; i++) {
+    const arm = new THREE.Group();
+    arm.rotation.z = (i / n) * Math.PI * 2;
+    const b = new THREE.Mesh(bladeGeom(s * 0.28, r * 0.97), bladeMat);
+    b.rotation.x = 0.45;
+    arm.add(b);
+    rotor.add(arm);
   }
   g.add(rotor);
   return { group: g, rotor };
@@ -147,6 +212,16 @@ function buildRig() {
     rig.add(g);
   }
 
+  // Faint edges so the glass reads as glass.
+  const edgeMat = new THREE.LineBasicMaterial({ color: C.gold, transparent: true, opacity: 0.22 });
+  for (const g of [sideGlass, frontGlass]) {
+    const e = new THREE.LineSegments(new THREE.EdgesGeometry(g.geometry), edgeMat);
+    e.position.copy(g.position);
+    e.rotation.copy(g.rotation);
+    e.raycast = () => {};
+    rig.add(e);
+  }
+
   // Basement shroud: the PSU lives under here. Stepped vents on top.
   const psu = part('psu');
   const shroudTop = -hy + 0.046 + 0.06;
@@ -188,9 +263,19 @@ function buildRig() {
 
   // Memory: two sticks right of the CPU, light bars along the top edge.
   const ram = part('ram');
+  // Light bars fade from burgundy at the bottom to gold at the top, a nod to the real RGB sticks.
+  const ramGlow = canvasTex(8, 128, (g, w, h) => {
+    const grad = g.createLinearGradient(0, h, 0, 0);
+    grad.addColorStop(0, '#b0303f');
+    grad.addColorStop(0.55, '#d4785a');
+    grad.addColorStop(1, '#e2c27a');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, w, h);
+  });
+  const ramBar = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: ramGlow, emissiveIntensity: 1.3 });
   for (const dx of [0.075, 0.087]) {
     ram.add(box(0.007, 0.133, 0.036, mat(0x3a3335, { metalness: 0.5, roughness: 0.4 }), cx + dx, 0.096, bz + 0.019));
-    ram.add(box(0.006, 0.13, 0.008, glow(C.gold, 1.1), cx + dx, 0.096, bz + 0.041));
+    ram.add(box(0.006, 0.13, 0.008, ramBar, cx + dx, 0.096, bz + 0.041));
   }
 
   // Storage: the M.2 drive below the CPU.
@@ -201,7 +286,15 @@ function buildRig() {
   // Cooler: 240 mm radiator on top, two fans under it, tubes down to the pump.
   const cooler = part('cooler');
   const radY = hy - 0.028 - 0.0135;
-  cooler.add(box(0.275, 0.027, 0.12, mat(0x201c1d, { metalness: 0.3 }), -0.06, radY, -0.005));
+  const fins = canvasTex(256, 32, (g, w, h) => {
+    g.fillStyle = '#1a1617';
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = '#3a3334';
+    for (let x = 0; x < w; x += 4) g.fillRect(x, 3, 1, h - 6);
+  });
+  fins.wrapS = THREE.RepeatWrapping;
+  fins.repeat.set(4, 1);
+  cooler.add(box(0.275, 0.027, 0.12, mat(0xffffff, { map: fins, metalness: 0.3 }), -0.06, radY, -0.005));
   addFan(cooler, 0.12, C.burgundy, -0.122, radY - 0.026, -0.005, [-Math.PI / 2, 0, 0]);
   addFan(cooler, 0.12, C.gold, 0.002, radY - 0.026, -0.005, [-Math.PI / 2, 0, 0]);
   const tubeMat = mat(C.tube, { roughness: 0.85 });
@@ -226,7 +319,14 @@ function buildRig() {
   const gz = 0.045;
   gpu.add(box(gL, gH, gT, mat(C.gpu, { roughness: 0.6, metalness: 0.25 }), gx, gy, gz));
   gpu.add(box(gL, 0.004, 0.012, glow(C.gold, 0.6), gx, gy + gH / 2 + 0.001, gz + gT / 2 - 0.008));
-  gpu.add(box(0.04, 0.003, 0.012, glow(0xffffff, 1.0), gx + gL / 2 - 0.04, gy + gH / 2 + 0.002, gz));
+  // Branding as it looks on the real card: RADEON along the face, a lit XFX logo on the top edge.
+  const radeon = decal(textTex('RADEON', { color: '#cfc7c0', spacing: 14 }), 0.07, 0.013);
+  radeon.position.set(gx - gL / 2 + 0.05, gy + gH / 2 - 0.0085, gz + gT / 2 + 0.0006);
+  gpu.add(radeon);
+  const xfx = decal(textTex('XFX', { color: '#ffffff', weight: 800, w: 256, spacing: 10 }), 0.045, 0.016, true);
+  xfx.rotation.x = -Math.PI / 2;
+  xfx.position.set(gx + gL / 2 - 0.045, gy + gH / 2 + 0.0012, gz + 0.006);
+  gpu.add(xfx);
   for (const dx of [-0.105, 0, 0.105]) {
     const well = new THREE.Mesh(new THREE.CircleGeometry(0.049, 40), mat(0x0e0c0d));
     well.position.set(gx + dx, gy, gz + gT / 2 + 0.0008);
@@ -235,6 +335,31 @@ function buildRig() {
   }
   // Riser bracket at the back of the case.
   gpu.add(box(0.006, gH + 0.02, 0.05, mat(C.metal, { metalness: 0.6 }), -hx + 0.012, gy, gz));
+
+  // Power cables (they belong to the PSU): two 8-pin leads from the top of the card back and
+  // down into the basement, and the 24-pin from the board's edge.
+  const cableMat = mat(0x0f0d0e, { roughness: 0.5, metalness: 0.1 });
+  const X = new THREE.Vector3(1, 0, 0);
+  const Z = new THREE.Vector3(0, 0, 1);
+  const gTop = gy + gH / 2;
+  for (const cx8 of [gx + 0.085, gx + 0.118]) {
+    psu.add(box(0.026, 0.008, 0.012, mat(0x0c0a0b), cx8, gTop + 0.004, gz - 0.004));
+    psu.add(cable([
+      new THREE.Vector3(cx8, gTop + 0.006, gz - 0.004),
+      new THREE.Vector3(cx8, gTop + 0.04, gz - 0.01),
+      new THREE.Vector3(cx8 + 0.02, gTop + 0.035, -0.045),
+      new THREE.Vector3(cx8 + 0.04, gTop - 0.02, -0.07),
+      new THREE.Vector3(cx8 + 0.045, shroudTop - 0.004, -0.07),
+    ], 4, 0.0055, X, cableMat));
+  }
+  const pin24x = bx0 + bw + 0.002;
+  psu.add(box(0.008, 0.052, 0.01, mat(0x0c0a0b), pin24x - 0.003, 0.03, bz + 0.012));
+  psu.add(cable([
+    new THREE.Vector3(pin24x, 0.03, bz + 0.012),
+    new THREE.Vector3(pin24x + 0.018, 0.026, bz + 0.016),
+    new THREE.Vector3(pin24x + 0.024, -0.04, bz + 0.016),
+    new THREE.Vector3(pin24x + 0.024, shroudTop - 0.004, bz + 0.016),
+  ], 6, 0.0048, Z, cableMat));
 
   // Each mesh gets its own material copy so a part can glow on its own.
   rig.traverse((o) => {
@@ -245,7 +370,22 @@ function buildRig() {
     }
   });
 
-  return { rig, parts, rotors };
+  // Where each part's label points. Most use the middle of the part; a few need a visible spot.
+  const anchors = {
+    case: new THREE.Vector3(hx - 0.01, hy - 0.06, hz),
+    psu: new THREE.Vector3(0.12, shroudTop - 0.02, hz - 0.01),
+    cooler: new THREE.Vector3(0.1, 0.12, 0.07),
+    cpu: new THREE.Vector3(cx, cy, bz + 0.04),
+    gpu: new THREE.Vector3(gx - 0.06, gy + 0.02, gz + gT / 2),
+    board: new THREE.Vector3(bx0 + 0.03, 0.125, bz + 0.032),
+    ram: new THREE.Vector3(cx + 0.081, 0.05, bz + 0.045),
+    ssd: new THREE.Vector3(cx - 0.065, 0.03, bz + 0.004),
+  };
+  for (const id in parts) {
+    if (!anchors[id]) anchors[id] = new THREE.Box3().setFromObject(parts[id]).getCenter(new THREE.Vector3());
+  }
+
+  return { rig, parts, rotors, anchors };
 }
 
 function partOf(obj) {
@@ -269,7 +409,8 @@ function tint(group, amount) {
   });
 }
 
-export function initRig(stage) {
+// names: { id: 'Display name' } for the label buttons, taken from the parts list on the page.
+export function initRig(stage, names = {}) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -282,6 +423,7 @@ export function initRig(stage) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 10);
   camera.position.set(0.42, 0.2, 0.95);
+  const home = camera.position.clone();
 
   scene.add(new THREE.HemisphereLight(0xfff4e6, 0x3a2a2c, 2.2));
   const key = new THREE.DirectionalLight(0xffffff, 1.6);
@@ -297,7 +439,7 @@ export function initRig(stage) {
   inside.position.set(0.1, 0.05, 0);
   scene.add(inside);
 
-  const { rig, parts, rotors } = buildRig();
+  const { rig, parts, rotors, anchors } = buildRig();
   scene.add(rig);
 
   const controls = new OrbitControls(camera, canvas);
@@ -309,9 +451,59 @@ export function initRig(stage) {
   controls.minPolarAngle = 0.25;
   controls.maxPolarAngle = 1.75;
   // Keep the glass sides in view: the back of the case is a plain black panel.
-  controls.minAzimuthAngle = -1.0;
+  controls.minAzimuthAngle = -0.35;
   controls.maxAzimuthAngle = 1.75;
   controls.update();
+
+  // Labels: real buttons over the canvas, so they work with a keyboard and a screen reader too.
+  const tagLayer = document.createElement('div');
+  tagLayer.className = 'rig-tags';
+  tagLayer.hidden = true;
+  const tags = {};
+  for (const id in anchors) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'rig-tag';
+    b.textContent = names[id] || id;
+    b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('rig:pick', { detail: id })));
+    tagLayer.appendChild(b);
+    tags[id] = b;
+  }
+  stage.appendChild(tagLayer);
+  const v = new THREE.Vector3();
+  const tagRay = new THREE.Raycaster();
+  const dir = new THREE.Vector3();
+  // A label whose part is hidden behind something solid fades back, so it doesn't look like
+  // it's floating on the wrong thing. It still works.
+  function hiddenBehind(id) {
+    dir.copy(anchors[id]).sub(camera.position);
+    const dist = dir.length();
+    tagRay.set(camera.position, dir.normalize());
+    tagRay.far = dist - 0.004;
+    const hit = tagRay.intersectObject(rig, true)[0];
+    return !!hit && partOf(hit.object) !== id;
+  }
+  // The fade check only reruns when the camera has moved, at most a few times a second.
+  const lastCam = new THREE.Vector3(Infinity, 0, 0);
+  let lastCheck = 0;
+  function placeTags() {
+    if (tagLayer.hidden) return;
+    const now = performance.now();
+    const recheck = now - lastCheck > 150 && camera.position.distanceToSquared(lastCam) > 1e-7;
+    if (recheck) {
+      lastCheck = now;
+      lastCam.copy(camera.position);
+    }
+    const w = stage.clientWidth;
+    const h = stage.clientHeight;
+    for (const id in tags) {
+      v.copy(anchors[id]).project(camera);
+      const off = v.z > 1 || Math.abs(v.x) > 1.05 || Math.abs(v.y) > 1.05;
+      tags[id].style.visibility = off ? 'hidden' : '';
+      if (recheck) tags[id].classList.toggle('behind', !off && hiddenBehind(id));
+      tags[id].style.transform = `translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px) translate(-50%, -50%)`;
+    }
+  }
 
   let selected = null;
   let hovered = null;
@@ -320,10 +512,12 @@ export function initRig(stage) {
 
   function refreshTint() {
     for (const id in parts) tint(parts[id], id === selected ? 0.45 : id === hovered ? 0.18 : 0);
+    for (const id in tags) tags[id].classList.toggle('on', id === selected);
   }
 
   function render() {
     renderer.render(scene, camera);
+    placeTags();
   }
 
   function resize() {
@@ -349,7 +543,11 @@ export function initRig(stage) {
     if (reduce) return render();
     if (!frame) frame = requestAnimationFrame(loop);
   }
-  if (reduce) controls.addEventListener('change', render);
+  if (reduce) {
+    controls.addEventListener('change', render);
+    // One more pass after a drag ends, so label fading catches up.
+    controls.addEventListener('end', () => setTimeout(render, 200));
+  }
 
   new ResizeObserver(resize).observe(stage);
   new IntersectionObserver((entries) => {
@@ -400,6 +598,17 @@ export function initRig(stage) {
     select(id) {
       selected = parts[id] ? id : null;
       refreshTint();
+      render();
+    },
+    labels(on) {
+      tagLayer.hidden = !on;
+      lastCam.set(Infinity, 0, 0);
+      render();
+    },
+    reset() {
+      camera.position.copy(home);
+      controls.target.set(0, -0.01, 0);
+      controls.update();
       render();
     },
     show(on) {

@@ -18,13 +18,13 @@ const projects = Object.entries(modules)
       something I built and run myself, mistakes included, because the mistakes are where I
       learned the most.
     </p>
-    <a class="badge" href="https://www.credly.com/badges/db7616f6-b416-4e13-8c73-ecb9c20a8beb/public_url" rel="noopener" target="_blank">
+    <div class="badge">
       <img src="/img/security-plus-badge.png" width="64" height="64" alt="CompTIA Security+ badge" loading="lazy" />
       <span class="badge-text">
         <span class="badge-name">CompTIA Security+</span>
-        <span class="badge-meta">Earned September 2026 &middot; Verify on Credly &rarr;</span>
+        <span class="badge-meta">Earned September 2026</span>
       </span>
-    </a>
+    </div>
     <p class="tip">Hover or focus a card to see what broke.</p>
   </section>
 
@@ -73,9 +73,6 @@ const projects = Object.entries(modules)
     border: 1px solid var(--rule);
     border-radius: var(--radius);
     background: var(--card);
-    color: var(--ink);
-    text-decoration: none;
-    transition: transform var(--base) var(--pop), box-shadow var(--base) var(--ease);
   }
   .badge img {
     width: 64px;
@@ -95,15 +92,6 @@ const projects = Object.entries(modules)
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--gold-text);
-  }
-  .badge:hover,
-  .badge:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px -18px rgba(60, 20, 10, 0.6);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .badge { transition: none; }
-    .badge:hover, .badge:focus-visible { transform: none; }
   }
   .tip {
     font-family: var(--font-mono);

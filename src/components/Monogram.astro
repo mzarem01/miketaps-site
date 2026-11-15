@@ -1,5 +1,7 @@
 ---
-// The MikeTaps monogram. Original mark: burgundy disc, gold ring, serif M.
+// The MikeTaps monogram: a bare MT drawn like circuit traces, gold lines ending
+// in burgundy vias over a burgundy rule. Colors come from --mark-* in global.css
+// so the gold stays readable on the light paper and the dark room.
 // Ships with an 8-bit twin that only shows during the Konami code easter egg.
 interface Props {
   size?: number;
@@ -7,23 +9,36 @@ interface Props {
 const { size = 36 } = Astro.props;
 ---
 <span class="mono" style={`--size:${size}px`} aria-hidden="true">
-  <svg class="mono-hd" viewBox="0 0 64 64" width={size} height={size}>
-    <circle cx="32" cy="32" r="31" fill="#6e1e28" />
-    <circle cx="32" cy="32" r="26.5" fill="none" stroke="#c29b45" stroke-width="1.5" />
-    <text x="32" y="42.5" text-anchor="middle" font-family="Fraunces Variable, Georgia, serif" font-size="30" font-weight="600" fill="#e2c27a">M</text>
+  <svg class="mono-hd" viewBox="-42 -40 84 84" width={size} height={size}>
+    <path class="rule" d="M-38,35H38" stroke-width="3" stroke-linecap="round" />
+    <polyline class="trace" points="-34,24 -34,-26 -17,0 0,-26 0,24" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path class="trace" d="M0,-26H36M18,-26V24" fill="none" stroke-width="5.5" stroke-linecap="round" />
+    <g class="via" stroke-width="2.2">
+      <circle cx="-34" cy="24" r="5" />
+      <circle cx="0" cy="24" r="5" />
+      <circle cx="18" cy="24" r="5" />
+      <circle cx="36" cy="-26" r="5" />
+    </g>
   </svg>
   <svg class="mono-8" viewBox="0 0 16 16" width={size} height={size} shape-rendering="crispEdges">
-    <rect x="4" y="0" width="8" height="1" fill="#6e1e28" />
-    <rect x="2" y="1" width="12" height="1" fill="#6e1e28" />
-    <rect x="1" y="2" width="14" height="12" fill="#6e1e28" />
-    <rect x="0" y="4" width="16" height="8" fill="#6e1e28" />
-    <rect x="2" y="14" width="12" height="1" fill="#6e1e28" />
-    <rect x="4" y="15" width="8" height="1" fill="#6e1e28" />
-    <rect x="4" y="4" width="2" height="8" fill="#e2c27a" />
-    <rect x="10" y="4" width="2" height="8" fill="#e2c27a" />
-    <rect x="6" y="5" width="1" height="2" fill="#e2c27a" />
-    <rect x="9" y="5" width="1" height="2" fill="#e2c27a" />
-    <rect x="7" y="7" width="2" height="2" fill="#e2c27a" />
+    <g class="px-gold">
+      <rect x="1" y="3" width="1" height="10" />
+      <rect x="2" y="4" width="1" height="1" />
+      <rect x="3" y="5" width="1" height="1" />
+      <rect x="4" y="6" width="1" height="1" />
+      <rect x="5" y="5" width="1" height="1" />
+      <rect x="6" y="4" width="1" height="1" />
+      <rect x="7" y="3" width="1" height="10" />
+      <rect x="8" y="3" width="6" height="1" />
+      <rect x="10" y="4" width="1" height="9" />
+    </g>
+    <g class="px-dot">
+      <rect x="1" y="13" width="1" height="1" />
+      <rect x="7" y="13" width="1" height="1" />
+      <rect x="10" y="13" width="1" height="1" />
+      <rect x="14" y="3" width="1" height="1" />
+      <rect x="1" y="15" width="14" height="1" />
+    </g>
   </svg>
 </span>
 
@@ -35,6 +50,22 @@ const { size = 36 } = Astro.props;
   }
   .mono > svg {
     grid-area: 1 / 1;
+  }
+  .trace {
+    stroke: var(--mark-gold);
+  }
+  .rule {
+    stroke: var(--mark-rule);
+  }
+  .via {
+    fill: var(--burgundy);
+    stroke: var(--mark-gold);
+  }
+  .px-gold {
+    fill: var(--mark-gold);
+  }
+  .px-dot {
+    fill: var(--mark-rule);
   }
   .mono-8 {
     opacity: 0;

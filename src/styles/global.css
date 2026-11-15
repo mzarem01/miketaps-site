@@ -36,6 +36,8 @@
   --gold-bright: #e2c27a;
   --gold-text: #6b5218;
   --gold-tint: #f4e8cc;
+  --mark-gold: #9a7424;
+  --mark-rule: #6e1e28;
   --accent: var(--burgundy-text);
 
   /* room scene */
@@ -87,6 +89,8 @@
   --burgundy-tint: #3a1c21;
   --gold-text: #e6c983;
   --gold-tint: #2f2716;
+  --mark-gold: #d4ad5a;
+  --mark-rule: #a3364a;
   --wall: #2b1316;
   --wall-shade: #230f12;
   --wainscot: #1d0c0f;
@@ -114,6 +118,8 @@
     --burgundy-tint: #3a1c21;
     --gold-text: #e6c983;
     --gold-tint: #2f2716;
+    --mark-gold: #d4ad5a;
+    --mark-rule: #a3364a;
     --wall: #2b1316;
     --wall-shade: #230f12;
     --wainscot: #1d0c0f;

@@ -28,6 +28,7 @@ const matches = [
     why: `An absolute classic. Ten scoreless minutes and into overtime, two of the best ever trading attacks. Kron almost gets Marcelo with a guillotine, Marcelo stays calm and gets out, then passes, climbs to mount and finishes Kron with his own guillotine. Immaculate. Still one of my favorite matches to watch.`,
     result: `Marcelo Garcia by guillotine`,
     url: 'https://www.youtube.com/watch?v=ebujdnSwlR4',
+    photo: { src: '/img/mat/marcelo.jpg', alt: 'Me with Marcelo Garcia, my face blurred', tilt: 4 },
     src: `Fan upload (no official copy on YouTube)`,
   },
   {
@@ -36,6 +37,7 @@ const matches = [
     why: `Roger locks up an armlock and Jacaré refuses to tap. The elbow pops. He tucks the arm into his belt and fights the rest of the match one-handed to hold onto his lead. Not saying anybody should copy that, but it's one of the toughest things I've ever seen on a mat.`,
     result: `Jacaré on points, 4 to 2`,
     url: 'https://www.youtube.com/watch?v=SWxPTrESldw',
+    photo: { src: '/img/mat/jacare.jpg', alt: 'Me with Jacaré, my face blurred', tilt: -3 },
     src: `Fan upload (no official copy on YouTube)`,
   },
 ];
@@ -76,7 +78,12 @@ const matches = [
       <p class="sub">Not my matches. The ones I keep going back to.</p>
       <ol class="cards">
         {matches.map((m, i) => (
-          <li class="card">
+          <li class={m.photo ? 'card has-photo' : 'card'}>
+            {m.photo && (
+              <figure class="snap" style={`--tilt:${m.photo.tilt}deg`}>
+                <img src={m.photo.src} alt={m.photo.alt} width="480" height="360" loading="lazy" decoding="async" />
+              </figure>
+            )}
             <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <p class="meta">{m.meta}</p>
             <h3>{m.title}</h3>
@@ -202,11 +209,11 @@ const matches = [
   }
   .cards {
     list-style: none;
-    margin: 1.2rem 0 0;
+    margin: 2.4rem 0 0;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.1rem;
+    gap: 2.6rem 1.1rem;
   }
   .card {
     display: flex;
@@ -221,6 +228,43 @@ const matches = [
   .card:hover {
     border-color: var(--accent);
     transform: translateY(-2px);
+  }
+  /* a snapshot taped to the corner of the card (my face blurred in the image itself) */
+  .card {
+    position: relative;
+  }
+  .snap {
+    position: absolute;
+    top: -30px;
+    right: -14px;
+    width: 156px;
+    margin: 0;
+    padding: 6px;
+    box-sizing: border-box;
+    background: #f4efe6;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+    transform: rotate(var(--tilt));
+    z-index: 1;
+  }
+  .snap::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    width: 62px;
+    height: 20px;
+    margin-left: -31px;
+    background: rgba(226, 194, 122, 0.75);
+    transform: rotate(calc(var(--tilt) * -1.5));
+  }
+  .snap img {
+    display: block;
+    width: 144px;
+    height: 108px;
+    object-fit: cover;
+  }
+  .has-photo .meta {
+    max-width: calc(100% - 140px);
   }
   .num {
     font-family: var(--font-display);

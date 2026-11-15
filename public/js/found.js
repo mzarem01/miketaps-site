@@ -1,13 +1,13 @@
 // The plaque: ten things to find around the site. Kept only in this browser
 // (localStorage), never sent anywhere. Other scripts call window.mtFound(id);
 // this file also listens for the simple ones itself (lamp, Mia, controller,
-// dealing a Gameday card, picking a verse, opening Work or the Lab).
+// running the numbers or picking a season on Gameday, picking a verse, opening Work or the Lab).
 (function () {
   var KEY = 'miketaps-found';
   var LIST = [
     { id: 'lamp', title: 'Lights on', done: 'Flipped the desk lamp.', hint: 'Something on the desk clicks.' },
     { id: 'mia', title: 'Good girl', done: 'Gave Mia a treat.', hint: 'Someone by the lamp is waiting.' },
-    { id: 'pennant', title: 'Gameday', done: 'Dealt a history card.', hint: 'Hail to the wall.' },
+    { id: 'pennant', title: 'Gameday', done: 'Ran the numbers on Gameday.', hint: 'Hail to the wall.' },
     { id: 'word', title: 'Read slowly', done: 'Picked a verse.', hint: 'One book on the shelf is different.' },
     { id: 'work', title: 'whoami', done: 'Opened the work.', hint: 'The screen is still on.' },
     { id: 'lab', title: 'Under the hood', done: 'Looked around the lab.', hint: 'Lights blink by the desk.' },
@@ -122,7 +122,7 @@
     ['[data-lamp]', 'lamp'],
     ['[data-mia]', 'mia'],
     ['[data-tv-remote]', 'clip'],
-    ['[data-deal]', 'pennant'],
+    ['[data-run], [data-season]', 'pennant'],
     ['[data-mood], [data-another]', 'word']
   ];
   function check(target) {

@@ -6,7 +6,6 @@ kind: Networking
 date: October 2026
 order: 3
 stack: [MikroTik hEX (RouterOS), Zyxel GS1900-8, CyberPower UPS, NUT, Pi-hole]
-repo: https://github.com/mzarem01/homelab-network-upgrade
 broke: The firewall rules "worked" but every counter read zero. The switch chip was forwarding traffic in hardware, so the firewall never saw a packet.
 teaser: An allow-list firewall, and the hardware offload trap that almost fooled me.
 ---

@@ -6,7 +6,6 @@ kind: Security project
 date: July 2026
 order: 1
 stack: [Wazuh 4.9, Ubuntu Server 24.04, VirtualBox, Tailscale, Debian, macOS, Windows 11]
-repo: https://github.com/mzarem01/soc-home-lab-wazuh
 broke: macOS wanted a system extension approved by hand, and the Windows agent wouldn't install silently without an elevated shell.
 teaser: 11 failed logins became one correlated alert in about 64 seconds.
 ---

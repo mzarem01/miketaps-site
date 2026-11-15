@@ -6,7 +6,6 @@ kind: Infrastructure
 date: 2025 to 2026
 order: 2
 stack: [Debian, Docker, CasaOS, mergerfs, Jellyfin, Immich, Pi-hole, Uptime Kuma, rsync, cron]
-repo: https://github.com/mzarem01/homelab
 broke: My docs. Addresses drifted and notes went stale while I trusted them. Verify against the system, not your notes.
 teaser: No forwarded ports, backups that report in, and a list of what I'd do differently.
 ---

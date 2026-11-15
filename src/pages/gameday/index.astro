@@ -1,92 +1,235 @@
 ---
 import { BUILD } from '../../data/build';
 import Base from '../../layouts/Base.astro';
-import data from '../../data/commanders.json';
+import notes from '../../data/commanders.json';
+import seasonData from '../../data/seasons.json';
 
-const { facts, eras, sources } = data as any;
-const eraName = Object.fromEntries(eras.map((e: any) => [e.id, e.name]));
+const { facts, eras: noteEras, sources } = notes as any;
+const { seasons, source, current_season } = seasonData as any;
+
+// Era ranges for the bands under the chart. "today" runs to the current season.
+const eras = noteEras.map((e: any) => {
+  const [from, to] = e.span.split(' to ');
+  return { id: e.id, name: e.name, span: e.span, from: +from, to: to === 'today' ? current_season : +to };
+});
+
+const games = (s: any) => s.wins + s.losses + s.ties;
+const pct = (s: any) => (s.wins + s.ties / 2) / games(s);
+const maxPF = Math.max(...seasons.map((s: any) => s.points_for / games(s)));
+const maxPA = Math.max(...seasons.map((s: any) => s.points_against / games(s)));
+const maxMargin = Math.max(...seasons.map((s: any) => Math.abs(s.points_for - s.points_against) / games(s)));
+const noteYears = new Set(facts.map((f: any) => +f.year).filter((y: number) => y > 0));
+const record = (s: any) => `${s.wins}-${s.losses}${s.ties ? `-${s.ties}` : ''}`;
+const resultText = (s: any) =>
+  s.in_progress ? 'Season in progress' : s.playoff_result ?? 'Missed the playoffs';
+
+const bars = seasons.map((s: any) => {
+  const m = (s.points_for - s.points_against) / games(s);
+  const style = [
+    `--win:${pct(s).toFixed(4)}`,
+    `--pf:${(s.points_for / games(s) / maxPF).toFixed(4)}`,
+    `--pa:${(s.points_against / games(s) / maxPA).toFixed(4)}`,
+    `--up:${(Math.max(m, 0) / maxMargin).toFixed(4)}`,
+    `--down:${(Math.max(-m, 0) / maxMargin).toFixed(4)}`,
+  ].join(';');
+  return {
+    ...s,
+    style,
+    note: noteYears.has(s.year),
+    label: `${s.year}, ${s.team}: ${record(s)}${s.in_progress ? ' so far' : ''}. ${resultText(s)}.`,
+  };
+});
+const startYear = seasons[0].year;
+const col = (y: number) => y - startYear + 1;
+
 // Escape < so nothing in the data can ever close the script tag it sits in.
-const payload = JSON.stringify({ facts, eras, sources }).replace(/</g, '\\u003c');
+const payload = JSON.stringify({ seasons, source, current: current_season, eras, facts, sources }).replace(/</g, '\\u003c');
 ---
-<Base title="Gameday" description="Washington franchise history, one collectible card at a time. Every fact has a source." accent="#8a2533">
+<Base title="Gameday" description="Every Washington season since 1932 on one chart. Pick a season, run the numbers and check the math." accent="#8a2533">
   <section class="wrap head">
     <p class="eyebrow">The MikeTaps history series</p>
     <h1>Gameday</h1>
     <p class="lede">
-      Washington football history, one card at a time. Deal yourself a card, flip it over, and
-      check the source if you don't believe it. Collect all {facts.length}.
+      Every Washington season since {startYear} on one chart. Pick a season, run the numbers, and
+      check the math yourself. Every number links back to where it came from.
     </p>
   </section>
 
-  <section class="wrap table" aria-label="Card table">
-    <div class="felt">
-      <div class="controls">
-        <div class="eras" role="group" aria-label="Deal from an era">
-          <button type="button" class="era on" data-era="all" aria-pressed="true">All eras</button>
-          {eras.map((e: any) => (
-            <button type="button" class="era" data-era={e.id} aria-pressed="false">{e.name}</button>
-          ))}
+  <section class="wrap" aria-labelledby="ls-h">
+    <div class="felt" id="chart">
+      <div class="top">
+        <div>
+          <h2 id="ls-h">The long season</h2>
+          <p class="note" data-metric-note>Bar height is the share of games won (a tie counts as half). Color shows how the season ended.</p>
         </div>
-        <p class="count"><span data-collected>0</span> of {facts.length} collected</p>
+        <div class="metrics" role="group" aria-label="What the bars show">
+          <button type="button" class="pill on" data-metric="win" aria-pressed="true">Win %</button>
+          <button type="button" class="pill" data-metric="pf" aria-pressed="false">Points per game</button>
+          <button type="button" class="pill" data-metric="pa" aria-pressed="false">Allowed per game</button>
+          <button type="button" class="pill" data-metric="margin" aria-pressed="false">Margin per game</button>
+        </div>
       </div>
 
-      <div class="play">
-        <button type="button" class="deck" data-deal aria-label="Deal me a card">
-          <span class="back b3" aria-hidden="true"></span>
-          <span class="back b2" aria-hidden="true"></span>
-          <span class="back b1" aria-hidden="true"><span class="crest">M</span></span>
-        </button>
-
-        <div class="slot" aria-live="polite">
-          <div class="dealt" data-dealt hidden>
-            <article class="hcard" data-card>
-              <div class="hcard-inner">
-                <div class="face front">
-                  <span class="series">History series <span data-no></span></span>
-                  <span class="ribbon" data-era-name></span>
-                  <span class="year" data-year></span>
-                  <h2 class="ctitle" data-title></h2>
-                  <p class="flip-hint">Tap to flip</p>
-                </div>
-                <div class="face backside">
-                  <p class="cfact" data-fact></p>
-                  <a class="csrc" data-src href="#" target="_blank" rel="noopener">Source</a>
-                </div>
-              </div>
-            </article>
+      <div class="scroll">
+        <div class="plot" style={`--n:${bars.length}`}>
+          <ol class="bars" data-bars data-mode="win" aria-label="Seasons. Use the arrow keys to move between seasons.">
+            {bars.map((b: any) => (
+              <li>
+                <button
+                  type="button"
+                  class:list={['bar', b.outcome, { live: b.in_progress }]}
+                  data-season={b.year}
+                  style={b.style}
+                  aria-label={b.label}
+                  tabindex="-1"
+                >
+                  <span class="mark" aria-hidden="true">{b.note && <span class="dot"></span>}</span>
+                  <span class="hi" aria-hidden="true"><span class="up"></span></span>
+                  <span class="lo" aria-hidden="true"><span class="down"></span></span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div class="ticks" aria-hidden="true">
+            {bars.filter((b: any) => b.year % 10 === 0).map((b: any) => (
+              <span style={`grid-column:${col(b.year)}`}>{b.year}</span>
+            ))}
           </div>
-          <p class="empty" data-empty>Click the deck. Your first card is waiting.</p>
+          <div class="bands" aria-hidden="true">
+            {eras.map((e: any) => (
+              <span style={`grid-column:${col(e.from)} / ${col(e.to) + 1}`}>{e.name}</span>
+            ))}
+          </div>
         </div>
+      </div>
 
-        <div class="actions">
-          <button type="button" class="btn" data-deal>Deal me a card</button>
-          <button type="button" class="ghost" data-flip disabled>Flip it</button>
-        </div>
+      <ul class="legend">
+        <li><span class="sw missed"></span>Missed the playoffs</li>
+        <li><span class="sw playoffs"></span>Made the playoffs</li>
+        <li><span class="sw title"></span>Won the title</li>
+        <li><span class="sw live"></span>{current_season}, still being played</li>
+        <li><span class="dotkey"></span>A note from the archive</li>
+      </ul>
+
+      <div class="panels">
+        <article class="panel season" aria-live="polite" aria-labelledby="sp-year">
+          <div class="sp-head">
+            <h3 id="sp-year" data-sp="year"></h3>
+            <p class="sp-team" data-sp="team"></p>
+          </div>
+          <dl class="stats">
+            <div><dt>Record</dt><dd data-sp="record"></dd></div>
+            <div><dt>Points for / against</dt><dd data-sp="points"></dd></div>
+            <div><dt>Margin</dt><dd data-sp="margin"></dd></div>
+          </dl>
+          <p class="sp-line" data-sp="result"></p>
+          <p class="sp-line faint" data-sp="coach"></p>
+          <ul class="sp-notes" data-sp="notes"></ul>
+          <p class="sp-src"><a data-sp="source" href={source.url}>See this season on Pro Football Reference</a></p>
+          <div class="stepper">
+            <button type="button" class="ghost" data-step="-1">Previous season</button>
+            <button type="button" class="ghost" data-step="1">Next season</button>
+          </div>
+        </article>
+
+        <article class="panel machine" aria-labelledby="sm-h">
+          <h3 id="sm-h" class="kicker">The stat machine</h3>
+          <div aria-live="polite">
+            <p class="sm-empty" data-sm-empty>
+              Every fact here is worked out from the season data when you press the button. The seasons
+              behind it light up on the chart, and the math is right underneath.
+            </p>
+            <div class="sm-fact" data-sm-fact hidden>
+              <p class="sm-title" data-sm="title"></p>
+              <p class="sm-text" data-sm="text"></p>
+              <p class="sm-math"><span>Show the math:</span> <span data-sm="math"></span></p>
+              <p class="sm-check" data-sm="check"></p>
+            </div>
+          </div>
+          <div class="sm-actions">
+            <button type="button" class="btn" data-run>Run the numbers</button>
+            <button type="button" class="ghost" data-clear>Clear</button>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="wrap binder" aria-labelledby="binder-h">
-    <h2 id="binder-h">The binder</h2>
-    <p class="sub">Every card in the set, by era. Cards you've been dealt get a gold corner.</p>
-    {eras.map((e: any) => (
+  <section class="wrap era" aria-labelledby="era-h">
+    <h2 id="era-h">Your era</h2>
+    <p class="sub">
+      Type the year you were born, or the year you started watching. It's all worked out in your
+      browser and nothing is sent anywhere.
+    </p>
+    <form class="era-form" data-era-form>
+      <label for="era-year">Starting year ({startYear} to {current_season})</label>
+      <div class="era-row">
+        <input id="era-year" name="year" type="number" inputmode="numeric" min={startYear} max={current_season} placeholder="1990" required />
+        <button type="submit" class="btn">Show me</button>
+        <button type="button" class="ghost dark" data-era-light hidden aria-pressed="false">Light them up on the chart</button>
+      </div>
+    </form>
+    <div class="era-out" data-era-out aria-live="polite" hidden>
+      <div class="tile"><span>Record since <b data-era="from"></b></span><strong data-era="record"></strong></div>
+      <div class="tile"><span>Win %</span><strong data-era="pct"></strong></div>
+      <div class="tile"><span>Playoff trips</span><strong data-era="trips"></strong></div>
+      <div class="tile"><span>Titles</span><strong data-era="titles"></strong></div>
+      <div class="tile"><span>Best season</span><strong data-era="best"></strong></div>
+      <div class="tile"><span>Head coaches</span><strong data-era="coaches"></strong></div>
+    </div>
+    <p class="faint era-foot" data-era-foot hidden></p>
+  </section>
+
+  <section class="wrap archive" aria-labelledby="ar-h">
+    <h2 id="ar-h">Notes from the archive</h2>
+    <p class="sub">The stories behind the numbers, each with its source. The gold dots on the chart mark these seasons.</p>
+    {noteEras.map((e: any) => (
       <div class="era-block">
         <h3>{e.name} <span>{e.span}</span></h3>
         <ol class="sleeves">
           {facts.filter((f: any) => f.era === e.id).map((f: any) => (
-            <li class="sleeve" data-sleeve={f.id}>
+            <li class="sleeve">
               <span class="s-year">{f.year}</span>
               <span class="s-title">{f.title}</span>
               <span class="s-fact">{f.fact}</span>
-              <a class="s-src" href={sources[f.src].url}>{sources[f.src].title}</a>
+              <span class="s-links">
+                <a href={sources[f.src].url}>{sources[f.src].title}</a>
+                {+f.year > 0 && <a href="#chart" data-goto={f.year}>Find {f.year} on the chart</a>}
+              </span>
             </li>
           ))}
         </ol>
       </div>
     ))}
+
+    <details class="table">
+      <summary>Every season as a table</summary>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Season</th><th scope="col">Team</th><th scope="col">Record</th><th scope="col">Points for</th><th scope="col">Points against</th><th scope="col">Head coach</th><th scope="col">Result</th></tr>
+          </thead>
+          <tbody>
+            {[...seasons].reverse().map((s: any) => (
+              <tr>
+                <th scope="row"><a href={s.source}>{s.year}</a></th>
+                <td>{s.team}</td>
+                <td>{record(s)}</td>
+                <td>{s.points_for}</td>
+                <td>{s.points_against}</td>
+                <td>{s.coaches.join(', ')}</td>
+                <td>{resultText(s)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+
     <p class="disclaimer">
-      A fan project. Not affiliated with the Washington Commanders or the NFL. Facts are written in
-      my own words from the linked sources.
+      {source.credit} (<a href={source.url}>franchise page</a>), checked {source.retrieved}. Team names
+      are the ones used that season. A fan project, not affiliated with the Washington Commanders or the
+      NFL. Notes are written in my own words from the linked sources.
     </p>
   </section>
 
@@ -105,254 +248,433 @@ const payload = JSON.stringify({ facts, eras, sources }).replace(/</g, '\\u003c'
     color: var(--ink-soft);
   }
   .felt {
+    --missed: #94807a;
+    --playoffs: #c99a3f;
+    --title: #f6e2a4;
     border-radius: 24px;
     padding: clamp(1rem, 3vw, 2rem);
     background:
-      radial-gradient(ellipse at 50% 30%, rgba(194, 155, 69, 0.18), transparent 60%),
-      repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.04) 0 2px, transparent 2px 6px),
+      radial-gradient(ellipse at 50% 20%, rgba(194, 155, 69, 0.16), transparent 60%),
       #4a1219;
     color: #f2e9dc;
     box-shadow: inset 0 0 0 1px rgba(194, 155, 69, 0.35), 0 30px 60px -30px rgba(40, 10, 14, 0.6);
+    display: grid;
+    gap: 1.25rem;
   }
-  .controls {
+  .felt h2,
+  .felt h3 {
+    color: #f2e9dc;
+  }
+  .felt :global(a) {
+    color: #e2c27a;
+  }
+  .top {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
+    align-items: flex-end;
+    gap: 1rem;
   }
-  .eras {
+  .top h2 {
+    margin: 0;
+  }
+  .note {
+    margin: 0.25rem 0 0;
+    max-width: 34rem;
+    font-size: 0.95rem;
+    color: #d9c9b6;
+  }
+  .metrics {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
   }
-  .era {
+  .pill {
     font: 600 0.9rem/1 var(--font-sans);
-    padding: 0.55rem 0.85rem;
+    min-height: 44px;
+    padding: 0 0.95rem;
     border-radius: 999px;
     border: 1px solid rgba(226, 194, 122, 0.45);
     background: transparent;
     color: #f2e9dc;
     cursor: pointer;
-    transition: background-color var(--fast) var(--ease), transform var(--fast) var(--pop);
   }
-  .era:active {
-    transform: scale(0.95);
-  }
-  .era.on {
+  .pill.on {
     background: #e2c27a;
     color: #3a1d10;
   }
-  .count {
+  .pill:focus-visible,
+  .bar:focus-visible,
+  .felt .ghost:focus-visible,
+  .felt .btn:focus-visible {
+    outline: 2px solid #e2c27a;
+    outline-offset: 2px;
+  }
+
+  /* chart */
+  .scroll {
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+  .plot {
+    min-width: 760px;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .bars,
+  .ticks,
+  .bands {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    column-gap: 2px;
+  }
+  .bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 260px;
+  }
+  .bars li {
+    display: flex;
+    min-width: 0;
+  }
+  .bar {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-rows: 14px 1fr 0fr;
+    color: var(--missed);
+    border-radius: 3px;
+  }
+  .bar.playoffs { color: var(--playoffs); }
+  .bar.title { color: var(--title); }
+  .bar:hover .up,
+  .bar:hover .down {
+    filter: brightness(1.2);
+  }
+  .mark {
+    display: grid;
+    place-items: start center;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    margin-top: 3px;
+    border-radius: 50%;
+    background: #e2c27a;
+  }
+  .hi,
+  .lo {
+    display: flex;
+    min-height: 0;
+  }
+  .hi { align-items: flex-end; }
+  .lo { align-items: flex-start; }
+  .up,
+  .down {
+    display: block;
+    width: 100%;
+    background: currentColor;
+    min-height: 2px;
+    transition: height var(--slow) var(--ease), opacity var(--base) var(--ease);
+  }
+  .up { border-radius: 2px 2px 0 0; height: calc(var(--win) * 100%); }
+  .down { border-radius: 0 0 2px 2px; height: 0; min-height: 0; }
+  .bar.live .up,
+  .bar.live .down {
+    background: repeating-linear-gradient(45deg, currentColor 0 3px, transparent 3px 6px);
+    box-shadow: inset 0 0 0 1px currentColor;
+  }
+  [data-mode='pf'] .up { height: calc(var(--pf) * 100%); }
+  [data-mode='pa'] .up { height: calc(var(--pa) * 100%); }
+  [data-mode='margin'] .bar { grid-template-rows: 14px 1fr 1fr; }
+  [data-mode='margin'] .lo { border-top: 1px solid rgba(242, 233, 220, 0.5); }
+  [data-mode='margin'] .up { height: calc(var(--up) * 100%); min-height: 0; }
+  [data-mode='margin'] .down { height: calc(var(--down) * 100%); }
+  .bar.sel {
+    box-shadow: 0 0 0 2px #f2e9dc;
+  }
+  .bars.lit .bar:not(.on) .up,
+  .bars.lit .bar:not(.on) .down {
+    opacity: 0.22;
+  }
+  .ticks span {
+    font: 0.72rem/1 var(--font-mono);
+    color: #d9c9b6;
+    white-space: nowrap;
+    grid-row: 1;
+  }
+  .bands span {
+    grid-row: 1;
+    border-top: 2px solid rgba(226, 194, 122, 0.4);
+    padding-top: 0.35rem;
+    font-size: 0.82rem;
+    color: #d9c9b6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.88rem;
+    color: #d9c9b6;
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .sw {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+  .sw.missed { background: var(--missed); }
+  .sw.playoffs { background: var(--playoffs); }
+  .sw.title { background: var(--title); }
+  .sw.live { background: repeating-linear-gradient(45deg, var(--missed) 0 3px, transparent 3px 6px); box-shadow: inset 0 0 0 1px var(--missed); }
+  .dotkey {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e2c27a;
+  }
+
+  /* panels */
+  .panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+  }
+  .panel {
+    background: rgba(20, 6, 8, 0.35);
+    border: 1px solid rgba(226, 194, 122, 0.25);
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .sp-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .sp-head h3 {
+    margin: 0;
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+  .sp-team {
     margin: 0;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: #e2c27a;
   }
-  .play {
+  .stats {
+    margin: 0;
     display: grid;
-    grid-template-columns: 180px 1fr;
-    grid-template-rows: auto auto;
-    gap: 1.5rem 2rem;
-    align-items: center;
-    margin: 1.5rem auto 0;
-    max-width: 620px;
-  }
-  .deck {
-    position: relative;
-    width: 160px;
-    height: 224px;
-    border: 0;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-    grid-row: span 2;
-  }
-  .back {
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    background:
-      repeating-linear-gradient(45deg, rgba(226, 194, 122, 0.22) 0 2px, transparent 2px 12px),
-      repeating-linear-gradient(-45deg, rgba(226, 194, 122, 0.22) 0 2px, transparent 2px 12px),
-      #6e1e28;
-    border: 3px solid #f2e9dc;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-    transition: transform var(--base) var(--pop);
-  }
-  .b2 { transform: translate(4px, 4px) rotate(2deg); }
-  .b3 { transform: translate(8px, 8px) rotate(4deg); }
-  .crest {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: #4a1219;
-    border: 2px solid #c29b45;
-    color: #e2c27a;
-    font-family: var(--font-display);
-    font-size: 2rem;
-  }
-  .deck:hover .b1,
-  .deck:focus-visible .b1 {
-    transform: translate(-6px, -8px) rotate(-3deg);
-  }
-  .deck:active .b1 {
-    transform: translate(-2px, -2px);
-  }
-  .slot {
-    min-height: 300px;
-    display: grid;
-    place-items: center start;
-  }
-  .empty {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-style: italic;
-    color: rgba(242, 233, 220, 0.75);
-  }
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.75rem;
   }
-  .actions .btn {
-    background: #e2c27a;
-    border-color: #e2c27a;
-    color: #3a1d10;
-    box-shadow: 0 3px 0 #9a7a33;
+  .stats dt {
+    font-size: 0.8rem;
+    color: #d9c9b6;
+  }
+  .stats dd {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+  .sp-line {
+    margin: 0;
+  }
+  .faint {
+    color: #d9c9b6;
+    font-size: 0.95rem;
+  }
+  .era .faint {
+    color: var(--ink-faint);
+  }
+  .sp-notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .sp-notes :global(li) {
+    border-top: 1px solid rgba(226, 194, 122, 0.25);
+    padding-top: 0.6rem;
+    font-family: var(--font-display);
+    line-height: 1.45;
+  }
+  .sp-notes :global(a) {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+  .sp-src {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .stepper,
+  .sm-actions {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .stepper .ghost {
+    flex: 1;
   }
   .ghost {
-    font: 600 1rem/1 var(--font-sans);
-    padding: 0.8rem 1.15rem;
+    font: 600 0.95rem/1 var(--font-sans);
+    min-height: 44px;
+    padding: 0 1.1rem;
     border-radius: 999px;
     border: 1.5px solid rgba(242, 233, 220, 0.6);
     background: transparent;
     color: #f2e9dc;
     cursor: pointer;
   }
-  .ghost:disabled {
-    opacity: 0.4;
-    cursor: default;
+  .ghost.dark {
+    color: var(--ink);
+    border-color: var(--rule);
   }
-
-  /* the card */
-  .dealt {
-    width: 100%;
+  .ghost.dark[aria-pressed='true'] {
+    background: var(--gold-tint);
+    border-color: var(--gold);
   }
-  .hcard {
-    width: 300px;
-    max-width: 100%;
-    aspect-ratio: 5 / 7;
-    perspective: 1200px;
-    cursor: pointer;
+  .felt .btn {
+    background: #e2c27a;
+    border-color: #e2c27a;
+    color: #3a1d10;
+    box-shadow: 0 3px 0 #9a7a33;
   }
-  .hcard-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 700ms var(--ease);
-  }
-  .hcard.flipped .hcard-inner {
-    transform: rotateY(180deg);
-  }
-  .face {
-    position: absolute;
-    inset: 0;
-    border-radius: 14px;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    padding: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    color: #261d1b;
-    background: #f6ecd8;
-    border: 8px solid #f6ecd8;
-    box-shadow: inset 0 0 0 2px #6e1e28, inset 0 0 0 5px #f6ecd8, inset 0 0 0 6px #c29b45, 0 14px 30px rgba(0, 0, 0, 0.4);
-  }
-  .front {
-    background:
-      radial-gradient(circle at 70% 20%, rgba(194, 155, 69, 0.25), transparent 50%),
-      #f6ecd8;
-  }
-  .series {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6e1e28;
-    display: flex;
-    justify-content: space-between;
-  }
-  .ribbon {
-    align-self: flex-start;
-    margin-top: 0.6rem;
-    padding: 0.2rem 0.6rem;
-    background: #6e1e28;
-    color: #e2c27a;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
-    padding-right: 1.1rem;
-  }
-  .year {
-    margin-top: auto;
-    font-family: var(--font-display);
-    font-size: clamp(4rem, 14vw, 5.5rem);
-    font-weight: 700;
-    line-height: 0.9;
-    color: #6e1e28;
-    letter-spacing: -0.03em;
-  }
-  .ctitle {
-    font-size: 1.45rem;
-    margin: 0.4rem 0 0.3rem;
-    color: #261d1b;
-  }
-  .flip-hint {
+  .kicker {
     margin: 0;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: #7b6a5d;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e2c27a !important;
+    font-weight: 500;
   }
-  .backside {
-    transform: rotateY(180deg);
-    justify-content: center;
-    background:
-      linear-gradient(#e8dcc3 1px, transparent 1px) 0 0 / 100% 1.6rem,
-      #f6ecd8;
-  }
-  .cfact {
+  .sm-empty {
+    margin: 0;
     font-family: var(--font-display);
-    font-size: 1.15rem;
-    line-height: 1.45;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #e6d8c6;
   }
-  .csrc {
-    margin-top: auto;
-    font-size: 0.85rem;
-    color: #6e1e28;
+  .sm-fact p {
+    margin: 0 0 0.6rem;
   }
-  .dealt.enter .hcard {
-    animation: deal 520ms var(--ease);
+  .sm-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.15;
   }
-  @keyframes deal {
-    from { transform: translate(-180px, 10px) rotate(-12deg) scale(0.7); opacity: 0; }
-    to { transform: none; opacity: 1; }
+  .sm-text {
+    font-size: 1.1rem;
+  }
+  .sm-math {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: #e6d8c6;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+  }
+  .sm-math span:first-child {
+    color: #e2c27a;
+  }
+  .sm-check {
+    font-size: 0.9rem;
+  }
+  .sm-check :global(a + a) {
+    margin-left: 0.75rem;
   }
 
-  /* binder */
-  .binder {
+  /* your era */
+  .era {
     padding-top: 3rem;
-    padding-bottom: 3rem;
   }
   .sub {
     color: var(--ink-soft);
+    max-width: 40rem;
+  }
+  .era-form {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .era-form label {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .era-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .era-row input {
+    width: 9rem;
+    min-height: 48px;
+    padding: 0 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--rule);
+    background: var(--card);
+    color: var(--ink);
+    font: 600 1.2rem var(--font-mono);
+  }
+  .era-out {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+  .era-out[hidden] {
+    display: none;
+  }
+  .tile {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--rule);
+  }
+  .tile span {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .tile strong {
+    font-size: 1.4rem;
+  }
+  .era-foot {
+    margin-top: 0.75rem;
+  }
+
+  /* archive */
+  .archive {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
   .era-block h3 {
     margin-top: 2rem;
@@ -375,23 +697,13 @@ const payload = JSON.stringify({ facts, eras, sources }).replace(/</g, '\\u003c'
     gap: 0.75rem;
   }
   .sleeve {
-    position: relative;
     display: grid;
     gap: 0.25rem;
+    align-content: start;
     padding: 0.9rem 1rem;
     border-radius: 10px;
     background: var(--card);
     border: 1px solid var(--rule);
-    overflow: hidden;
-  }
-  .sleeve.have::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-style: solid;
-    border-width: 0 28px 28px 0;
-    border-color: transparent var(--gold) transparent transparent;
   }
   .s-year {
     font-family: var(--font-display);
@@ -408,33 +720,55 @@ const payload = JSON.stringify({ facts, eras, sources }).replace(/</g, '\\u003c'
     color: var(--ink-soft);
     line-height: 1.45;
   }
-  .s-src {
+  .s-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
     font-size: 0.8rem;
+  }
+  .table {
+    margin-top: 2.5rem;
+  }
+  .table summary {
+    cursor: pointer;
+    font-weight: 700;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .table-scroll {
+    overflow-x: auto;
+    max-height: 28rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+  }
+  .table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .table th,
+  .table td {
+    text-align: left;
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--paper-2);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
   }
   .disclaimer {
     margin-top: 2rem;
     font-size: 0.85rem;
     color: var(--ink-faint);
   }
-  @media (max-width: 640px) {
-    .play {
-      grid-template-columns: 1fr;
-    }
-    .deck {
-      grid-row: auto;
-      width: 120px;
-      height: 168px;
-      justify-self: center;
-    }
-    .slot {
-      place-items: center;
-    }
-    .actions {
-      justify-content: center;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .hcard-inner {
+    .up,
+    .down {
       transition: none;
     }
   }

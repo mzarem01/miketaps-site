@@ -1,0 +1,1630 @@
+{
+  "source": {
+    "name": "Pro Football Reference",
+    "url": "https://www.pro-football-reference.com/teams/was/",
+    "credit": "Season data from Pro-Football-Reference.com",
+    "retrieved": "2026-11-14"
+  },
+  "current_season": 2026,
+  "seasons": [
+    {
+      "year": 1932,
+      "team": "Boston Braves",
+      "wins": 4,
+      "losses": 4,
+      "ties": 2,
+      "points_for": 55,
+      "points_against": 79,
+      "coaches": [
+        "Wray"
+      ],
+      "division_finish": "4th of 8",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1932.htm"
+    },
+    {
+      "year": 1933,
+      "team": "Boston Redskins",
+      "wins": 5,
+      "losses": 5,
+      "ties": 2,
+      "points_for": 103,
+      "points_against": 97,
+      "coaches": [
+        "Dietz"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1933.htm"
+    },
+    {
+      "year": 1934,
+      "team": "Boston Redskins",
+      "wins": 6,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 107,
+      "points_against": 94,
+      "coaches": [
+        "Dietz"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1934.htm"
+    },
+    {
+      "year": 1935,
+      "team": "Boston Redskins",
+      "wins": 2,
+      "losses": 8,
+      "ties": 1,
+      "points_for": 65,
+      "points_against": 123,
+      "coaches": [
+        "Casey"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1935.htm"
+    },
+    {
+      "year": 1936,
+      "team": "Boston Redskins",
+      "wins": 7,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 149,
+      "points_against": 110,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the NFL Championship Game",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1936.htm"
+    },
+    {
+      "year": 1937,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 195,
+      "points_against": 120,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Won the NFL Championship",
+      "outcome": "title",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1937.htm"
+    },
+    {
+      "year": 1938,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 3,
+      "ties": 2,
+      "points_for": 148,
+      "points_against": 154,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1938.htm"
+    },
+    {
+      "year": 1939,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 2,
+      "ties": 1,
+      "points_for": 242,
+      "points_against": 94,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1939.htm"
+    },
+    {
+      "year": 1940,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 245,
+      "points_against": 142,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the NFL Championship Game",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1940.htm"
+    },
+    {
+      "year": 1941,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 176,
+      "points_against": 174,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1941.htm"
+    },
+    {
+      "year": 1942,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 1,
+      "ties": 0,
+      "points_for": 227,
+      "points_against": 102,
+      "coaches": [
+        "Flaherty"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Won the NFL Championship",
+      "outcome": "title",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1942.htm"
+    },
+    {
+      "year": 1943,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 3,
+      "ties": 1,
+      "points_for": 229,
+      "points_against": 137,
+      "coaches": [
+        "Bergman"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the NFL Championship Game",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1943.htm"
+    },
+    {
+      "year": 1944,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 3,
+      "ties": 1,
+      "points_for": 169,
+      "points_against": 180,
+      "coaches": [
+        "DeGroot"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1944.htm"
+    },
+    {
+      "year": 1945,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 209,
+      "points_against": 121,
+      "coaches": [
+        "DeGroot"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the NFL Championship Game",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1945.htm"
+    },
+    {
+      "year": 1946,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 5,
+      "ties": 1,
+      "points_for": 171,
+      "points_against": 191,
+      "coaches": [
+        "Edwards"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1946.htm"
+    },
+    {
+      "year": 1947,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 295,
+      "points_against": 367,
+      "coaches": [
+        "Edwards"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1947.htm"
+    },
+    {
+      "year": 1948,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 291,
+      "points_against": 287,
+      "coaches": [
+        "Edwards"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1948.htm"
+    },
+    {
+      "year": 1949,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 7,
+      "ties": 1,
+      "points_for": 268,
+      "points_against": 339,
+      "coaches": [
+        "Whelchel",
+        "Ball"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1949.htm"
+    },
+    {
+      "year": 1950,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 232,
+      "points_against": 326,
+      "coaches": [
+        "Ball"
+      ],
+      "division_finish": "6th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1950.htm"
+    },
+    {
+      "year": 1951,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 183,
+      "points_against": 296,
+      "coaches": [
+        "Todd",
+        "Ball"
+      ],
+      "division_finish": "3rd of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1951.htm"
+    },
+    {
+      "year": 1952,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 240,
+      "points_against": 287,
+      "coaches": [
+        "Lambeau"
+      ],
+      "division_finish": "5th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1952.htm"
+    },
+    {
+      "year": 1953,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 5,
+      "ties": 1,
+      "points_for": 208,
+      "points_against": 215,
+      "coaches": [
+        "Lambeau"
+      ],
+      "division_finish": "3rd of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1953.htm"
+    },
+    {
+      "year": 1954,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 207,
+      "points_against": 432,
+      "coaches": [
+        "Kuharich"
+      ],
+      "division_finish": "5th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1954.htm"
+    },
+    {
+      "year": 1955,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 246,
+      "points_against": 222,
+      "coaches": [
+        "Kuharich"
+      ],
+      "division_finish": "2nd of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1955.htm"
+    },
+    {
+      "year": 1956,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 183,
+      "points_against": 225,
+      "coaches": [
+        "Kuharich"
+      ],
+      "division_finish": "3rd of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1956.htm"
+    },
+    {
+      "year": 1957,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 6,
+      "ties": 1,
+      "points_for": 251,
+      "points_against": 230,
+      "coaches": [
+        "Kuharich"
+      ],
+      "division_finish": "4th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1957.htm"
+    },
+    {
+      "year": 1958,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 7,
+      "ties": 1,
+      "points_for": 214,
+      "points_against": 268,
+      "coaches": [
+        "Kuharich"
+      ],
+      "division_finish": "4th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1958.htm"
+    },
+    {
+      "year": 1959,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 185,
+      "points_against": 350,
+      "coaches": [
+        "Nixon"
+      ],
+      "division_finish": "5th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1959.htm"
+    },
+    {
+      "year": 1960,
+      "team": "Washington Redskins",
+      "wins": 1,
+      "losses": 9,
+      "ties": 2,
+      "points_for": 178,
+      "points_against": 309,
+      "coaches": [
+        "Nixon"
+      ],
+      "division_finish": "6th of 6",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1960.htm"
+    },
+    {
+      "year": 1961,
+      "team": "Washington Redskins",
+      "wins": 1,
+      "losses": 12,
+      "ties": 1,
+      "points_for": 174,
+      "points_against": 392,
+      "coaches": [
+        "McPeak"
+      ],
+      "division_finish": "7th of 7",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1961.htm"
+    },
+    {
+      "year": 1962,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 7,
+      "ties": 2,
+      "points_for": 305,
+      "points_against": 376,
+      "coaches": [
+        "McPeak"
+      ],
+      "division_finish": "4th of 7",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1962.htm"
+    },
+    {
+      "year": 1963,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 11,
+      "ties": 0,
+      "points_for": 279,
+      "points_against": 398,
+      "coaches": [
+        "McPeak"
+      ],
+      "division_finish": "6th of 7",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1963.htm"
+    },
+    {
+      "year": 1964,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 307,
+      "points_against": 305,
+      "coaches": [
+        "McPeak"
+      ],
+      "division_finish": "3rd of 7",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1964.htm"
+    },
+    {
+      "year": 1965,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 257,
+      "points_against": 301,
+      "coaches": [
+        "McPeak"
+      ],
+      "division_finish": "4th of 7",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1965.htm"
+    },
+    {
+      "year": 1966,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 351,
+      "points_against": 355,
+      "coaches": [
+        "Graham"
+      ],
+      "division_finish": "5th of 8",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1966.htm"
+    },
+    {
+      "year": 1967,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 6,
+      "ties": 3,
+      "points_for": 347,
+      "points_against": 353,
+      "coaches": [
+        "Graham"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1967.htm"
+    },
+    {
+      "year": 1968,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 249,
+      "points_against": 358,
+      "coaches": [
+        "Graham"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1968.htm"
+    },
+    {
+      "year": 1969,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 5,
+      "ties": 2,
+      "points_for": 307,
+      "points_against": 319,
+      "coaches": [
+        "Lombardi"
+      ],
+      "division_finish": "2nd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1969.htm"
+    },
+    {
+      "year": 1970,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 297,
+      "points_against": 314,
+      "coaches": [
+        "Austin"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1970.htm"
+    },
+    {
+      "year": 1971,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 4,
+      "ties": 1,
+      "points_for": 276,
+      "points_against": 190,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1971.htm"
+    },
+    {
+      "year": 1972,
+      "team": "Washington Redskins",
+      "wins": 11,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 336,
+      "points_against": 218,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the Super Bowl",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1972.htm"
+    },
+    {
+      "year": 1973,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 325,
+      "points_against": 198,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1973.htm"
+    },
+    {
+      "year": 1974,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 320,
+      "points_against": 196,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1974.htm"
+    },
+    {
+      "year": 1975,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 325,
+      "points_against": 276,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1975.htm"
+    },
+    {
+      "year": 1976,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 291,
+      "points_against": 217,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1976.htm"
+    },
+    {
+      "year": 1977,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 196,
+      "points_against": 189,
+      "coaches": [
+        "Allen"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1977.htm"
+    },
+    {
+      "year": 1978,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 273,
+      "points_against": 283,
+      "coaches": [
+        "Pardee"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1978.htm"
+    },
+    {
+      "year": 1979,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 348,
+      "points_against": 295,
+      "coaches": [
+        "Pardee"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1979.htm"
+    },
+    {
+      "year": 1980,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 261,
+      "points_against": 293,
+      "coaches": [
+        "Pardee"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1980.htm"
+    },
+    {
+      "year": 1981,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 347,
+      "points_against": 349,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1981.htm"
+    },
+    {
+      "year": 1982,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 1,
+      "ties": 0,
+      "points_for": 190,
+      "points_against": 128,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Won the Super Bowl",
+      "outcome": "title",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1982.htm"
+    },
+    {
+      "year": 1983,
+      "team": "Washington Redskins",
+      "wins": 14,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 541,
+      "points_against": 332,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost the Super Bowl",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1983.htm"
+    },
+    {
+      "year": 1984,
+      "team": "Washington Redskins",
+      "wins": 11,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 426,
+      "points_against": 310,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1984.htm"
+    },
+    {
+      "year": 1985,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 297,
+      "points_against": 312,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1985.htm"
+    },
+    {
+      "year": 1986,
+      "team": "Washington Redskins",
+      "wins": 12,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 368,
+      "points_against": 296,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": "Lost the NFC Championship",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1986.htm"
+    },
+    {
+      "year": 1987,
+      "team": "Washington Redskins",
+      "wins": 11,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 379,
+      "points_against": 285,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Won the Super Bowl",
+      "outcome": "title",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1987.htm"
+    },
+    {
+      "year": 1988,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 345,
+      "points_against": 387,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1988.htm"
+    },
+    {
+      "year": 1989,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 386,
+      "points_against": 308,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1989.htm"
+    },
+    {
+      "year": 1990,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 381,
+      "points_against": 301,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1990.htm"
+    },
+    {
+      "year": 1991,
+      "team": "Washington Redskins",
+      "wins": 14,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 485,
+      "points_against": 224,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Won the Super Bowl",
+      "outcome": "title",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1991.htm"
+    },
+    {
+      "year": 1992,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 300,
+      "points_against": 255,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1992.htm"
+    },
+    {
+      "year": 1993,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 12,
+      "ties": 0,
+      "points_for": 230,
+      "points_against": 345,
+      "coaches": [
+        "Petitbon"
+      ],
+      "division_finish": "5th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1993.htm"
+    },
+    {
+      "year": 1994,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 13,
+      "ties": 0,
+      "points_for": 320,
+      "points_against": 412,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "5th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1994.htm"
+    },
+    {
+      "year": 1995,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 326,
+      "points_against": 359,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1995.htm"
+    },
+    {
+      "year": 1996,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 364,
+      "points_against": 312,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1996.htm"
+    },
+    {
+      "year": 1997,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 7,
+      "ties": 1,
+      "points_for": 327,
+      "points_against": 289,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1997.htm"
+    },
+    {
+      "year": 1998,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 319,
+      "points_against": 421,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "4th of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1998.htm"
+    },
+    {
+      "year": 1999,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 443,
+      "points_against": 377,
+      "coaches": [
+        "Turner"
+      ],
+      "division_finish": "1st of 5",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/1999.htm"
+    },
+    {
+      "year": 2000,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 281,
+      "points_against": 269,
+      "coaches": [
+        "Turner",
+        "Robiskie"
+      ],
+      "division_finish": "3rd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2000.htm"
+    },
+    {
+      "year": 2001,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 256,
+      "points_against": 303,
+      "coaches": [
+        "Schottenheimer"
+      ],
+      "division_finish": "2nd of 5",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2001.htm"
+    },
+    {
+      "year": 2002,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 307,
+      "points_against": 365,
+      "coaches": [
+        "Spurrier"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2002.htm"
+    },
+    {
+      "year": 2003,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 11,
+      "ties": 0,
+      "points_for": 287,
+      "points_against": 372,
+      "coaches": [
+        "Spurrier"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2003.htm"
+    },
+    {
+      "year": 2004,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 240,
+      "points_against": 265,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2004.htm"
+    },
+    {
+      "year": 2005,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 359,
+      "points_against": 293,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "2nd of 4",
+      "playoff_result": "Lost in the Divisional round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2005.htm"
+    },
+    {
+      "year": 2006,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 11,
+      "ties": 0,
+      "points_for": 307,
+      "points_against": 376,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2006.htm"
+    },
+    {
+      "year": 2007,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 334,
+      "points_against": 310,
+      "coaches": [
+        "Gibbs"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": "Lost in the Wild Card round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2007.htm"
+    },
+    {
+      "year": 2008,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 8,
+      "ties": 0,
+      "points_for": 265,
+      "points_against": 296,
+      "coaches": [
+        "Zorn"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2008.htm"
+    },
+    {
+      "year": 2009,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 12,
+      "ties": 0,
+      "points_for": 266,
+      "points_against": 336,
+      "coaches": [
+        "Zorn"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2009.htm"
+    },
+    {
+      "year": 2010,
+      "team": "Washington Redskins",
+      "wins": 6,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 302,
+      "points_against": 377,
+      "coaches": [
+        "Shanahan"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2010.htm"
+    },
+    {
+      "year": 2011,
+      "team": "Washington Redskins",
+      "wins": 5,
+      "losses": 11,
+      "ties": 0,
+      "points_for": 288,
+      "points_against": 367,
+      "coaches": [
+        "Shanahan"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2011.htm"
+    },
+    {
+      "year": 2012,
+      "team": "Washington Redskins",
+      "wins": 10,
+      "losses": 6,
+      "ties": 0,
+      "points_for": 436,
+      "points_against": 388,
+      "coaches": [
+        "Shanahan"
+      ],
+      "division_finish": "1st of 4",
+      "playoff_result": "Lost in the Wild Card round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2012.htm"
+    },
+    {
+      "year": 2013,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 13,
+      "ties": 0,
+      "points_for": 334,
+      "points_against": 478,
+      "coaches": [
+        "Shanahan"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2013.htm"
+    },
+    {
+      "year": 2014,
+      "team": "Washington Redskins",
+      "wins": 4,
+      "losses": 12,
+      "ties": 0,
+      "points_for": 301,
+      "points_against": 438,
+      "coaches": [
+        "Gruden"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2014.htm"
+    },
+    {
+      "year": 2015,
+      "team": "Washington Redskins",
+      "wins": 9,
+      "losses": 7,
+      "ties": 0,
+      "points_for": 388,
+      "points_against": 379,
+      "coaches": [
+        "Gruden"
+      ],
+      "division_finish": "1st of 4",
+      "playoff_result": "Lost in the Wild Card round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2015.htm"
+    },
+    {
+      "year": 2016,
+      "team": "Washington Redskins",
+      "wins": 8,
+      "losses": 7,
+      "ties": 1,
+      "points_for": 396,
+      "points_against": 383,
+      "coaches": [
+        "Gruden"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2016.htm"
+    },
+    {
+      "year": 2017,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 342,
+      "points_against": 388,
+      "coaches": [
+        "Gruden"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2017.htm"
+    },
+    {
+      "year": 2018,
+      "team": "Washington Redskins",
+      "wins": 7,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 281,
+      "points_against": 359,
+      "coaches": [
+        "Gruden"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2018.htm"
+    },
+    {
+      "year": 2019,
+      "team": "Washington Redskins",
+      "wins": 3,
+      "losses": 13,
+      "ties": 0,
+      "points_for": 266,
+      "points_against": 435,
+      "coaches": [
+        "Callahan",
+        "Gruden"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2019.htm"
+    },
+    {
+      "year": 2020,
+      "team": "Washington Football Team",
+      "wins": 7,
+      "losses": 9,
+      "ties": 0,
+      "points_for": 335,
+      "points_against": 329,
+      "coaches": [
+        "Rivera"
+      ],
+      "division_finish": "1st of 4",
+      "playoff_result": "Lost in the Wild Card round",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2020.htm"
+    },
+    {
+      "year": 2021,
+      "team": "Washington Football Team",
+      "wins": 7,
+      "losses": 10,
+      "ties": 0,
+      "points_for": 335,
+      "points_against": 434,
+      "coaches": [
+        "Rivera"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2021.htm"
+    },
+    {
+      "year": 2022,
+      "team": "Washington Commanders",
+      "wins": 8,
+      "losses": 8,
+      "ties": 1,
+      "points_for": 321,
+      "points_against": 343,
+      "coaches": [
+        "Rivera"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2022.htm"
+    },
+    {
+      "year": 2023,
+      "team": "Washington Commanders",
+      "wins": 4,
+      "losses": 13,
+      "ties": 0,
+      "points_for": 329,
+      "points_against": 518,
+      "coaches": [
+        "Rivera"
+      ],
+      "division_finish": "4th of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2023.htm"
+    },
+    {
+      "year": 2024,
+      "team": "Washington Commanders",
+      "wins": 12,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 485,
+      "points_against": 391,
+      "coaches": [
+        "Quinn"
+      ],
+      "division_finish": "2nd of 4",
+      "playoff_result": "Lost the NFC Championship",
+      "outcome": "playoffs",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2024.htm"
+    },
+    {
+      "year": 2025,
+      "team": "Washington Commanders",
+      "wins": 5,
+      "losses": 12,
+      "ties": 0,
+      "points_for": 356,
+      "points_against": 451,
+      "coaches": [
+        "Quinn"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": false,
+      "source": "https://www.pro-football-reference.com/teams/was/2025.htm"
+    },
+    {
+      "year": 2026,
+      "team": "Washington Commanders",
+      "wins": 3,
+      "losses": 5,
+      "ties": 1,
+      "points_for": 196,
+      "points_against": 223,
+      "coaches": [
+        "Quinn"
+      ],
+      "division_finish": "3rd of 4",
+      "playoff_result": null,
+      "outcome": "missed",
+      "in_progress": true,
+      "source": "https://www.pro-football-reference.com/teams/was/2026.htm"
+    }
+  ]
+}

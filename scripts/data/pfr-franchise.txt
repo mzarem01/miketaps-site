@@ -1,0 +1,95 @@
+2026|W Commanders|3|5|1|3rd/4||196|223|Quinn
+2025|W Commanders|5|12|0|3rd/4||356|451|Quinn
+2024|W Commanders*|12|5|0|2nd/4|Lost Conf|485|391|Quinn
+2023|W Commanders|4|13|0|4th/4||329|518|Rivera
+2022|W Commanders|8|8|1|4th/4||321|343|Rivera
+2021|W Football Team|7|10|0|3rd/4||335|434|Rivera
+2020|W Football Team*|7|9|0|1st/4|Lost WC|335|329|Rivera
+2019|W Redskins|3|13|0|4th/4||266|435|Callahan,Gruden
+2018|W Redskins|7|9|0|3rd/4||281|359|Gruden
+2017|W Redskins|7|9|0|3rd/4||342|388|Gruden
+2016|W Redskins|8|7|1|3rd/4||396|383|Gruden
+2015|W Redskins*|9|7|0|1st/4|Lost WC|388|379|Gruden
+2014|W Redskins|4|12|0|4th/4||301|438|Gruden
+2013|W Redskins|3|13|0|4th/4||334|478|Shanahan
+2012|W Redskins*|10|6|0|1st/4|Lost WC|436|388|Shanahan
+2011|W Redskins|5|11|0|4th/4||288|367|Shanahan
+2010|W Redskins|6|10|0|4th/4||302|377|Shanahan
+2009|W Redskins|4|12|0|4th/4||266|336|Zorn
+2008|W Redskins|8|8|0|4th/4||265|296|Zorn
+2007|W Redskins*|9|7|0|3rd/4|Lost WC|334|310|Gibbs
+2006|W Redskins|5|11|0|4th/4||307|376|Gibbs
+2005|W Redskins*|10|6|0|2nd/4|Lost Div|359|293|Gibbs
+2004|W Redskins|6|10|0|4th/4||240|265|Gibbs
+2003|W Redskins|5|11|0|3rd/4||287|372|Spurrier
+2002|W Redskins|7|9|0|3rd/4||307|365|Spurrier
+2001|W Redskins|8|8|0|2nd/5||256|303|Schottenheimer
+2000|W Redskins|8|8|0|3rd/5||281|269|Turner,Robiskie
+1999|W Redskins*|10|6|0|1st/5|Lost Div|443|377|Turner
+1998|W Redskins|6|10|0|4th/5||319|421|Turner
+1997|W Redskins|8|7|1|2nd/5||327|289|Turner
+1996|W Redskins|9|7|0|3rd/5||364|312|Turner
+1995|W Redskins|6|10|0|3rd/5||326|359|Turner
+1994|W Redskins|3|13|0|5th/5||320|412|Turner
+1993|W Redskins|4|12|0|5th/5||230|345|Petitbon
+1992|W Redskins*|9|7|0|3rd/5|Lost Div|300|255|Gibbs
+1991|W Redskins*|14|2|0|1st/5|Won SB|485|224|Gibbs
+1990|W Redskins*|10|6|0|3rd/5|Lost Div|381|301|Gibbs
+1989|W Redskins|10|6|0|3rd/5||386|308|Gibbs
+1988|W Redskins|7|9|0|3rd/5||345|387|Gibbs
+1987|W Redskins*|11|4|0|1st/5|Won SB|379|285|Gibbs
+1986|W Redskins*|12|4|0|2nd/5|Lost Conf|368|296|Gibbs
+1985|W Redskins|10|6|0|3rd/5||297|312|Gibbs
+1984|W Redskins*|11|5|0|1st/5|Lost Div|426|310|Gibbs
+1983|W Redskins*|14|2|0|1st/5|Lost SB|541|332|Gibbs
+1982|W Redskins*|8|1|0|1st/5|Won SB|190|128|Gibbs
+1981|W Redskins|8|8|0|4th/5||347|349|Gibbs
+1980|W Redskins|6|10|0|3rd/5||261|293|Pardee
+1979|W Redskins|10|6|0|3rd/5||348|295|Pardee
+1978|W Redskins|8|8|0|3rd/5||273|283|Pardee
+1977|W Redskins|9|5|0|2nd/5||196|189|Allen
+1976|W Redskins*|10|4|0|2nd/5|Lost Div|291|217|Allen
+1975|W Redskins|8|6|0|3rd/5||325|276|Allen
+1974|W Redskins*|10|4|0|2nd/5|Lost Div|320|196|Allen
+1973|W Redskins*|10|4|0|2nd/5|Lost Div|325|198|Allen
+1972|W Redskins*|11|3|0|1st/5|Lost SB|336|218|Allen
+1971|W Redskins*|9|4|1|2nd/5|Lost Div|276|190|Allen
+1970|W Redskins|6|8|0|4th/5||297|314|Austin
+1969|W Redskins|7|5|2|2nd/4||307|319|Lombardi
+1968|W Redskins|5|9|0|3rd/4||249|358|Graham
+1967|W Redskins|5|6|3|3rd/4||347|353|Graham
+1966|W Redskins|7|7|0|5th/8||351|355|Graham
+1965|W Redskins|6|8|0|4th/7||257|301|McPeak
+1964|W Redskins|6|8|0|3rd/7||307|305|McPeak
+1963|W Redskins|3|11|0|6th/7||279|398|McPeak
+1962|W Redskins|5|7|2|4th/7||305|376|McPeak
+1961|W Redskins|1|12|1|7th/7||174|392|McPeak
+1960|W Redskins|1|9|2|6th/6||178|309|Nixon
+1959|W Redskins|3|9|0|5th/6||185|350|Nixon
+1958|W Redskins|4|7|1|4th/6||214|268|Kuharich
+1957|W Redskins|5|6|1|4th/6||251|230|Kuharich
+1956|W Redskins|6|6|0|3rd/6||183|225|Kuharich
+1955|W Redskins|8|4|0|2nd/6||246|222|Kuharich
+1954|W Redskins|3|9|0|5th/6||207|432|Kuharich
+1953|W Redskins|6|5|1|3rd/6||208|215|Lambeau
+1952|W Redskins|4|8|0|5th/6||240|287|Lambeau
+1951|W Redskins|5|7|0|3rd/6||183|296|Todd,Ball
+1950|W Redskins|3|9|0|6th/6||232|326|Ball
+1949|W Redskins|4|7|1|4th/5||268|339|Whelchel,Ball
+1948|W Redskins|7|5|0|2nd/5||291|287|Edwards
+1947|W Redskins|4|8|0|4th/5||295|367|Edwards
+1946|W Redskins|5|5|1|3rd/5||171|191|Edwards
+1945|W Redskins*|8|2|0|1st/5|Lost Champ|209|121|DeGroot
+1944|W Redskins|6|3|1|3rd/5||169|180|DeGroot
+1943|W Redskins*|6|3|1|1st/5|Lost Champ|229|137|Bergman
+1942|W Redskins*|10|1|0|1st/5|Won Champ|227|102|Flaherty
+1941|W Redskins|6|5|0|3rd/5||176|174|Flaherty
+1940|W Redskins*|9|2|0|1st/5|Lost Champ|245|142|Flaherty
+1939|W Redskins|8|2|1|2nd/5||242|94|Flaherty
+1938|W Redskins|6|3|2|2nd/5||148|154|Flaherty
+1937|W Redskins*|8|3|0|1st/5|Won Champ|195|120|Flaherty
+1936|B Redskins*|7|5|0|1st/5|Lost Champ|149|110|Flaherty
+1935|B Redskins|2|8|1|4th/5||65|123|Casey
+1934|B Redskins|6|6|0|2nd/5||107|94|Dietz
+1933|B Redskins|5|5|2|3rd/5||103|97|Dietz
+1932|B Braves|4|4|2|4th/8||55|79|Wray

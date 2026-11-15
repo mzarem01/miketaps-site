@@ -21,9 +21,9 @@ export const sections: Section[] = [
     slug: 'gameday',
     name: 'Gameday',
     object: 'the pennant',
-    blurb: 'Washington franchise history, one collectible card at a time. Every fact has a source.',
+    blurb: 'Every Washington season since 1932 on one chart. Run the numbers and check the math.',
     accent: '#8a2533',
-    mood: 'Vintage program, trading cards',
+    mood: 'Vintage program, stat sheets',
   },
   {
     slug: 'the-mat',

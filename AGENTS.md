@@ -31,6 +31,10 @@ Claude maintains it; Mike reviews and merges every change.
   Don't invent skills, tools, numbers or results.
 - Washington franchise history: every fact needs a source link, checked against that
   page before it's added. No AI-written history.
+- Season stats come only from `scripts/data/pfr-franchise.txt` (Pro Football Reference,
+  credited on the page). Never scrape Sports Reference; edit that file by hand from their
+  Share & Export table. Stat machine facts are computed from the data in
+  `public/js/gameday.js`, never typed in, and each one links to the seasons behind it.
 - Scripture: World English Bible text only, copied by script from the eBible.org files,
   never retyped or paraphrased. Label it "WEB". Commentary goes in a separate,
   clearly labeled box.

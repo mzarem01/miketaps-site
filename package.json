@@ -8,8 +8,9 @@
   },
   "scripts": {
     "bible": "node scripts/build-bible.mjs",
-    "dev": "node scripts/build-bible.mjs && astro dev",
-    "build": "node scripts/build-bible.mjs && astro build",
+    "seasons": "node scripts/build-seasons.mjs",
+    "dev": "node scripts/build-bible.mjs && node scripts/build-seasons.mjs && astro dev",
+    "build": "node scripts/build-bible.mjs && node scripts/build-seasons.mjs && astro build",
     "preview": "astro preview",
     "check": "node scripts/check-content.mjs",
     "ci": "npm run build && npm run check"

@@ -4,9 +4,9 @@ import WristLock from '../../components/WristLock.astro';
 import { BUILD } from '../../data/build';
 
 const belts = [
-  { name: 'White', color: '#f2ede4', bar: '#151012' },
-  { name: 'Blue', color: '#2f5fa8', bar: '#151012' },
-  { name: 'Purple', color: '#5d3d91', bar: '#151012', me: true },
+  { name: 'White', color: '#f2ede4', bar: '#151012', stripes: 4 },
+  { name: 'Blue', color: '#2f5fa8', bar: '#151012', stripes: 4 },
+  { name: 'Purple', color: '#5d3d91', bar: '#151012', stripes: 4, me: true },
   { name: 'Brown', color: '#6b4226', bar: '#151012' },
   { name: 'Black', color: '#141012', bar: '#b0303f' },
 ];
@@ -64,7 +64,9 @@ const matches = [
       <ol class="belt-row">
         {belts.map((b) => (
           <li class={b.me ? 'belt me' : 'belt'}>
-            <span class="strip" style={`--c:${b.color};--bar:${b.bar}`} aria-hidden="true"></span>
+            <span class="strip" style={`--c:${b.color};--bar:${b.bar}`} aria-hidden="true">
+              {b.stripes && (<span class="tape">{Array.from({ length: b.stripes }, () => <i />)}</span>)}
+            </span>
             <span class="b-name">{b.name}</span>
             {b.me && <span class="here">I'm here</span>}
           </li>
@@ -179,6 +181,18 @@ const matches = [
     border-radius: 4px;
     background: linear-gradient(90deg, var(--c) 0 72%, var(--bar) 72% 92%, var(--c) 92%);
     box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+  .tape {
+    position: absolute;
+    inset: 0 8% 0 72%;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .tape i {
+    width: 3px;
+    background: #f2ede4;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
   }
   .me .strip {
     height: 28px;

@@ -45,7 +45,7 @@ export const sections: Section[] = [
     slug: 'lab',
     name: 'The Lab',
     object: 'the rig and the server rack',
-    blurb: 'The rig, the home server and how this site runs, minus the private bits.',
+    blurb: 'The rig and the home server: what runs on it and how I keep it running, minus the private bits.',
     accent: '#3f8f6a',
     mood: 'Rack lights and spec sheets',
   },

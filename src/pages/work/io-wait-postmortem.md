@@ -6,7 +6,6 @@ kind: Postmortem
 date: August 28, 2026
 order: 4
 stack: [Linux load average, docker stats, iostat, Netdata]
-repo: https://github.com/mzarem01/homelab-incident-reports
 broke: My first hypothesis. It fit every symptom and was completely wrong.
 teaser: A plausible explanation is not a diagnosis.
 ---

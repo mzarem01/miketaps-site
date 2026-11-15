@@ -18,6 +18,13 @@ const projects = Object.entries(modules)
       something I built and run myself, mistakes included, because the mistakes are where I
       learned the most.
     </p>
+    <a class="badge" href="https://www.credly.com/badges/db7616f6-b416-4e13-8c73-ecb9c20a8beb/public_url" rel="noopener" target="_blank">
+      <img src="/img/security-plus-badge.png" width="64" height="64" alt="CompTIA Security+ badge" loading="lazy" />
+      <span class="badge-text">
+        <span class="badge-name">CompTIA Security+</span>
+        <span class="badge-meta">Earned September 2026 &middot; Verify on Credly &rarr;</span>
+      </span>
+    </a>
     <p class="tip">Hover or focus a card to see what broke.</p>
   </section>
 
@@ -56,6 +63,47 @@ const projects = Object.entries(modules)
     max-width: 42rem;
     font-size: 1.2rem;
     color: var(--ink-soft);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0.25rem 0 1rem;
+    padding: 0.6rem 1rem 0.6rem 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform var(--base) var(--pop), box-shadow var(--base) var(--ease);
+  }
+  .badge img {
+    width: 64px;
+    height: 64px;
+  }
+  .badge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .badge-name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 560;
+  }
+  .badge-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gold-text);
+  }
+  .badge:hover,
+  .badge:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -18px rgba(60, 20, 10, 0.6);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .badge { transition: none; }
+    .badge:hover, .badge:focus-visible { transform: none; }
   }
   .tip {
     font-family: var(--font-mono);

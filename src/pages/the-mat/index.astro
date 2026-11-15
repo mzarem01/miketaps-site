@@ -1,5 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
+import WristLock from '../../components/WristLock.astro';
+import { BUILD } from '../../data/build';
 
 const belts = [
   { name: 'White', color: '#f2ede4', bar: '#151012' },
@@ -9,26 +11,50 @@ const belts = [
   { name: 'Black', color: '#141012', bar: '#b0303f' },
 ];
 
-// Standard IBJJF positional points, with a plain-words description of each position.
-const ladder = [
-  { name: 'Back control', pts: 4, what: 'Behind your opponent with both hooks in. The strongest position in the sport: they can\'t see you, and every submission is close.' },
-  { name: 'Mount', pts: 4, what: 'Sitting on your opponent\'s chest or stomach, knees on the mat. Heavy, hard to escape, and it opens up chokes and armbars.' },
-  { name: 'Knee on belly', pts: 2, what: 'One knee driven across the stomach, other leg posted. Mobile and uncomfortable for the bottom person, and a bridge to mount or the back.' },
-  { name: 'Guard pass', pts: 3, what: 'Getting past the legs to side control or better. The legs are the bottom player\'s defense, so passing is most of the work on top.' },
-  { name: 'Sweep', pts: 2, what: 'From guard, reversing the position so you end up on top. Bottom isn\'t losing if you know how to use it.' },
-  { name: 'Takedown', pts: 2, what: 'Bringing a standing opponent to the mat and landing on top.' },
+// Three matches Mike keeps rewatching. Facts checked against match reports (Nov 2026).
+// Two have no official YouTube upload, so they link to long-standing fan uploads; swap the url if one disappears.
+const matches = [
+  {
+    title: `Kade Ruotolo vs. Andrew Tackett`,
+    meta: `Craig Jones Invitational 2024 · Under 80kg semifinal`,
+    why: `Fifteen minutes of nonstop chaos. Tackett takes Kade's back in the first round, Kade comes roaring back, and both of them get out of stuff that should have ended it, including a D'Arce and an anaconda with seconds left. Kade took it on a split decision, but honestly nobody lost that one. If you only watch one match on this list, make it this one.`,
+    result: `Kade Ruotolo by split decision`,
+    url: 'https://www.youtube.com/watch?v=HkwFwGYtqfk',
+    src: `Official upload (The B-Team)`,
+  },
+  {
+    title: `Marcelo Garcia vs. Kron Gracie`,
+    meta: `ADCC 2009 · Barcelona · 77kg quarterfinal`,
+    why: `An absolute classic. Ten scoreless minutes and into overtime, two of the best ever trading attacks. Kron almost gets Marcelo with a guillotine, Marcelo stays calm and gets out, then passes, climbs to mount and finishes Kron with his own guillotine. Immaculate. Still one of my favorite matches to watch.`,
+    result: `Marcelo Garcia by guillotine`,
+    url: 'https://www.youtube.com/watch?v=ebujdnSwlR4',
+    src: `Fan upload (no official copy on YouTube)`,
+  },
+  {
+    title: `Ronaldo "Jacaré" Souza vs. Roger Gracie`,
+    meta: `2004 Worlds · Absolute final · Tijuca Tênis Clube, Rio`,
+    why: `Roger locks up an armlock and Jacaré refuses to tap. The elbow pops. He tucks the arm into his belt and fights the rest of the match one-handed to hold onto his lead. Not saying anybody should copy that, but it's one of the toughest things I've ever seen on a mat.`,
+    result: `Jacaré on points, 4 to 2`,
+    url: 'https://www.youtube.com/watch?v=SWxPTrESldw',
+    src: `Fan upload (no official copy on YouTube)`,
+  },
 ];
 ---
-<Base title="The Mat" description="Jiu-jitsu since 2010: the belt path and the positional ladder." accent="#6a4a9c">
+<Base title="The Mat" description="Jiu-jitsu since 2010: the belt path and three matches I'll never stop rewatching." accent="#6a4a9c">
   <div class="mat">
     <section class="wrap head">
-      <p class="eyebrow">The Mat</p>
-      <h1>Purple belt. <span>On the mat since 2010.</span></h1>
-      <p class="lede">
-        Brazilian jiu-jitsu has been part of my life for over fifteen years, training and coaching.
-        It's problem solving with someone actively trying to solve you back, which is not that
-        different from security work.
-      </p>
+      <div class="head-text">
+        <p class="eyebrow">The Mat</p>
+        <h1>Purple belt. <span>On the mat since 2010.</span></h1>
+        <p class="lede">
+          Brazilian jiu-jitsu has been part of my life for over fifteen years, training and coaching.
+          It's problem solving with someone actively trying to solve you back, which is not that
+          different from security work.
+        </p>
+      </div>
+      <div class="head-art">
+        <WristLock />
+      </div>
     </section>
 
     <section class="wrap belts" aria-labelledby="belts-h">
@@ -45,24 +71,30 @@ const ladder = [
       <p class="note">Adult belts in BJJ often take years each. There's no shortcut, which is the point.</p>
     </section>
 
-    <section class="wrap ladder" aria-labelledby="ladder-h">
-      <h2 id="ladder-h" class="sec-h">The positional ladder</h2>
-      <p class="sub">"Position before submission." Tap a position to see what it is and what it scores in competition.</p>
-      <div class="tiles">
-        {ladder.map((p, i) => (
-          <details class="tile" style={`--i:${i}`}>
-            <summary>
-              <span class="rank">{i + 1}</span>
-              <span class="p-name">{p.name}</span>
-              <span class="pts">{p.pts} pts</span>
-            </summary>
-            <p>{p.what}</p>
-          </details>
+    <section class="wrap matches" aria-labelledby="matches-h">
+      <h2 id="matches-h" class="sec-h">Three matches I'll never stop rewatching</h2>
+      <p class="sub">Not my matches. The ones I keep going back to.</p>
+      <ol class="cards">
+        {matches.map((m, i) => (
+          <li class="card">
+            <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <p class="meta">{m.meta}</p>
+            <h3>{m.title}</h3>
+            <p class="why">{m.why}</p>
+            <div class="foot">
+              <p class="result">Result: {m.result}</p>
+              <a class="watch" href={m.url} target="_blank" rel="noopener noreferrer">
+                Watch on YouTube<span class="sr-only"> (opens in a new tab)</span>
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M6 3h7v7M13 3L4 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
+              <p class="src">{m.src}</p>
+            </div>
+          </li>
         ))}
-      </div>
-      <p class="note">Points follow the standard IBJJF scoring rules.</p>
+      </ol>
     </section>
   </div>
+  <script is:inline src={`/js/wristlock.js?v=${BUILD}`} defer></script>
 </Base>
 
 <style>
@@ -75,6 +107,20 @@ const ladder = [
   .head {
     padding-top: clamp(2rem, 5vw, 3.5rem);
     padding-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+  .head-text {
+    flex: 1 1 26rem;
+    min-width: 0;
+  }
+  .head-art {
+    flex: 0 1 340px;
+    display: flex;
+    justify-content: center;
   }
   .head h1 span {
     display: block;
@@ -146,71 +192,97 @@ const ladder = [
     color: var(--ink-faint);
     margin-top: 0.8rem;
   }
-  .ladder {
+  .matches {
     padding-top: 2.5rem;
     padding-bottom: 3rem;
   }
   .sub {
     color: var(--ink-soft);
+    margin-top: 0;
   }
-  .tiles {
+  .cards {
+    list-style: none;
+    margin: 1.2rem 0 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.1rem;
   }
-  .tile {
-    border-radius: 12px;
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem 1.4rem 1.2rem;
+    border-radius: 14px;
     border: 1px solid var(--rule);
     background: var(--card);
-    overflow: hidden;
-    transition: border-color var(--base) var(--ease);
+    transition: border-color var(--base) var(--ease), transform var(--base) var(--pop);
   }
-  .tile[open] {
+  .card:hover {
     border-color: var(--accent);
+    transform: translateY(-2px);
   }
-  summary {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.9rem 1rem;
-    cursor: pointer;
-  }
-  summary::-webkit-details-marker {
-    display: none;
-  }
-  .rank {
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--paper);
-    font-weight: 700;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-  }
-  .p-name {
+  .num {
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--accent);
   }
-  .pts {
-    margin-left: auto;
+  .meta {
+    margin: 0;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-text);
+  }
+  .card h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+  .why {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .foot {
+    margin-top: auto;
+    padding-top: 0.4rem;
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+  }
+  .result {
+    margin: 0;
+    font-size: 0.9rem;
     color: var(--ink-faint);
   }
-  .tile p {
-    margin: 0;
-    padding: 0 1rem 1rem 3.4rem;
-    color: var(--ink-soft);
-    font-size: 1rem;
-    animation: drop 300ms var(--ease);
+  .watch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--fast) var(--ease);
   }
-  @keyframes drop {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: none; }
+  .watch:hover {
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  .watch:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .src {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
   }
   @media (max-width: 640px) {
     .belt-row {

@@ -15,7 +15,8 @@
     { id: 'stripe', title: 'Stripe earned', done: 'Came back and earned a belt stripe.', hint: 'Visit again another day.' },
     { id: 'dawn', title: 'Early riser', done: 'Caught the sunrise in the window.', hint: 'Come by early.' },
     { id: 'night', title: 'Night owl', done: 'Saw the stars in the window.', hint: 'Come by late.' },
-    { id: 'backroom', secret: true, title: 'Tapped in', done: 'Found the back room.', hint: 'Some pages have more to say than they show.' }
+    { id: 'backroom', secret: true, title: 'Tapped in', done: 'Found the back room.', hint: 'Some pages have more to say than they show.', where: 'the back room' },
+    { id: 'wristlock', secret: true, title: 'Slap and bump', done: 'Offered the wrong guy a handshake.', hint: 'Someone on The Mat wants to shake hands.', where: 'The Mat' }
   ];
   var known = {};
   LIST.forEach(function (a) { known[a.id] = a; });
@@ -77,7 +78,7 @@
     badge.setAttribute('aria-hidden', 'true');
     badge.appendChild(icon('M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3', 24, 18, 2));
     var text = el('span', 'found-text');
-    text.appendChild(el('span', 'found-eyebrow', a.secret ? 'Secret found · the back room' : 'Found on the plaque · ' + a.count + '/' + MAIN));
+    text.appendChild(el('span', 'found-eyebrow', a.secret ? 'Secret found \u00b7 ' + a.where : 'Found on the plaque · ' + a.count + '/' + MAIN));
     text.appendChild(el('span', 'found-title', a.title));
     text.appendChild(el('span', 'found-line', a.done));
     box.appendChild(badge);
@@ -99,7 +100,7 @@
     have.push(id);
     if (!save(have)) return;
     var count = have.filter(function (h) { return !known[h].secret; }).length;
-    queue.push({ title: known[id].title, done: known[id].done, count: count, secret: !!known[id].secret });
+    queue.push({ title: known[id].title, done: known[id].done, count: count, secret: !!known[id].secret, where: known[id].where });
     document.dispatchEvent(new CustomEvent('miketaps:found', { detail: id }));
     if (document.body) next();
     else document.addEventListener('DOMContentLoaded', next);

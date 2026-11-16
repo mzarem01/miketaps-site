@@ -288,9 +288,45 @@
 
 // Mia, on the floor by the desk: each click gives her a treat.
 // The count is kept only in this browser.
+// At night (when the window shows night) she sleeps. A treat or turning the lamp on
+// wakes her for a few seconds, and the lamp coming on always gets a happy wag.
 (function () {
   var mia = document.querySelector('[data-mia]');
   if (!mia) return;
+  var scene = document.querySelector('.scene');
+  var wakeTimer, happyTimer;
+  function asleep() {
+    return scene && scene.getAttribute('data-sky') === 'night' && !mia.classList.contains('is-awake');
+  }
+  function wake(ms) {
+    mia.classList.add('is-awake');
+    clearTimeout(wakeTimer);
+    wakeTimer = setTimeout(function () {
+      mia.classList.remove('is-awake');
+      refreshTip();
+    }, ms);
+  }
+  function happy() {
+    mia.classList.remove('is-happy');
+    void mia.getBoundingClientRect();
+    mia.classList.add('is-happy');
+    clearTimeout(happyTimer);
+    happyTimer = setTimeout(function () { mia.classList.remove('is-happy'); }, 1700);
+  }
+  // The lamp lives in site.js and flips data-theme on <html>. Light means it just came on.
+  var lastTheme = document.documentElement.dataset.theme;
+  new MutationObserver(function () {
+    var t = document.documentElement.dataset.theme;
+    if (t !== lastTheme && t === 'light') {
+      if (asleep()) wake(5000);
+      happy();
+      refreshTip();
+    }
+    lastTheme = t;
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (scene) {
+    new MutationObserver(refreshTip).observe(scene, { attributes: true, attributeFilter: ['data-sky'] });
+  }
   var tip = mia.querySelector('[data-mia-tip]');
   var live = document.querySelector('[data-mia-live]');
   var treats = 0;
@@ -304,9 +340,14 @@
     if (n < 25) return n + ' treats. She has you trained';
     return n + ' treats. Spoiled rotten';
   }
-  if (tip) tip.textContent = line(treats);
+  function refreshTip() {
+    if (!tip) return;
+    tip.textContent = asleep() ? 'asleep. A treat might wake her' : line(treats);
+  }
+  refreshTip();
 
   function give() {
+    if (scene && scene.getAttribute('data-sky') === 'night') wake(6000);
     treats += 1;
     try { localStorage.setItem('miketaps-mia-treats', String(treats)); } catch (e) {}
     if (tip) tip.textContent = line(treats);

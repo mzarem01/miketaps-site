@@ -355,10 +355,14 @@ import { BUILD } from '../data/build';
           <path d="M33 30C33 16 46 8 62 8C78 8 91 16 91 30C93 40 93 50 87 58C81 66 72 69 62 69C52 69 43 66 37 58C31 50 31 40 33 30z" fill="#f4efe6" />
           <path d="M35 27C39 15 49 10 56 11C55 20 54 30 52 40C50 48 46 54 40 57C34 50 32 38 35 27z" fill="#b0602c" />
           <path d="M84 16C88 20 91 25 91 30C87 28 84 23 82 18z" fill="#b0602c" />
-          <ellipse cx="49" cy="33" rx="3.6" ry="3.2" fill="#4a2614" />
-          <ellipse cx="75" cy="33" rx="3.6" ry="3.2" fill="#4a2614" />
-          <circle cx="50" cy="32" r="1.1" fill="#fff" />
-          <circle cx="76" cy="32" r="1.1" fill="#fff" />
+          <g class="mia-eyes-open">
+            <ellipse cx="49" cy="33" rx="3.6" ry="3.2" fill="#4a2614" />
+            <ellipse cx="75" cy="33" rx="3.6" ry="3.2" fill="#4a2614" />
+            <circle cx="50" cy="32" r="1.1" fill="#fff" />
+            <circle cx="76" cy="32" r="1.1" fill="#fff" />
+          </g>
+          <!-- asleep: shut eyes (shown at night, see scene.js) -->
+          <path class="mia-eyes-shut" d="M45 33Q49 36.5 53 33M71 33Q75 36.5 79 33" fill="none" stroke="#4a2614" stroke-width="1.8" stroke-linecap="round" />
           <ellipse cx="62" cy="52" rx="21" ry="12" fill="#f4efe6" />
           <ellipse cx="62" cy="47" rx="11" ry="5" fill="#d8d0c5" opacity="0.6" />
           <path d="M44 52Q62 79 80 52Q72 58 62 57Q52 58 44 52z" fill="#241718" />
@@ -376,6 +380,11 @@ import { BUILD } from '../data/build';
           <circle cx="54" cy="63.5" r="2.6" fill="#d9a95c" />
           <circle cx="70" cy="60.5" r="2.6" fill="#d9a95c" />
           <circle cx="70" cy="63.5" r="2.6" fill="#d9a95c" />
+        </g>
+        <g class="mia-zzz" aria-hidden="true">
+          <text x="98" y="18" class="z1">z</text>
+          <text x="108" y="6" class="z2">z</text>
+          <text x="120" y="-8" class="z3">Z</text>
         </g>
         <path class="mia-heart" aria-hidden="true" d="M104 30c-4-6-12-2-9 4l9 8 9-8c3-6-5-10-9-4z" fill="#b0303f" />
       </g>
@@ -875,6 +884,30 @@ import { BUILD } from '../data/build';
   .mia.is-treating .mia-tail { animation: wag 180ms ease-in-out 6; }
   @media (prefers-reduced-motion: reduce) {
     .mia.is-treating .mia-heart { opacity: 1; }
+  }
+  /* Mia at night: asleep when the window shows night. A treat or the lamp wakes her
+     for a few seconds (scene.js adds .is-awake), then she drifts off again. */
+  .mia-eyes-shut, .mia-zzz { opacity: 0; transition: opacity 400ms var(--ease); }
+  .mia-eyes-open { transition: opacity 200ms var(--ease); }
+  .mia-zzz text { font-family: var(--font-display); font-weight: 600; fill: var(--gold-bright); }
+  .mia-zzz .z1 { font-size: 12px; }
+  .mia-zzz .z2 { font-size: 15px; }
+  .mia-zzz .z3 { font-size: 19px; }
+  .scene[data-sky='night'] .mia:not(.is-awake) .mia-eyes-open { opacity: 0; }
+  .scene[data-sky='night'] .mia:not(.is-awake) .mia-eyes-shut,
+  .scene[data-sky='night'] .mia:not(.is-awake) .mia-zzz { opacity: 1; }
+  .scene[data-sky='night'] .mia:not(.is-awake) .mia-head { animation: doze 4s ease-in-out infinite; }
+  .scene[data-sky='night'] .mia:not(.is-awake) .mia-zzz text { animation: zfloat 3s ease-in-out infinite; }
+  .mia-zzz .z2 { animation-delay: 0.5s !important; }
+  .mia-zzz .z3 { animation-delay: 1s !important; }
+  /* The lamp comes on: a happy wag (scene.js adds .is-happy) */
+  .mia.is-happy .mia-tail { animation: wag 200ms ease-in-out 8; }
+  @keyframes doze { 0%, 100% { transform: rotate(0) translateY(0); } 50% { transform: rotate(2deg) translateY(2px); } }
+  @keyframes zfloat { 0%, 100% { opacity: 0.35; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .scene[data-sky='night'] .mia:not(.is-awake) .mia-head,
+    .scene[data-sky='night'] .mia:not(.is-awake) .mia-zzz text,
+    .mia.is-happy .mia-tail { animation: none; }
   }
   @keyframes wag { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-22deg); } }
   @keyframes treat-drop {

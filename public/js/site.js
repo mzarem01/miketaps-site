@@ -39,6 +39,14 @@
   });
   syncLamps();
 
+  // Email links: the address is put together here so it isn't sitting in the page for
+  // spam scrapers. Without JavaScript the link text still reads "hello [at] miketaps.com".
+  document.querySelectorAll('a[data-mail][data-host]').forEach(function (el) {
+    var addr = el.dataset.mail + '@' + el.dataset.host;
+    el.href = 'mailto:' + addr;
+    el.textContent = addr;
+  });
+
   // The controller on the desk: a little wiggle, nothing more (yet).
   document.querySelectorAll('[data-wiggle]').forEach(function (el) {
     function go() {

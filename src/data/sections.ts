@@ -29,7 +29,7 @@ export const sections: Section[] = [
     slug: 'the-mat',
     name: 'The Mat',
     object: 'the belt on the hook',
-    blurb: 'Jiu-jitsu since 2010. Notes from training and coaching.',
+    blurb: 'Jiu-jitsu since 2010. The three matches I keep rewatching, and the road to purple.',
     accent: '#6a4a9c',
     mood: 'Belt colors and chalk lines',
   },
